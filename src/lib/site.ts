@@ -21,7 +21,7 @@ export const nav = [
       { label: "Community Stories", href: "/blog", blurb: "Philanthropy, sponsorships and contests." },
       { label: "Events", href: "/events", blurb: "What’s happening in and around our stores." },
       { label: "Mangoes", href: "/mangoes", blurb: "Rajan mangoes, our signature, exclusive to Fruiticana." },
-      { label: "Forced and Child Labour Report 2024-25", href: "/forced-and-child-labour-report-2024-25", blurb: "Our supply-chain transparency report." },
+      { label: "Forced and Child Labour Report 2024\u201125", href: "/forced-and-child-labour-report-2024-25", blurb: "Our supply-chain transparency report." },
     ],
   },
   { label: "Weekly Specials", href: "/flyers" },

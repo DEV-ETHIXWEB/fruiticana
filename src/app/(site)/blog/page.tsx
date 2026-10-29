@@ -33,16 +33,17 @@ export default async function CommunityPage() {
             </div>
           </dl>
         </div>
+        {/* Feature the newest story only when there are enough to fill a grid beneath it */}
         <div className="mt-14 grid gap-5">
-          {first && (
+          {posts.length >= 4 && first && (
             <Reveal>
               <PostCard post={first} large />
             </Reveal>
           )}
-          <div className="grid gap-5 md:grid-cols-2">
-            {rest.map((p, i) => (
-              <Reveal key={p.slug} delay={i * 0.06}>
-                <PostCard post={p} />
+          <div className={`grid gap-5 md:grid-cols-2 ${posts.length >= 3 ? "lg:grid-cols-3" : ""}`}>
+            {(posts.length >= 4 ? rest : posts).map((p, i) => (
+              <Reveal key={p.slug} delay={i * 0.06} className="h-full">
+                <PostCard post={p} eager={i === 0 && posts.length < 4} />
               </Reveal>
             ))}
           </div>

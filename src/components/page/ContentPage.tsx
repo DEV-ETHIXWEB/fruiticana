@@ -27,7 +27,7 @@ export function ContentPage({
   return (
     <>
       <PageHero eyebrow={page.eyebrow} title={page.title} intro={page.intro} image={page.heroImage} crumbs={crumbs} />
-      <section className="container-x grid gap-14 py-20 lg:grid-cols-[1fr_22rem] lg:gap-24 lg:py-28">
+      <section className="container-x grid gap-14 pt-16 pb-20 lg:grid-cols-[1fr_22rem] lg:gap-24 lg:pt-24 lg:pb-24">
         <Reveal>
           <RichText value={page.body} className="dropcap max-w-[44rem]" />
         </Reveal>

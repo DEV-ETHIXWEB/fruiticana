@@ -102,11 +102,11 @@ export default async function StorePage({ params }: PageProps<"/storefinder/[slu
                   </div>
                 )}
               </dl>
-              <div className="mt-10 flex flex-wrap gap-3">
-                <ButtonLink href={dirs} target="_blank" rel="noopener noreferrer" variant="chili">
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <ButtonLink href={dirs} target="_blank" rel="noopener noreferrer" variant="chili" magnetic={false} className="w-full sm:w-auto">
                   Get directions
                 </ButtonLink>
-                <ButtonLink href={tel} variant="ghost" arrow={false}>
+                <ButtonLink href={tel} variant="ghost" arrow={false} magnetic={false} className="w-full sm:w-auto">
                   <span className="inline-flex items-center gap-2">
                     <Icon name="phone" className="size-4" /> Call the store
                   </span>
@@ -123,12 +123,12 @@ export default async function StorePage({ params }: PageProps<"/storefinder/[slu
       </section>
 
       {!store.isHeadOffice && (
-        <section className="container-x grid gap-5 py-20 lg:grid-cols-[1fr_22rem] lg:py-28">
-          <div>
-            <h2 className="font-display text-title text-forest">What you’ll find in store</h2>
-            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+        <section className="container-x py-20 lg:py-28">
+          <h2 className="font-display text-title text-forest">What you’ll find in store</h2>
+          <div className="mt-8 grid gap-4 lg:grid-cols-[1fr_22rem]">
+            <div className="grid gap-4 sm:grid-cols-3">
               {aisles.map((a, i) => (
-                <Reveal key={a.title} delay={i * 0.07}>
+                <Reveal key={a.title} delay={i * 0.07} className="h-full">
                   <div className="h-full rounded-[var(--radius-card)] bg-paper/70 p-6">
                     <span className="grid size-11 place-items-center rounded-full bg-leaf text-white">
                       <Icon name={a.icon} className="size-5" />
@@ -139,17 +139,17 @@ export default async function StorePage({ params }: PageProps<"/storefinder/[slu
                 </Reveal>
               ))}
             </div>
-          </div>
-          <Reveal delay={0.1}>
-            <Link href={`/flyers?region=${flyer.region}`} className="group/btn block overflow-hidden rounded-[var(--radius-card)] bg-leaf p-4 text-white">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-white">
+            <Reveal delay={0.1} className="h-full">
+            <Link href={`/flyers?region=${flyer.region}`} className="group/btn flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-leaf p-4 text-white">
+              <div className="relative min-h-40 flex-1 overflow-hidden rounded-2xl bg-white">
                 <Image src={flyer.image.src} alt={flyer.image.alt} fill sizes="22rem" className="object-cover object-top transition-transform duration-[1.2s] group-hover/btn:scale-105" />
               </div>
               <p className="mt-4 flex items-center justify-between px-2 pb-1 font-semibold">
                 This week’s {flyer.label} flyer <Arrow />
               </p>
             </Link>
-          </Reveal>
+            </Reveal>
+          </div>
         </section>
       )}
 

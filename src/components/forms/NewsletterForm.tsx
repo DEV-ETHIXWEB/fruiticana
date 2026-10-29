@@ -5,7 +5,7 @@ import { useActionState, useState } from "react";
 import { subscribe, type FormState } from "@/app/actions";
 import { Icon } from "@/components/ui/Icon";
 
-export function NewsletterForm({ tone = "dark", compact = false }: { tone?: "dark" | "light"; compact?: boolean }) {
+export function NewsletterForm({ tone = "dark", compact = false, stacked = false }: { tone?: "dark" | "light"; compact?: boolean; stacked?: boolean }) {
   const [state, action, pending] = useActionState<FormState, FormData>(subscribe, { status: "idle" });
   const [t] = useState(() => Date.now());
   const dark = tone === "dark";
@@ -34,7 +34,7 @@ export function NewsletterForm({ tone = "dark", compact = false }: { tone?: "dar
             </label>
             <input id={`company_website-${tone}`} name="company_website" tabIndex={-1} autoComplete="off" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
             <div
-              className={`flex items-center gap-1.5 rounded-full p-1.5 ring-1 transition-shadow focus-within:ring-2 ${
+              className={`flex ${stacked ? "flex-col items-stretch rounded-3xl" : "items-center rounded-full"} gap-1.5 p-1.5 ring-1 transition-shadow focus-within:ring-2 ${
                 dark ? "bg-cream/[0.07] ring-cream/20 focus-within:ring-turmeric" : "bg-white ring-ink/10 focus-within:ring-leaf"
               } ${state.fieldErrors?.email ? (dark ? "ring-chili" : "ring-chili") : ""}`}
             >
@@ -55,7 +55,7 @@ export function NewsletterForm({ tone = "dark", compact = false }: { tone?: "dar
               <button
                 type="submit"
                 disabled={pending}
-                className={`inline-flex shrink-0 items-center gap-2 rounded-full bg-chili ${compact ? "px-4 py-2.5" : "px-5 py-3"} text-sm font-semibold text-white transition-colors hover:bg-chili-deep disabled:opacity-70`}
+                className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-chili ${compact ? "px-4 py-2.5" : "px-5 py-3"} text-sm font-semibold text-white transition-colors hover:bg-chili-deep disabled:opacity-70`}
               >
                 {pending ? <span className="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white" /> : "Subscribe"}
               </button>

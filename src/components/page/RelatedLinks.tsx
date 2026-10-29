@@ -6,8 +6,8 @@ export type Related = { href: string; title: string; body: string };
 
 export function RelatedLinks({ title = "Keep exploring", items }: { title?: string; items: Related[] }) {
   return (
-    <section className="container-x py-20 lg:py-28">
-      <h2 className="font-display text-title text-forest">{title}</h2>
+    <section className="container-x pb-20 lg:pb-28">
+      <h2 className="border-t border-ink/10 pt-14 font-display text-title text-forest">{title}</h2>
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         {items.map((it, i) => (
           <Reveal key={it.href} delay={i * 0.07}>

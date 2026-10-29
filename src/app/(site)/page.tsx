@@ -73,7 +73,7 @@ export default async function HomePage() {
                 { value: <>12-24<span className="text-[0.5em]">h</span></>, label: "Local farm to our shelves" },
               ].map((s, i) => (
                 <Reveal key={i} delay={i * 0.08} className="pr-6">
-                  <p className="font-display text-[clamp(2.6rem,1.6rem+2.6vw,4.25rem)] leading-none tracking-tight text-leaf">{s.value}</p>
+                  <p className="font-display text-[clamp(2.4rem,1.2rem+2.4vw,4.25rem)] leading-none tracking-tight whitespace-nowrap text-leaf">{s.value}</p>
                   <p className="mt-3 max-w-[12rem] text-sm text-muted">{s.label}</p>
                 </Reveal>
               ))}
@@ -166,7 +166,7 @@ export default async function HomePage() {
 
       {/* ---------------- President's message ---------------- */}
       <section className="relative overflow-hidden bg-paper py-24 lg:py-32">
-        <div aria-hidden className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 font-display text-[22rem] leading-none text-leaf/[0.07] select-none">“</div>
+        <div aria-hidden className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 font-display text-[16rem] leading-[0.85] text-leaf/[0.08] select-none">“</div>
         <div className="container-x relative max-w-5xl text-center">
           <p className="eyebrow justify-center text-chili">President’s message</p>
           <SplitHeading
@@ -200,7 +200,7 @@ export default async function HomePage() {
             <Reveal key={post.slug} delay={i * 0.08}>
               <Link href={`/blog/${post.slug}`} className="group/btn flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-white ring-1 ring-ink/[0.06] transition-shadow hover:shadow-[0_30px_60px_-30px_rgb(15_59_38/0.35)]">
                 {post.image && (
-                  <div className="relative aspect-[16/10] overflow-hidden bg-paper">
+                  <div className={`relative aspect-[16/10] overflow-hidden ${post.image.width < 400 ? "bg-white" : "bg-paper"}`}>
                     <Image src={post.image.src} alt={post.image.alt} fill sizes="(min-width: 768px) 30vw, 100vw" className={`transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover/btn:scale-105 ${post.image.width < 400 ? "object-contain p-6" : "object-cover"}`} />
                   </div>
                 )}

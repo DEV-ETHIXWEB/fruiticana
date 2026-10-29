@@ -1,5 +1,5 @@
+import Image from "next/image";
 import { PageHero } from "@/components/page/PageHero";
-import { Reveal } from "@/components/motion/primitives";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { getPage } from "@/lib/content";
@@ -7,6 +7,7 @@ import { metaFromPage } from "@/lib/seo";
 
 const PATH = "/forced-and-child-labour-report-2024-25";
 const PDF = "/docs/forced-and-child-labour-report-2024-25.pdf";
+const PAGES = 7;
 
 export async function generateMetadata() {
   return metaFromPage(await getPage("forced-and-child-labour-report-2024-25"), PATH);
@@ -31,22 +32,28 @@ export default async function ReportPage() {
         </div>
       </PageHero>
       <section className="container-x py-16 lg:py-20">
-        <Reveal>
-          <div className="overflow-hidden rounded-[var(--radius-card)] bg-white ring-1 ring-ink/10">
-            <div className="flex items-center justify-between border-b border-ink/10 px-6 py-4 text-sm">
-              <span className="font-medium">Fruiticana Produce Ltd. · Fiscal Year 2024-25</span>
-              <span className="text-muted">PDF</span>
-            </div>
-            <object data={`${PDF}#view=FitH`} type="application/pdf" className="block h-[80vh] min-h-[36rem] w-full" aria-label="Forced and Child Labour Report 2024-25">
-              <div className="grid place-items-center gap-4 p-12 text-center">
-                <p className="text-ink-soft">Your browser can’t display PDFs inline.</p>
-                <a href={PDF} className="font-semibold text-leaf underline underline-offset-4">
-                  Download the report
-                </a>
-              </div>
-            </object>
+        <div className="mx-auto max-w-4xl overflow-hidden rounded-[var(--radius-card)] bg-white ring-1 ring-ink/10">
+          <div className="flex items-center justify-between border-b border-ink/10 px-6 py-4 text-sm">
+            <span className="font-medium">Fruiticana Produce Ltd. · Fiscal Year 2024-25</span>
+            <span className="text-muted">{PAGES} pages</span>
           </div>
-        </Reveal>
+          {/* Rendered page images: readable on every device, no PDF plugin needed */}
+          <ol className="space-y-px bg-ink/10">
+            {Array.from({ length: PAGES }, (_, i) => (
+              <li key={i} className="bg-white">
+                <Image
+                  src={`/docs/report-p${i + 1}.jpg`}
+                  alt={`Forced and Child Labour Report 2024-25, page ${i + 1} of ${PAGES}`}
+                  width={1222}
+                  height={1580}
+                  sizes="(min-width: 896px) 56rem, 100vw"
+                  preload={i === 0}
+                  className="h-auto w-full"
+                />
+              </li>
+            ))}
+          </ol>
+        </div>
       </section>
     </>
   );

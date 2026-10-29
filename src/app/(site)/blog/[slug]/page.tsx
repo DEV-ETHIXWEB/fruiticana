@@ -42,11 +42,11 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
       </header>
       {post.image && (
         <Reveal className="container-x mt-12 max-w-5xl">
-          <div className={`relative overflow-hidden rounded-[var(--radius-card)] bg-paper ${post.image.width < 400 ? "aspect-[16/8]" : ""}`}>
+          <div className={`relative overflow-hidden rounded-[var(--radius-card)] ${post.image.width < 400 ? "aspect-[16/7] bg-white ring-1 ring-ink/[0.06]" : "bg-paper"}`}>
             {post.image.width < 400 ? (
-              <Image src={post.image.src} alt={post.image.alt} fill priority sizes="64rem" className="object-contain p-10" />
+              <Image src={post.image.src} alt={post.image.alt} fill preload sizes="64rem" className="object-contain p-10" />
             ) : (
-              <Image src={post.image.src} alt={post.image.alt} width={post.image.width} height={post.image.height} priority sizes="(min-width: 1024px) 64rem, 100vw" className="h-auto w-full" />
+              <Image src={post.image.src} alt={post.image.alt} width={post.image.width} height={post.image.height} preload sizes="(min-width: 1024px) 64rem, 100vw" className="h-auto w-full" />
             )}
           </div>
         </Reveal>
@@ -83,9 +83,9 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
             <h2 className="font-display text-title text-forest">More from the community</h2>
             <Link href="/blog" className="text-sm font-semibold text-leaf">All stories</Link>
           </div>
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
+          <div className={`mt-8 grid gap-5 ${others.length > 1 ? "md:grid-cols-2" : ""}`}>
             {others.map((p) => (
-              <PostCard key={p.slug} post={p} />
+              <PostCard key={p.slug} post={p} large={others.length === 1} />
             ))}
           </div>
         </section>

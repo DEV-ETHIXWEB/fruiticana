@@ -4,7 +4,6 @@ import { Reveal } from "@/components/motion/primitives";
 import { NearestStore } from "@/components/stores/NearestStore";
 import { Arrow } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { StoreConstellation } from "@/components/ui/StoreConstellation";
 import type { Flyer, Store } from "@/lib/content/types";
 
 /** The two signature boxes from the legacy homepage, green “Weekly Specials”, yellow “Find a location”. */
@@ -36,7 +35,7 @@ export function QuickActions({ flyers, stores }: { flyers: Flyer[]; stores: Stor
             <Link
               href={`/flyers?region=${lead.region}`}
               aria-label={`Open the ${lead.label} flyer`}
-              className="absolute top-8 right-[-3.5rem] hidden w-[15rem] rotate-[8deg] overflow-hidden rounded-xl shadow-[0_30px_60px_-15px_rgb(0_0_0/0.45)] ring-4 ring-white transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover/card:-translate-y-3 group-hover/card:rotate-[4deg] sm:block lg:right-[-2rem] xl:right-6"
+              className="absolute top-8 right-[-3.5rem] hidden w-[15rem] rotate-[8deg] overflow-hidden rounded-xl shadow-[0_30px_60px_-15px_rgb(0_0_0/0.45)] ring-4 ring-white transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover/card:-translate-y-3 group-hover/card:rotate-[4deg] sm:block lg:hidden xl:right-6 xl:block"
             >
               <Image src={lead.image.src} alt="" width={lead.image.width} height={lead.image.height} sizes="15rem" className="h-auto w-full" />
             </Link>
@@ -55,9 +54,7 @@ export function QuickActions({ flyers, stores }: { flyers: Flyer[]; stores: Stor
               <p className="mt-3 text-forest/75">{retail.length} stores across BC and Alberta. There’s sure to be a Fruiticana near you.</p>
             </div>
           </div>
-          <div className="pointer-events-none absolute top-6 right-0 hidden w-[52%] opacity-90 md:block lg:w-[48%]">
-            <StoreConstellation stores={stores} tone="light" width={320} labels={false} className="h-auto w-full" />
-          </div>
+          <div aria-hidden className="pointer-events-none absolute -right-6 -bottom-20 font-display text-[18rem] leading-none text-forest/[0.07] italic">{retail.length}</div>
           <div className="mt-auto space-y-4 pt-8">
             <NearestStore stores={retail} tone="dark" />
             <Link href="/storefinder" className="group/btn inline-flex items-center gap-2 text-sm font-semibold underline decoration-forest/30 underline-offset-4 hover:decoration-forest">

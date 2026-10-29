@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Parallax, Reveal, SplitHeading } from "@/components/motion/primitives";
+import { Reveal, SplitHeading, ZoomSettle } from "@/components/motion/primitives";
 import type { Img } from "@/lib/content/types";
 import { Breadcrumbs } from "./Breadcrumbs";
 
@@ -11,7 +11,7 @@ export function PageHero({
   image,
   crumbs,
   children,
-  imageClassName = "aspect-[16/7] sm:aspect-[16/6]",
+  imageClassName = "",
 }: {
   eyebrow?: string;
   title: string;
@@ -42,11 +42,12 @@ export function PageHero({
       {image && (
         <div className="container-x mt-12 lg:mt-16">
           <Reveal y={50}>
-            <Parallax amount={40} className={`relative overflow-hidden rounded-[var(--radius-card)] ${imageClassName}`}>
-              <div className="absolute -inset-y-12 inset-x-0">
-                <Image src={image.src} alt={image.alt} fill priority sizes="(min-width: 1408px) 1344px, 100vw" className="object-cover" quality={90} />
+            {/* Natural aspect ratio: banners with lettering are never cropped */}
+            <ZoomSettle className={`relative rounded-[var(--radius-card)] ${imageClassName}`}>
+              <div className="relative w-full" style={{ aspectRatio: `${image.width} / ${image.height}` }}>
+                <Image src={image.src} alt={image.alt} fill preload sizes="(min-width: 1408px) 1344px, 100vw" className="object-cover" quality={90} />
               </div>
-            </Parallax>
+            </ZoomSettle>
           </Reveal>
         </div>
       )}

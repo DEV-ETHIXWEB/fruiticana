@@ -39,18 +39,18 @@ export default async function OurCompanyPage() {
       </section>
 
       {/* Then & now */}
-      <section className="container-x grid gap-5 md:grid-cols-[1.15fr_1fr]">
+      <section className="container-x grid gap-5 md:grid-cols-[1.15fr_1fr] md:items-end">
         <Reveal>
           <figure>
             <ZoomSettle className="relative aspect-[989/660] rounded-[var(--radius-card)]">
-              <Image src={photos.firstStore.src} alt={photos.firstStore.alt} fill sizes="(min-width: 768px) 52vw, 100vw" className="object-cover" />
+              <Image src={photos.firstStore.src} alt={photos.firstStore.alt} fill preload sizes="(min-width: 768px) 52vw, 100vw" className="object-cover" />
             </ZoomSettle>
             <figcaption className="mt-3 flex justify-between text-sm text-muted">
               <span className="font-display text-base text-ink italic">The first Fruiticana</span> Surrey, 1994
             </figcaption>
           </figure>
         </Reveal>
-        <Reveal delay={0.1} className="md:pt-24">
+        <Reveal delay={0.1}>
           <figure>
             <ZoomSettle className="relative aspect-[990/511] rounded-[var(--radius-card)]">
               <Image src={photos.flagship.src} alt={photos.flagship.alt} fill sizes="(min-width: 768px) 45vw, 100vw" className="object-cover" />
@@ -62,12 +62,14 @@ export default async function OurCompanyPage() {
         </Reveal>
       </section>
 
-      <section className="container-x py-20 lg:py-28">
-        <div className="mx-auto max-w-[44rem]">
-          <Reveal>
-            <RichText value={rest} />
-          </Reveal>
-        </div>
+      <section className="container-x grid gap-8 py-20 lg:grid-cols-[1fr_1fr] lg:gap-24 lg:py-28">
+        <Reveal>
+          <p className="eyebrow text-leaf">How we grew</p>
+          <p className="mt-5 max-w-md font-display text-title text-forest">From a single store to one of Western Canada’s largest grocery chains.</p>
+        </Reveal>
+        <Reveal delay={0.05}>
+          <RichText value={rest} />
+        </Reveal>
       </section>
 
       {/* Timeline band */}

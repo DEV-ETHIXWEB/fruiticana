@@ -89,7 +89,7 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
               alt={flyer.image.alt}
               width={flyer.image.width}
               height={flyer.image.height}
-              priority
+              preload
               sizes="(min-width: 1024px) 56rem, 100vw"
               quality={90}
               className="h-auto w-full rounded-[1.35rem]"

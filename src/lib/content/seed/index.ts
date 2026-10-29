@@ -64,8 +64,8 @@ export const campaigns: CampaignBanner[] = [
   { id: "weekly", label: "Weekly Specials", href: "/flyers", image: img("/images/banners/weekly-specials.jpg", "Fruiticana Weekly Specials", 1800, 600) },
   { id: "quality", label: "Highest quality at lowest prices", href: "/commitment-to-quality", image: img("/images/banners/quality-lowest-prices.jpg", "Highest quality at lowest prices: apples, pomegranate, oranges, grapes and berries", 1800, 517) },
   { id: "farm", label: "Farm to Table", href: "/farm-to-table", image: img("/images/banners/farm-to-table.jpg", "Fruiticana Hee Jaana: Farm to Table", 1800, 517) },
-  { id: "spices", label: "Indican spices", href: "/indican", image: img("/images/banners/spices.png", "Indican spices", 1800, 517) },
-  { id: "lentils", label: "Indican lentils", href: "/indican", image: img("/images/banners/lentils.png", "Indican lentils", 1800, 517) },
+  { id: "spices", label: "India SaY organic spices", href: "/flyers", image: img("/images/banners/spices.png", "India SaY organic spices, in store at Fruiticana", 1800, 517) },
+  { id: "lentils", label: "India SaY organic lentils", href: "/flyers", image: img("/images/banners/lentils.png", "India SaY organic lentils and dals, in store at Fruiticana", 1800, 517) },
   { id: "locations", label: "Find a location", href: "/storefinder", image: img("/images/banners/locations.jpg", "Fruiticana locations across BC and Alberta", 1800, 517) },
   { id: "company", label: "Our company", href: "/our-company", image: img("/images/banners/our-company.jpg", "Fruiticana offers its customers the highest quality of fresh fruits, vegetables and spices, at the best price", 1800, 517) },
 ];
@@ -100,6 +100,7 @@ export const newsClip = {
   pageUrl: "https://globalnews.ca/video/2470244/surrey-businessman-offers-free-groceries-to-refugees/",
   // Set to a licensed MP4 (e.g. uploaded to Sanity) to play it muted on a loop.
   loopSrc: undefined as string | undefined,
+  poster: "/images/photos/welcoming-refugees.jpg",
 };
 
 /* YouTube refuses embeds for this id, link out instead of showing a broken player. */
@@ -241,7 +242,6 @@ export const pages: Record<string, Page> = {
     title: "In The Community",
     eyebrow: "In The Community",
     intro: "Fruiticana is an active member of the local community, committed to being a goodwill partner.",
-    heroImage: img("/images/banners/page-inthecommunity.jpg", "Fruiticana in the community", 1800, 600),
     seoTitle: "In The Community | Fruiticana",
     seoDescription: "Philanthropic initiatives, community events and contests. Stay up to date with the latest community initiatives from Fruiticana.",
     body: [

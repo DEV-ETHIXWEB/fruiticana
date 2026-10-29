@@ -32,7 +32,7 @@ export default async function FlyersPage() {
         <Suspense
           fallback={
             <div className="overflow-hidden rounded-[var(--radius-card)] bg-white p-3">
-              <Image src={flyers[0].image.src} alt={flyers[0].image.alt} width={flyers[0].image.width} height={flyers[0].image.height} priority sizes="(min-width: 1024px) 56rem, 100vw" className="h-auto w-full rounded-[1.35rem]" />
+              <Image src={flyers[0].image.src} alt={flyers[0].image.alt} width={flyers[0].image.width} height={flyers[0].image.height} preload sizes="(min-width: 1024px) 56rem, 100vw" className="h-auto w-full rounded-[1.35rem]" />
             </div>
           }
         >
@@ -60,8 +60,8 @@ export default async function FlyersPage() {
             <div className="grain relative overflow-hidden rounded-[var(--radius-card)] bg-forest p-6 text-cream">
               <div className="relative z-10">
                 <p className="font-display text-2xl">Get the flyer by email</p>
-                <p className="mt-2 mb-5 text-sm text-cream/65">Weekly Specials and event news, straight to your inbox.</p>
-                <NewsletterForm tone="dark" />
+                <p className="mt-2 mb-5 text-sm text-cream/70">Weekly Specials and event news, straight to your inbox.</p>
+                <NewsletterForm tone="dark" compact stacked />
               </div>
             </div>
           </Reveal>

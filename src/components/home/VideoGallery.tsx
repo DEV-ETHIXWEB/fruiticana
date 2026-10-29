@@ -8,6 +8,9 @@ import type { Video } from "@/lib/content/types";
 
 type Mode = "ambient" | "sound";
 
+/** YouTube hq/sd thumbnails are 4:3 with black bars baked in; zoom them to 16:9. */
+const letterbox = (p: Video["poster"]) => (p.width / p.height < 1.5 ? "scale-[1.34]" : "");
+
 /** YouTube only loops a single video when it is also passed as its own playlist. */
 const embedUrl = (id: string, mode: Mode) => {
   const q = new URLSearchParams({
@@ -50,7 +53,7 @@ export function VideoGallery({ videos, nonEmbeddable }: { videos: Video[]; nonEm
         {/* Poster always underneath: instant paint, and the fallback while the iframe boots */}
         <AnimatePresence mode="wait">
           <motion.div key={`p-${v.youtubeId}`} initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0">
-            <Image src={v.poster.src} alt={v.poster.alt} fill sizes="(min-width: 1024px) 62vw, 100vw" className="object-cover" />
+            <Image src={v.poster.src} alt={v.poster.alt} fill sizes="(min-width: 1024px) 62vw, 100vw" className={`object-cover ${letterbox(v.poster)}`} />
           </motion.div>
         </AnimatePresence>
 
@@ -60,8 +63,7 @@ export function VideoGallery({ videos, nonEmbeddable }: { videos: Video[]; nonEm
             className={`absolute inset-0 size-full ${mode === "ambient" ? "pointer-events-none scale-[1.02]" : ""}`}
             src={embedUrl(v.youtubeId, mode)}
             title={v.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture"
             tabIndex={mode === "ambient" ? -1 : 0}
             aria-hidden={mode === "ambient"}
           />
@@ -81,7 +83,7 @@ export function VideoGallery({ videos, nonEmbeddable }: { videos: Video[]; nonEm
                 <span className="sr-only">Play {v.title} with sound</span>
               </button>
             )}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-6 sm:p-8">
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden items-end justify-between gap-4 p-8 xl:flex">
               <div>
                 <p className="flex items-center gap-2 text-[0.7rem] font-semibold tracking-[0.2em] text-turmeric uppercase">
                   {showFrame && <span className="size-1.5 animate-pulse-dot rounded-full bg-chili text-chili" />}
@@ -94,6 +96,8 @@ export function VideoGallery({ videos, nonEmbeddable }: { videos: Video[]; nonEm
           </div>
         )}
       </div>
+
+      <p className="-mt-1 font-display text-xl leading-snug text-cream xl:hidden">{v.title}</p>
 
       <ul className="grid content-start gap-3 sm:grid-cols-3 lg:grid-cols-1" aria-label="More commercials">
         {videos.map((item, i) => (
@@ -108,7 +112,7 @@ export function VideoGallery({ videos, nonEmbeddable }: { videos: Video[]; nonEm
               className={`group flex w-full items-center gap-4 rounded-2xl p-2.5 text-left transition-colors ${i === active ? "bg-cream/10 ring-1 ring-cream/20" : "hover:bg-cream/5"}`}
             >
               <span className="relative aspect-video w-28 shrink-0 overflow-hidden rounded-xl">
-                <Image src={item.poster.src} alt="" fill sizes="7rem" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                <Image src={item.poster.src} alt="" fill sizes="7rem" className={`object-cover ${letterbox(item.poster)}`} />
                 {i === active && <span className="absolute inset-0 ring-2 ring-turmeric ring-inset" />}
               </span>
               <span className="min-w-0">

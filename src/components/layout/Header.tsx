@@ -92,7 +92,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
                 alt="Fruiticana, since 1994"
                 width={482}
                 height={118}
-                priority
+                preload
                 className={`h-auto transition-[width] duration-500 ${scrolled ? "w-[148px]" : "w-[164px] lg:w-[196px]"}`}
               />
             </Link>

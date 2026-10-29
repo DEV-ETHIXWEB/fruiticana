@@ -1,6 +1,7 @@
 "use client";
 
 import { useInView, useReducedMotion } from "motion/react";
+import Image from "next/image";
 import { useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 
@@ -30,7 +31,15 @@ export function NewsVideo({ clip }: { clip: NewsClip }) {
 
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-forest text-cream">
-      <div ref={ref} className="relative aspect-video bg-forest-deep">
+      <div ref={ref} className="relative aspect-video overflow-hidden bg-forest-deep">
+        {clip.poster && !clip.loopSrc && (
+          <>
+            <Image src={clip.poster} alt="" fill sizes="(min-width: 768px) 30vw, 100vw" className="scale-110 object-cover opacity-50 blur-[3px]" />
+            <span className="absolute inset-0 grid place-items-center">
+              <span className="size-8 animate-spin rounded-full border-2 border-cream/25 border-t-cream" />
+            </span>
+          </>
+        )}
         {clip.loopSrc ? (
           <>
             <video
@@ -57,7 +66,6 @@ export function NewsVideo({ clip }: { clip: NewsClip }) {
             src={clip.embedUrl}
             title={clip.title}
             allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-            allowFullScreen
             loading="lazy"
           />
         ) : null}

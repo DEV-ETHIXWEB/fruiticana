@@ -22,7 +22,7 @@ export default async function MangoesPage() {
       <section className="container-x grid gap-10 pt-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:pt-20">
         <Reveal y={50}>
           <ZoomSettle className="relative aspect-[495/660] rounded-[var(--radius-card)]">
-            <Image src={photos.rajanMangoes.src} alt={photos.rajanMangoes.alt} fill priority sizes="(min-width: 1024px) 36vw, 100vw" className="object-cover" />
+            <Image src={photos.rajanMangoes.src} alt={photos.rajanMangoes.alt} fill preload sizes="(min-width: 1024px) 36vw, 100vw" className="object-cover" />
           </ZoomSettle>
         </Reveal>
         <div className="lg:pt-10">
@@ -50,12 +50,12 @@ export default async function MangoesPage() {
         </p>
         <Stagger className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-5" gap={0.07}>
           {mangoBenefits.map((b, i) => (
-            <MotionItem key={b.title} className={`flex flex-col rounded-[var(--radius-card)] p-7 ${i % 2 ? "bg-turmeric/70" : "bg-mango/90 text-white"}`}>
+            <MotionItem key={b.title} className={`flex flex-col rounded-[var(--radius-card)] p-7 text-forest-deep ${i % 2 ? "bg-turmeric" : "bg-mango"}`}>
               <span className="text-xs font-semibold tracking-[0.18em] uppercase opacity-70">0{i + 1}</span>
               <h3 className="mt-6 font-display text-[1.75rem] leading-tight">{b.title}</h3>
               <p className="mt-1 font-display text-4xl italic">{b.stat}</p>
               <p className="text-xs uppercase opacity-70">{b.unit}</p>
-              <p className={`mt-6 text-sm ${i % 2 ? "text-forest/80" : "text-white/85"}`}>{b.body}</p>
+              <p className="mt-6 text-sm text-forest-deep/85">{b.body}</p>
             </MotionItem>
           ))}
         </Stagger>

@@ -4,6 +4,7 @@ import { PageHero } from "@/components/page/PageHero";
 import { RelatedLinks, relatedExcept } from "@/components/page/RelatedLinks";
 import { RichText } from "@/components/page/RichText";
 import { ButtonLink } from "@/components/ui/Button";
+import { Icon } from "@/components/ui/Icon";
 import { getPage, photos } from "@/lib/content";
 import { metaFromPage } from "@/lib/seo";
 
@@ -13,9 +14,9 @@ export async function generateMetadata() {
 }
 
 const range = [
-  { title: "Spices", body: "Aromatic, all-natural and exotic, handpicked by our experts.", image: { src: "/images/banners/spices.png", alt: "Indican spices, whole and ground", width: 1800, height: 517 } },
-  { title: "Lentils & dals", body: "The staples of every kitchen, packed to international standards.", image: { src: "/images/banners/lentils.png", alt: "Indican lentils and dals", width: 1800, height: 517 } },
-  { title: "Rice, sugar & juices", body: "Kheer rice, brown cane sugar, mango juice and more.", image: { src: "/images/banners/indican.jpg", alt: "Indican mango juice, kheer rice and brown cane sugar", width: 1800, height: 517 } },
+  { icon: "spark" as const, title: "Spices", body: "Aromatic, all-natural and exotic, handpicked by our experts." },
+  { icon: "leaf" as const, title: "Lentils & dals", body: "The staples of every kitchen, packed to international standards." },
+  { icon: "heart" as const, title: "Rice, sugar & juices", body: "Kheer rice, brown cane sugar, mango juice and more." },
 ];
 
 export default async function IndicanPage() {
@@ -52,14 +53,13 @@ export default async function IndicanPage() {
           <div className="mt-14 grid gap-5 md:grid-cols-3">
             {range.map((r, i) => (
               <Reveal key={r.title} delay={i * 0.08}>
-                <article className="h-full overflow-hidden rounded-[var(--radius-card)] bg-white text-ink">
-                  <div className="relative aspect-[16/9] overflow-hidden">
-                    <Image src={r.image.src} alt={r.image.alt} fill sizes="(min-width: 768px) 30vw, 100vw" className="object-cover object-left" />
-                  </div>
-                  <div className="p-7">
-                    <h3 className="font-display text-2xl">{r.title}</h3>
-                    <p className="mt-2 text-ink-soft">{r.body}</p>
-                  </div>
+                <article className="flex h-full flex-col rounded-[var(--radius-card)] bg-white p-8 text-ink">
+                  <span className="grid size-12 place-items-center rounded-full bg-chili text-white">
+                    <Icon name={r.icon} className="size-6" />
+                  </span>
+                  <span className="mt-8 text-[0.7rem] font-semibold tracking-[0.18em] text-chili uppercase">Indican</span>
+                  <h3 className="mt-1 font-display text-3xl">{r.title}</h3>
+                  <p className="mt-2 text-ink-soft">{r.body}</p>
                 </article>
               </Reveal>
             ))}

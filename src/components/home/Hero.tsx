@@ -76,9 +76,9 @@ export function Hero({ storeCount, produceFloor, firstStore, spiceAisle }: { sto
             initial={reduce ? false : { opacity: 0, scale: 0.94, clipPath: "inset(12% 12% 12% 12% round 2rem)" }}
             animate={{ opacity: 1, scale: 1, clipPath: "inset(0% 0% 0% 0% round 2rem)" }}
             transition={{ duration: 1.4, ease: EASE, delay: 0.1 }}
-            className="absolute top-0 right-0 h-[74%] w-[86%] overflow-hidden rounded-[2rem] shadow-[0_40px_90px_-30px_rgb(15_59_38/0.5)]"
+            className="absolute top-0 right-0 h-[70%] w-full overflow-hidden sm:h-[74%] sm:w-[86%] rounded-[2rem] shadow-[0_40px_90px_-30px_rgb(15_59_38/0.5)]"
           >
-            <Image src={produceFloor.src} alt={produceFloor.alt} fill priority sizes="(min-width: 1024px) 38vw, 86vw" className="object-cover" quality={90} />
+            <Image src={produceFloor.src} alt={produceFloor.alt} fill preload sizes="(min-width: 1024px) 38vw, 86vw" className="object-cover" quality={90} />
             <div className="absolute inset-0 bg-gradient-to-t from-forest/35 via-transparent to-transparent" />
           </motion.div>
 
@@ -87,10 +87,10 @@ export function Hero({ storeCount, produceFloor, firstStore, spiceAisle }: { sto
             initial={reduce ? false : { opacity: 0, y: 60, rotate: -9 }}
             animate={{ opacity: 1, y: 0, rotate: -5 }}
             transition={{ duration: 1.3, ease: EASE, delay: 0.45 }}
-            className="absolute bottom-[2%] left-0 w-[52%] rounded-2xl bg-white p-2.5 pb-3 shadow-[0_30px_60px_-20px_rgb(28_26_21/0.45)]"
+            className="absolute bottom-[1%] left-[2%] w-[50%] rounded-2xl sm:left-0 sm:w-[52%] bg-white p-2.5 pb-3 shadow-[0_30px_60px_-20px_rgb(28_26_21/0.45)]"
           >
             <div className="relative aspect-[989/660] overflow-hidden rounded-xl">
-              <Image src={firstStore.src} alt={firstStore.alt} fill sizes="(min-width: 1024px) 20vw, 50vw" className="object-cover grayscale-[0.15]" />
+              <Image src={firstStore.src} alt={firstStore.alt} fill preload sizes="(min-width: 1024px) 20vw, 50vw" className="object-cover grayscale-[0.15]" />
             </div>
             <figcaption className="mt-2.5 flex items-baseline justify-between px-1.5 font-display text-[0.95rem] text-ink">
               <span className="italic">Where it began</span>
@@ -105,7 +105,7 @@ export function Hero({ storeCount, produceFloor, firstStore, spiceAisle }: { sto
             transition={{ duration: 1.2, ease: EASE, delay: 0.7 }}
             className="absolute right-[6%] bottom-[-4%] hidden aspect-square w-[30%] overflow-hidden rounded-full ring-8 ring-cream sm:block"
           >
-            <Image src={spiceAisle.src} alt={spiceAisle.alt} fill sizes="12rem" className="scale-125 object-cover" />
+            <Image src={spiceAisle.src} alt={spiceAisle.alt} fill preload sizes="12rem" className="scale-125 object-cover" />
           </motion.div>
 
           {/* rotating seal */}
@@ -114,7 +114,7 @@ export function Hero({ storeCount, produceFloor, firstStore, spiceAisle }: { sto
             initial={reduce ? false : { opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: EASE, delay: 0.9 }}
-            className="absolute top-[56%] left-[40%] grid size-28 -translate-x-1/2 -translate-y-1/2 place-items-center sm:size-32"
+            className="absolute top-[58%] right-[6%] grid size-24 place-items-center sm:top-[56%] sm:right-auto sm:left-[40%] sm:size-32 sm:-translate-x-1/2 sm:-translate-y-1/2"
             aria-hidden
           >
             <svg viewBox="0 0 120 120" className="absolute inset-0 size-full animate-[spin_24s_linear_infinite]">
