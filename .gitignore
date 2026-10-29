@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+!.env.example
+
+# generated on postinstall
+/public/vendor/
+
+# QA output
+/qa-output/

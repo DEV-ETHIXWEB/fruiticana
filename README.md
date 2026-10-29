@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Fruiticana website
 
-## Getting Started
+The rebuild of [fruiticana.com](https://www.fruiticana.com): 25 South Asian grocery stores across BC and Alberta, since 1994.
 
-First, run the development server:
+Next.js 16 (App Router) · React 19 · Tailwind CSS 4 · Motion · Lenis · MapLibre · Sanity (headless CMS)
+
+## Quick start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install          # also copies the MapLibre worker into public/vendor
+npm run dev          # http://localhost:3000  (use -- -p 4317 if 3000 is taken)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The site runs with **no configuration**: every page, store, flyer and image from the legacy site is bundled as seed content in `src/lib/content/seed`. Connect Sanity when you're ready to edit content in a CMS.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Dev server |
+| `npm run build` / `npm start` | Production build / serve |
+| `npm run lint` · `npm run typecheck` | ESLint · TypeScript |
+| `npm run seed` | Imports all seed content and images into Sanity (idempotent) |
+| `npm run qa -- /path out 1440` | Full-page screenshot + console/network errors for one route |
+| `node scripts/qa-sweep.mjs / /flyers …` | Every route at 1440 + 390px: errors, overflow, h1, meta length, stray dashes |
+| `node scripts/qa-footer.mjs <dir>` | Footer screenshots at 4 breakpoints + WCAG contrast + link check |
 
-## Learn More
+QA scripts use Playwright (`npx playwright install chromium` once).
 
-To learn more about Next.js, take a look at the following resources:
+## Content (headless)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`src/lib/content/index.ts` is the only data API the pages use. Each getter queries Sanity and **falls back to the seed** if Sanity isn't configured, returns nothing, or errors, so the site is never blank.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+To enable the CMS:
 
-## Deploy on Vercel
+1. Create a project at sanity.io/manage and copy `.env.example` to `.env.local`.
+2. Set `NEXT_PUBLIC_SANITY_PROJECT_ID`, and `SANITY_API_WRITE_TOKEN` (Editor token).
+3. `npm run seed` to import everything.
+4. Edit at **/studio**: site settings, weekly flyers, homepage banners, stores, pages, community posts, events, commercials. Contact and newsletter submissions land in **Inbox** when the write token is set.
+5. Add a Sanity webhook to `POST /api/revalidate` (projection `{_type, "slug": slug.current}`, secret `SANITY_REVALIDATE_SECRET`) so edits go live instantly.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Weekly flyer swap: Studio → Weekly flyers → replace the image for the region. Newest flyer per region wins.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Forms
+
+`src/app/actions.ts`: Zod validation, honeypot, minimum fill time, per-IP throttle. Delivery goes to Resend (`RESEND_API_KEY` + `CONTACT_TO_EMAIL`) and/or the Sanity inbox. In production with neither configured the form shows an honest error (with the phone/email) instead of silently dropping messages.
+
+## SEO
+
+- Legacy URLs kept (`/storefinder`, `/flyers`, `/blog`, `/our-company`, `/indican`, …); changed or dead legacy paths 301 in `next.config.ts`.
+- Every store has its own page `/storefinder/[slug]` with `GroceryStore` JSON-LD (geo, hours, phone) for local search.
+- Organization, WebSite, BreadcrumbList, ItemList, NewsArticle and Event structured data.
+- `sitemap.xml`, `robots.txt`, generated Open Graph image, manifest, canonical URLs, titles ≤ 65 and descriptions ≤ 160 chars.
+
+## Notes
+
+- Store hours and open/closed status are computed in each store's own time zone (BC vs Alberta).
+- Map tiles: OpenFreeMap (free, no key). Postal-code search geocodes via `/api/geocode` (validated Canadian postal codes only, cached 24h).
+- Commercials play on a muted loop when in view; one YouTube video blocks embedding and links out. The Global News clip uses Global's official player, which can't loop; set `newsClip.loopSrc` to a licensed MP4 to loop it.
+- Images are served as AVIF/WebP at quality 90 up to 3840px. Many legacy photos are under 1000px wide; upload original high-res files in the Studio for sharper results.
+- House style: no em or en dashes in copy, code or comments.
+
+## Structure
+
+```
+src/app/(site)/        pages (legacy URL structure)
+src/app/api/           geocode, revalidate
+src/app/studio/        embedded Sanity Studio
+src/components/        layout, home, page, stores, flyers, forms, motion, ui
+src/lib/content/       types, seed data, Sanity-backed getters
+src/sanity/            client, env, schemas
+scripts/               seed + QA tooling
+```
