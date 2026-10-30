@@ -130,7 +130,7 @@ for (const [width, height] of viewports) {
         if (cv.measureText(inp.placeholder).width > room + 1) issues.push(`CLIP-placeholder "${inp.placeholder}" (${Math.round(room)}px room)`);
       }
       for (const img of sec.querySelectorAll("img, video, iframe")) {
-        if (!visible(img)) continue;
+        if (!visible(img) || img.closest("[data-qa=bleed]")) continue; // intentional full-bleed backgrounds
         const r = img.getBoundingClientRect();
         // measure the visible box (img inside overflow-hidden frame)
         const frame = img.closest(".overflow-hidden") ?? img;

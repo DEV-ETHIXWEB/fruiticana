@@ -47,7 +47,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <Hero storeCount={retail.length} produceFloor={photos.produceFloor} firstStore={photos.firstStore} spiceAisle={photos.spiceAisle} />
+      <Hero storeCount={retail.length} />
 
       <CampaignRail items={campaigns} />
 

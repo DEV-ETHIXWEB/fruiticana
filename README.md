@@ -65,6 +65,7 @@ Weekly flyer swap: Studio → Weekly flyers → replace the image for the region
 - Above-the-fold entrances are CSS animations (`.enter-*`, `.split-word` in `globals.css`), so the hero never waits for JavaScript and LCP stays fast. Scroll reveals use Motion.
 - Fonts are self-hosted via `next/font` with only the axes in use (Fraunces SOFT, Instrument Sans default). Minimum text size is 12px; colour tokens are tuned for WCAG AA.
 - `experimental.turbopackFileSystemCacheForBuild` is off: the persistent build cache shipped stale CSS after `@theme` token edits.
+- Homepage hero video lives in `public/video/`: an 11s seamless loop of two clips (crossfaded, mirrored so the subject sits right of the headline). Desktop 1280x720 and phone 544x960 crops, each in AV1 (served first) and H.264 (fallback), plus first-frame posters that are the LCP image. `HeroVideo` never plays for reduced-motion or Save-Data users, pauses off-screen, and has a pause control (WCAG 2.2.2). To replace it, keep the same file names and sizes.
 - House style: no em or en dashes in copy, code or comments.
 
 ## Structure

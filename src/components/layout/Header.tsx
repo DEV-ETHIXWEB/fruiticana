@@ -46,6 +46,9 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
   const isActive = (href: string, children?: readonly { href: string }[]) =>
     pathname === href || (href !== "/" && pathname.startsWith(href + "/")) || Boolean(children?.some((c) => pathname === c.href));
 
+  // Over the homepage video (top of page, nothing open) the header switches to light-on-dark.
+  const onDark = pathname === "/" && !scrolled && !open && !mobile;
+
   const enter = (label: string) => {
     clearTimeout(closeTimer.current);
     setOpen(label);
@@ -87,14 +90,21 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
         >
           <div className={`container-x flex items-center justify-between gap-6 transition-[height] duration-500 ${scrolled ? "h-[4.25rem]" : "h-20 lg:h-24"}`}>
             <Link href="/" className="relative shrink-0" aria-label="Fruiticana home">
-              <Image
-                src="/brand/logo.png"
-                alt="Fruiticana, since 1994"
-                width={482}
-                height={118}
-                preload
-                className={`h-auto transition-[width] duration-500 ${scrolled ? "w-[148px]" : "w-[164px] lg:w-[196px]"}`}
-              />
+              {onDark ? (
+                <span className="flex items-end gap-1.5">
+                  <Image src="/brand/wordmark-cream.png" alt="Fruiticana, since 1994" width={380} height={89} preload className="h-auto w-[128px] lg:w-[154px]" />
+                  <Image src="/brand/mark.png" alt="" width={118} height={118} preload className="mb-0.5 h-auto w-[32px] lg:w-[38px]" />
+                </span>
+              ) : (
+                <Image
+                  src="/brand/logo.png"
+                  alt="Fruiticana, since 1994"
+                  width={482}
+                  height={118}
+                  preload
+                  className={`h-auto transition-[width] duration-500 ${scrolled ? "w-[148px]" : "w-[164px] lg:w-[196px]"}`}
+                />
+              )}
             </Link>
 
             <nav aria-label="Primary" className="hidden xl:block">
@@ -106,7 +116,9 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
                     <li key={item.label} className="relative" onMouseEnter={() => children && enter(item.label)} onMouseLeave={() => children && leave()}>
                       <Link
                         href={item.href}
-                        className={`group relative flex items-center gap-1 rounded-full px-3 py-2 text-[0.9rem] font-medium whitespace-nowrap transition-colors ${active ? "text-forest" : "text-ink/75 hover:text-ink"}`}
+                        className={`group relative flex items-center gap-1 rounded-full px-3 py-2 text-[0.9rem] font-medium whitespace-nowrap transition-colors ${
+                          onDark ? (active ? "text-turmeric" : "text-cream/90 hover:text-white") : active ? "text-forest" : "text-ink/75 hover:text-ink"
+                        }`}
                         aria-expanded={children ? open === item.label : undefined}
                         onFocus={() => children && enter(item.label)}
                       >
@@ -170,7 +182,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
               </Link>
               <button
                 type="button"
-                className="relative grid size-11 place-items-center rounded-full bg-forest text-cream xl:hidden"
+                className={`relative grid size-11 place-items-center rounded-full text-cream transition-colors xl:hidden ${onDark ? "bg-cream/15 ring-1 ring-cream/30 backdrop-blur" : "bg-forest"}`}
                 aria-label={mobile ? "Close menu" : "Open menu"}
                 aria-expanded={mobile}
                 aria-controls="mobile-menu"
