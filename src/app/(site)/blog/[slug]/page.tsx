@@ -7,6 +7,7 @@ import { Breadcrumbs } from "@/components/page/Breadcrumbs";
 import { PostCard, dateFmt } from "@/components/page/PostCard";
 import { RichText } from "@/components/page/RichText";
 import { Icon } from "@/components/ui/Icon";
+import { ProductShot } from "@/components/ui/ProductShot";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { getPost, getPosts } from "@/lib/content";
 import { articleLd, pageMetadata } from "@/lib/seo";
@@ -44,7 +45,7 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
         <Reveal className="container-x mt-12 max-w-5xl">
           <div className={`relative overflow-hidden rounded-[var(--radius-card)] ${post.image.width < 400 ? "aspect-[16/7] bg-white ring-1 ring-ink/[0.06]" : "bg-paper"}`}>
             {post.image.width < 400 ? (
-              <Image src={post.image.src} alt={post.image.alt} fill preload sizes="64rem" className="object-contain p-10" />
+              <ProductShot image={post.image} preload />
             ) : (
               <Image src={post.image.src} alt={post.image.alt} width={post.image.width} height={post.image.height} preload sizes="(min-width: 1024px) 64rem, 100vw" className="h-auto w-full" />
             )}

@@ -9,12 +9,12 @@ const img = (src: string, alt: string, width: number, height: number): Img => ({
 /* ------------------------------------------------------------------ */
 export const photos = {
   firstStore: img("/images/photos/first-store-1994.jpg", "The first Fruiticana store in Surrey, BC, with a “Now Open, Fresh Fruit & Vegetables” banner, 1994", 989, 660),
-  flagship: img("/images/photos/flagship-scott-road.jpg", "Fruiticana’s flagship store on Scott Road in Surrey on its opening day", 990, 511),
-  produceFloor: img("/images/photos/store-produce-floor.jpg", "Overhead view of a busy Fruiticana produce floor stocked with fresh fruits and vegetables", 800, 534),
+  flagship: img("/images/photos/flagship-scott-road.jpg", "Fruiticana’s flagship store on Scott Road in Surrey on its opening day", 2000, 1032),
+  produceFloor: img("/images/photos/store-produce-floor.jpg", "Overhead view of a busy Fruiticana produce floor stocked with fresh fruits and vegetables", 2000, 1335),
   spiceAisle: img("/images/photos/indican-spice-aisle.jpg", "A wall of Indican spice packets on a Fruiticana aisle", 990, 556),
-  rajanMangoes: img("/images/photos/rajan-mangoes.jpg", "Boxes of ripe Rajan mangoes, exclusive to Fruiticana", 495, 660),
+  rajanMangoes: img("/images/photos/rajan-mangoes.jpg", "Boxes of ripe Rajan mangoes, exclusive to Fruiticana", 1980, 2640),
   mangoCurry: img("/images/photos/mango-curry.jpg", "A brass pot of mango kadhi garnished with curry leaves and chili", 990, 660),
-  mangoLassi: img("/images/photos/mango-lassi.jpg", "A glass of mango lassi with fresh-cut mango, yogurt and honey", 990, 660),
+  mangoLassi: img("/images/photos/mango-lassi.jpg", "A glass of mango lassi with fresh-cut mango, yogurt and honey", 2000, 1333),
   president: img("/images/photos/tony-singh.jpg", "Tony Singh, President and CEO of Fruiticana", 131, 130),
   miracleWeekend: img("/images/photos/bcch-miracle-weekend-2016.jpg", "Nikhita Singh presenting Fruiticana’s donation cheque on the BC Children’s Hospital Miracle Weekend broadcast", 990, 469),
   anesthesiaMonitor: img("/images/photos/anesthesia-monitor.png", "Anesthesia monitor for BC Children’s Hospital", 311, 350),

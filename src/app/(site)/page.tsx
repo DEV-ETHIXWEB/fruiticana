@@ -8,6 +8,7 @@ import { NewsVideo } from "@/components/home/NewsVideo";
 import { VideoGallery } from "@/components/home/VideoGallery";
 import { Counter, Reveal, SplitHeading } from "@/components/motion/primitives";
 import { Arrow, ButtonLink } from "@/components/ui/Button";
+import { isSmallImage, ProductShot } from "@/components/ui/ProductShot";
 import {
   getCampaigns,
   getFlyers,
@@ -220,7 +221,11 @@ export default async function HomePage() {
               <Link href={`/blog/${post.slug}`} className="group/btn flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-white ring-1 ring-ink/[0.06] transition-shadow hover:shadow-[0_30px_60px_-30px_rgb(15_59_38/0.35)]">
                 {post.image && (
                   <div className={`relative aspect-[16/9] overflow-hidden lg:aspect-[2/1] ${post.image.width < 400 ? "bg-white" : "bg-paper"}`}>
-                    <Image src={post.image.src} alt={post.image.alt} fill sizes="(min-width: 768px) 30vw, 82vw" className={`transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover/btn:scale-105 ${post.image.width < 400 ? "object-contain p-5" : "object-cover"}`} />
+                    {isSmallImage(post.image) ? (
+                      <ProductShot image={post.image} />
+                    ) : (
+                      <Image src={post.image.src} alt={post.image.alt} fill sizes="(min-width: 768px) 30vw, 82vw" className="object-cover transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover/btn:scale-105" />
+                    )}
                   </div>
                 )}
                 <div className="flex flex-1 flex-col p-5 xl:p-6">

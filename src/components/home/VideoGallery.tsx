@@ -33,8 +33,10 @@ const embedUrl = (id: string, mode: Mode) => {
  * owners block embedding open on YouTube instead of showing a broken frame.
  */
 export function VideoGallery({ videos, nonEmbeddable, intro }: { videos: Video[]; nonEmbeddable: string[]; intro?: ReactNode }) {
-  const firstEmbeddable = Math.max(0, videos.findIndex((v) => !nonEmbeddable.includes(v.youtubeId)));
-  const [active, setActive] = useState(firstEmbeddable);
+  // Lead with the embeddable commercial that has the sharpest poster (YouTube only
+  // publishes a 480px thumbnail for some uploads).
+  const lead = videos.reduce((best, v, i) => (!nonEmbeddable.includes(v.youtubeId) && (best < 0 || v.poster.width > videos[best].poster.width) ? i : best), -1);
+  const [active, setActive] = useState(Math.max(0, lead));
   const [mode, setMode] = useState<Mode>("ambient");
   const frame = useRef<HTMLDivElement>(null);
   const inView = useInView(frame, { margin: "0px 0px -20% 0px" });

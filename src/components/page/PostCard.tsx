@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Arrow } from "@/components/ui/Button";
+import { isSmallImage, ProductShot } from "@/components/ui/ProductShot";
 import type { Post } from "@/lib/content/types";
 
 export const dateFmt = new Intl.DateTimeFormat("en-CA", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
@@ -13,14 +14,18 @@ export function PostCard({ post, large = false, eager = false }: { post: Post; l
     >
       {post.image && (
         <div className={`relative overflow-hidden ${post.image.width < 400 ? "bg-white" : "bg-paper"} ${large ? "aspect-[16/10] md:aspect-auto md:min-h-[24rem]" : "aspect-[16/10]"}`}>
-          <Image
-            src={post.image.src}
-            alt={post.image.alt}
-            fill
-            preload={large || eager}
-            sizes={large ? "(min-width: 768px) 55vw, 100vw" : "(min-width: 768px) 45vw, 100vw"}
-            className={`transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover/btn:scale-105 ${post.image.width < 400 ? "object-contain p-8" : "object-cover"}`}
-          />
+          {isSmallImage(post.image) ? (
+            <ProductShot image={post.image} preload={large || eager} />
+          ) : (
+            <Image
+              src={post.image.src}
+              alt={post.image.alt}
+              fill
+              preload={large || eager}
+              sizes={large ? "(min-width: 768px) 55vw, 100vw" : "(min-width: 768px) 45vw, 100vw"}
+              className="object-cover transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover/btn:scale-105"
+            />
+          )}
         </div>
       )}
       <div className={`flex flex-col ${large ? "p-8 sm:p-12" : "p-7"}`}>
