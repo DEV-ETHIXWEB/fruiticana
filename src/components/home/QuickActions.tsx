@@ -23,7 +23,7 @@ export function QuickActions({ flyers, stores }: { flyers: Flyer[]; stores: Stor
           <ul className="relative z-10 mt-auto flex flex-wrap gap-2 pt-6 sm:max-w-[60%] sm:pt-8 lg:max-w-none xl:max-w-[60%]">
             {flyers.map((f) => (
               <li key={f.region}>
-                <Link href={`/flyers?region=${f.region}`} className="group/btn inline-flex items-center gap-2 rounded-full bg-white/12 px-4 py-2.5 text-sm font-semibold ring-1 ring-white/25 backdrop-blur transition hover:bg-white hover:text-leaf">
+                <Link href={`/flyers?region=${f.region}`} className="group/btn inline-flex items-center gap-2 btn-glass btn-glass-dark rounded-full px-4 py-2.5 text-sm font-semibold hover:bg-white hover:text-leaf">
                   {f.label} <Arrow />
                 </Link>
               </li>

@@ -170,13 +170,13 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
               {/* The two red / green header buttons from the original site, kept on purpose. */}
               <Link
                 href="/storefinder"
-                className="hidden items-center gap-2 rounded-full bg-chili px-4 py-2.5 text-[0.82rem] font-semibold tracking-wide text-white uppercase transition-colors hover:bg-chili-deep sm:inline-flex"
+                className="hidden items-center gap-2 btn-3d btn-chili rounded-full bg-chili px-4 py-2.5 text-[0.82rem] font-semibold tracking-wide text-white uppercase hover:bg-chili-deep sm:inline-flex"
               >
                 <Icon name="pin" className="size-4" strokeWidth={2} /> Locations
               </Link>
               <Link
                 href="/flyers"
-                className="hidden items-center gap-2 rounded-full bg-leaf px-4 py-2.5 text-[0.82rem] font-semibold tracking-wide text-white uppercase transition-colors hover:bg-forest sm:inline-flex"
+                className="hidden items-center gap-2 btn-3d btn-leaf rounded-full bg-leaf px-4 py-2.5 text-[0.82rem] font-semibold tracking-wide text-white uppercase hover:bg-forest sm:inline-flex"
               >
                 <Icon name="flyer" className="size-4" strokeWidth={2} /> <span className="hidden 2xl:inline">Weekly</span> Specials
               </Link>
@@ -228,10 +228,10 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
                 ))}
               </ul>
               <motion.div className="mt-8 grid grid-cols-2 gap-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-                <Link href="/storefinder" className="flex items-center justify-center gap-2 rounded-full bg-chili py-3.5 text-sm font-semibold uppercase">
+                <Link href="/storefinder" className="flex items-center justify-center btn-3d btn-chili gap-2 rounded-full bg-chili py-3.5 text-sm font-semibold uppercase">
                   <Icon name="pin" className="size-4" /> Locations
                 </Link>
-                <Link href="/flyers" className="flex items-center justify-center gap-2 rounded-full bg-turmeric py-3.5 text-sm font-semibold text-forest uppercase">
+                <Link href="/flyers" className="flex items-center justify-center btn-3d btn-turmeric gap-2 rounded-full bg-turmeric py-3.5 text-sm font-semibold text-forest uppercase">
                   <Icon name="flyer" className="size-4" /> Specials
                 </Link>
                 <a href={`tel:+1${phone.replace(/\D/g, "")}`} className="col-span-2 mt-2 text-center text-sm text-cream/60">

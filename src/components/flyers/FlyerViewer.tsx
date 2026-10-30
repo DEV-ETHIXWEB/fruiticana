@@ -66,10 +66,10 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
             <p className="text-sm text-muted">{validity ?? "This week’s specials"}</p>
           </div>
           <div className="flex gap-2">
-            <button type="button" onClick={() => setZoomed(true)} className="inline-flex items-center gap-2 rounded-full bg-forest px-5 py-3 text-sm font-semibold text-cream transition-colors hover:bg-forest-deep">
+            <button type="button" onClick={() => setZoomed(true)} className="inline-flex items-center btn-3d btn-forest gap-2 rounded-full bg-forest px-5 py-3 text-sm font-semibold text-cream hover:bg-forest-deep">
               <Icon name="zoomIn" className="size-4" /> Zoom
             </button>
-            <a href={flyer.image.src} download className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ring-1 ring-ink/15 transition hover:ring-ink/40">
+            <a href={flyer.image.src} download className="inline-flex items-center btn-glass gap-2 rounded-full px-5 py-3 text-sm font-semibold">
               <Icon name="download" className="size-4" /> Save
             </a>
           </div>

@@ -63,7 +63,7 @@ export function NearestStore({ stores, tone = "dark" }: { stores: Store[]; tone?
               type="button"
               onClick={locate}
               disabled={state.kind === "locating"}
-              className={`inline-flex items-center gap-2.5 rounded-full px-5 py-3.5 text-sm font-semibold transition-colors ${dark ? "bg-forest text-cream hover:bg-forest-deep" : "bg-white text-forest hover:bg-cream"}`}
+              className={`inline-flex items-center gap-2.5 rounded-full px-5 py-3.5 text-sm font-semibold ${dark ? "btn-3d btn-forest bg-forest text-cream hover:bg-forest-deep" : "btn-3d btn-cream bg-white text-forest hover:bg-cream"}`}
             >
               {state.kind === "locating" ? <span className="size-4 animate-spin rounded-full border-2 border-current/30 border-t-current" /> : <Icon name="locate" className="size-4" strokeWidth={2} />}
               {state.kind === "locating" ? "Finding the closest store…" : "Use my location"}

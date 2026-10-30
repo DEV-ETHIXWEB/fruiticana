@@ -21,8 +21,9 @@ export function PageHero({
   children?: React.ReactNode;
   imageClassName?: string;
 }) {
+  // Without a photo the title is the last thing in this clipped section: the bottom padding keeps its descenders visible.
   return (
-    <section className="relative overflow-hidden pt-28 lg:pt-36">
+    <section className={`relative overflow-hidden pt-28 lg:pt-36 ${image ? "" : "pb-6"}`}>
       <div aria-hidden className="pointer-events-none absolute -top-48 right-[-12%] size-[40rem] rounded-full bg-[radial-gradient(circle,rgb(246_210_28/0.28),transparent_65%)] blur-2xl" />
       <div className="container-x relative">
         <Breadcrumbs items={crumbs} />

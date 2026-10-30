@@ -123,7 +123,7 @@ export function HeroVideo({ desktopPoster, mobilePoster, alt }: { desktopPoster:
         <button
           type="button"
           onClick={toggle}
-          className="absolute top-[5.75rem] right-5 z-10 grid size-10 md:top-auto md:bottom-5 place-items-center rounded-full bg-cream/15 text-cream ring-1 ring-cream/30 backdrop-blur transition-colors hover:bg-cream/25 sm:right-8 lg:right-12"
+          className="absolute top-[5.75rem] right-5 z-10 grid size-10 md:top-auto md:bottom-5 place-items-center rounded-full btn-glass btn-glass-dark text-cream sm:right-8 lg:right-12"
           aria-label={playing ? "Pause background video" : "Play background video"}
         >
           {playing ? (

@@ -65,10 +65,10 @@ export function CampaignRail({ items }: { items: CampaignBanner[] }) {
           <h2 className="mt-3 font-display text-title text-forest">What’s fresh at Fruiticana</h2>
         </div>
         <div className="flex gap-2">
-          <button type="button" onClick={() => go(index - 1, -1)} className="grid size-12 place-items-center rounded-full ring-1 ring-ink/15 transition hover:bg-forest hover:text-cream hover:ring-forest" aria-label="Previous banner">
+          <button type="button" onClick={() => go(index - 1, -1)} className="btn-glass grid size-12 place-items-center rounded-full text-forest" aria-label="Previous banner">
             <Icon name="chevron" className="size-5 rotate-180" strokeWidth={2} />
           </button>
-          <button type="button" onClick={() => go(index + 1, 1)} className="grid size-12 place-items-center rounded-full ring-1 ring-ink/15 transition hover:bg-forest hover:text-cream hover:ring-forest" aria-label="Next banner">
+          <button type="button" onClick={() => go(index + 1, 1)} className="btn-glass grid size-12 place-items-center rounded-full text-forest" aria-label="Next banner">
             <Icon name="chevron" className="size-5" strokeWidth={2} />
           </button>
         </div>

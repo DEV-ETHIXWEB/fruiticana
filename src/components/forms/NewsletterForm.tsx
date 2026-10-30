@@ -55,7 +55,7 @@ export function NewsletterForm({ tone = "dark", compact = false, stacked = false
               <button
                 type="submit"
                 disabled={pending}
-                className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-chili ${compact ? "px-4 py-2.5" : "px-5 py-3"} text-sm font-semibold text-white transition-colors hover:bg-chili-deep disabled:opacity-70`}
+                className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-full btn-3d btn-chili bg-chili ${compact ? "px-4 py-2.5" : "px-5 py-3"} text-sm font-semibold text-white hover:bg-chili-deep disabled:opacity-70`}
               >
                 {pending ? <span className="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white" /> : "Subscribe"}
               </button>

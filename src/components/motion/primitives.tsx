@@ -94,8 +94,10 @@ export function SplitHeading({
       if (/^\s+$/.test(tok)) return " ";
       const accent = tok.startsWith("*") && tok.endsWith("*");
       const word = accent ? tok.slice(1, -1) : tok;
+      // The mask is padded past the line box (and cancelled with negative margins, so layout is
+      // unchanged): italic overhangs and descenders (the tail of a y, g, p) would otherwise be clipped.
       return (
-        <span key={idx} className="inline-block overflow-hidden pb-[0.08em] -mb-[0.08em] align-bottom">
+        <span key={idx} className="-mx-[0.12em] -mt-[0.2em] -mb-[0.28em] inline-block overflow-hidden px-[0.12em] pt-[0.2em] pb-[0.28em] align-bottom">
           {render(word, accent, i++, idx)}
         </span>
       );
@@ -125,7 +127,7 @@ export function SplitHeading({
         {words((word, accent) => (
           <motion.span
             className={`inline-block will-change-transform ${accent ? accentClassName : ""}`}
-            variants={{ hidden: { y: "105%", rotate: 4 }, show: { y: "0%", rotate: 0, transition: { duration: 1, ease: EASE } } }}
+            variants={{ hidden: { y: "150%", rotate: 4 }, show: { y: "0%", rotate: 0, transition: { duration: 1, ease: EASE } } }}
           >
             {word}
           </motion.span>

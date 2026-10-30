@@ -229,11 +229,11 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
           </div>
           <div className="flex gap-2">
             {POSTAL_RE.test(query.trim()) && (
-              <button type="submit" disabled={busy} className="rounded-full bg-chili px-5 py-3 text-sm font-semibold text-white hover:bg-chili-deep">
+              <button type="submit" disabled={busy} className="btn-3d btn-chili rounded-full bg-chili px-5 py-3 text-sm font-semibold text-white hover:bg-chili-deep">
                 Find nearby
               </button>
             )}
-            <button type="button" onClick={locate} disabled={busy} className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-forest px-5 py-3 text-sm font-semibold text-cream hover:bg-forest-deep md:flex-none">
+            <button type="button" onClick={locate} disabled={busy} className="inline-flex flex-1 items-center justify-center btn-3d btn-forest gap-2 rounded-full bg-forest px-5 py-3 text-sm font-semibold text-cream hover:bg-forest-deep md:flex-none">
               {busy ? <span className="size-4 animate-spin rounded-full border-2 border-cream/30 border-t-cream" /> : <Icon name="locate" className="size-4" strokeWidth={2} />}
               Near me
             </button>
