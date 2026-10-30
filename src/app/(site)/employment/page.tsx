@@ -17,7 +17,7 @@ export default async function Page() {
       parent={{ name: "Our Company", path: "/our-company" }}
       facts={[
         { icon: "heart", title: "Customer-first", body: "We look for people passionate about serving customers." },
-        { icon: "spark", title: "Positive & energetic", body: "You enjoy a fast-paced environment focused on customers’ needs." },
+        { icon: "sparkle", title: "Positive & energetic", body: "You enjoy a fast-paced environment focused on customers’ needs." },
       ]}
       aside={
         <div className="rounded-2xl bg-forest p-6 text-cream">

@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useActionState, useState } from "react";
 import { sendContact, type FormState } from "@/app/actions";
 import { Button } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
+import { Icon3D } from "@/components/ui/Icon3D";
 
 const topics = ["General", "Store feedback", "Product request", "Careers", "Media & partnerships"] as const;
 
@@ -38,9 +38,7 @@ export function ContactForm({ stores }: { stores: string[] }) {
   if (state.status === "success") {
     return (
       <motion.div role="status" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="grid place-items-center rounded-[var(--radius-card)] bg-leaf p-12 text-center text-white">
-        <span className="grid size-16 place-items-center rounded-full bg-turmeric text-forest">
-          <Icon name="check" className="size-8" strokeWidth={2.4} />
-        </span>
+        <Icon3D name="check" className="size-20" />
         <p className="mt-6 font-display text-3xl">Message sent</p>
         <p className="mt-3 max-w-sm text-white/80">{state.message}</p>
       </motion.div>

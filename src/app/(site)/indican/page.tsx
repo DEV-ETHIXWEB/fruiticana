@@ -4,7 +4,7 @@ import { PageHero } from "@/components/page/PageHero";
 import { RelatedLinks, relatedExcept } from "@/components/page/RelatedLinks";
 import { RichText } from "@/components/page/RichText";
 import { ButtonLink } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
+import { Icon3D } from "@/components/ui/Icon3D";
 import { getPage, photos } from "@/lib/content";
 import { metaFromPage } from "@/lib/seo";
 
@@ -14,9 +14,9 @@ export async function generateMetadata() {
 }
 
 const range = [
-  { icon: "spark" as const, title: "Spices", body: "Aromatic, all-natural and exotic, handpicked by our experts." },
-  { icon: "leaf" as const, title: "Lentils & dals", body: "The staples of every kitchen, packed to international standards." },
-  { icon: "heart" as const, title: "Rice, sugar & juices", body: "Kheer rice, brown cane sugar, mango juice and more." },
+  { icon: "chili" as const, title: "Spices", body: "Aromatic, all-natural and exotic, handpicked by our experts." },
+  { icon: "bowl" as const, title: "Lentils & dals", body: "The staples of every kitchen, packed to international standards." },
+  { icon: "bottle" as const, title: "Rice, sugar & juices", body: "Kheer rice, brown cane sugar, mango juice and more." },
 ];
 
 export default async function IndicanPage() {
@@ -54,10 +54,8 @@ export default async function IndicanPage() {
             {range.map((r, i) => (
               <Reveal key={r.title} delay={i * 0.08}>
                 <article className="flex h-full flex-col rounded-[var(--radius-card)] bg-white p-8 text-ink">
-                  <span className="grid size-12 place-items-center rounded-full bg-chili text-white">
-                    <Icon name={r.icon} className="size-6" />
-                  </span>
-                  <span className="mt-8 text-[0.75rem] font-semibold tracking-[0.18em] text-chili-deep uppercase">Indican</span>
+                  <Icon3D name={r.icon} className="size-20 -ml-2" />
+                  <span className="mt-6 text-[0.75rem] font-semibold tracking-[0.18em] text-chili-deep uppercase">Indican</span>
                   <h3 className="mt-1 font-display text-3xl">{r.title}</h3>
                   <p className="mt-2 text-ink-soft">{r.body}</p>
                 </article>

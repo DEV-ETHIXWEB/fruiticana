@@ -8,6 +8,7 @@ import { OpenBadge } from "@/components/stores/NearestStore";
 import { StoreMap } from "@/components/stores/StoreMap";
 import { Arrow, ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { Icon3D } from "@/components/ui/Icon3D";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { getFlyers, getStore, getStores } from "@/lib/content";
 import { distanceKm, formatKm } from "@/lib/geo";
@@ -35,8 +36,8 @@ export async function generateMetadata({ params }: PageProps<"/storefinder/[slug
 
 const aisles = [
   { icon: "leaf" as const, title: "Fresh produce daily", body: "Local farm fruit and vegetables alongside okra, guava, sugarcane and more." },
-  { icon: "spark" as const, title: "Indican spices & dals", body: "Our own brand, available exclusively at Fruiticana." },
-  { icon: "heart" as const, title: "Rajan mangoes", body: "Our signature mango, in season from March through summer." },
+  { icon: "chili" as const, title: "Indican spices & dals", body: "Our own brand, available exclusively at Fruiticana." },
+  { icon: "mango" as const, title: "Rajan mangoes", body: "Our signature mango, in season from March through summer." },
 ];
 
 export default async function StorePage({ params }: PageProps<"/storefinder/[slug]">) {
@@ -131,9 +132,7 @@ export default async function StorePage({ params }: PageProps<"/storefinder/[slu
               {aisles.map((a, i) => (
                 <Reveal key={a.title} delay={i * 0.07} className="h-full">
                   <div className="h-full rounded-[var(--radius-card)] bg-paper/70 p-6">
-                    <span className="grid size-11 place-items-center rounded-full bg-leaf text-white">
-                      <Icon name={a.icon} className="size-5" />
-                    </span>
+                    <Icon3D name={a.icon} className="size-14 -ml-1" />
                     <p className="mt-5 font-semibold text-ink">{a.title}</p>
                     <p className="mt-1.5 text-sm text-ink-soft">{a.body}</p>
                   </div>

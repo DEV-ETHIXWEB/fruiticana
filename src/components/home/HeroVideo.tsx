@@ -11,8 +11,9 @@ type Poster = { srcSet?: string; src: string };
  *  - The poster (first frame) is a real <picture> rendered on the server, so it
  *    paints immediately and is the page's LCP; the video fades in only once it
  *    is actually playing.
- *  - Sources are chosen by the browser: AV1 where supported (≈60% smaller),
- *    H.264 otherwise; a vertical crop for phones.
+ *  - 1080p, 48fps (motion-interpolated from AI-upscaled 24fps frames), 10-bit
+ *    so the warm gradients never band. The browser picks AV1 where supported,
+ *    HEVC on Safari, H.264 otherwise; a vertical crop for phones.
  *  - Never plays for reduced-motion or Save-Data users; pauses when scrolled
  *    away or the tab is hidden; a visible pause control satisfies WCAG 2.2.2.
  */
@@ -105,10 +106,12 @@ export function HeroVideo({ desktopPoster, mobilePoster, alt }: { desktopPoster:
           onPause={() => setPlaying(false)}
           className={`absolute inset-0 size-full object-cover transition-opacity duration-1000 ${playing ? "opacity-100" : "opacity-0"}`}
         >
-          <source media="(max-width: 767px)" src="/video/hero-loop-mobile.av1.mp4" type='video/mp4; codecs="av01.0.04M.08"' />
+          <source media="(max-width: 767px)" src="/video/hero-loop-mobile.av1.mp4" type='video/mp4; codecs="av01.0.05M.10"' />
+          <source media="(max-width: 767px)" src="/video/hero-loop-mobile.hevc.mp4" type='video/mp4; codecs="hvc1.2.4.L120.B0"' />
           <source media="(max-width: 767px)" src="/video/hero-loop-mobile.mp4" type='video/mp4; codecs="avc1.640028"' />
-          <source src="/video/hero-loop.av1.mp4" type='video/mp4; codecs="av01.0.05M.08"' />
-          <source src="/video/hero-loop.mp4" type='video/mp4; codecs="avc1.640028"' />
+          <source src="/video/hero-loop.av1.mp4" type='video/mp4; codecs="av01.0.09M.10"' />
+          <source src="/video/hero-loop.hevc.mp4" type='video/mp4; codecs="hvc1.2.4.L123.B0"' />
+          <source src="/video/hero-loop.mp4" type='video/mp4; codecs="avc1.640020"' />
         </video>
       </motion.div>
 

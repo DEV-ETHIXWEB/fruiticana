@@ -1,11 +1,11 @@
 import { Reveal } from "@/components/motion/primitives";
-import { Icon, type IconName } from "@/components/ui/Icon";
+import { Icon3D, type Icon3DName } from "@/components/ui/Icon3D";
 import type { Page } from "@/lib/content/types";
 import { PageHero } from "./PageHero";
 import { RelatedLinks, relatedExcept } from "./RelatedLinks";
 import { RichText } from "./RichText";
 
-export type Fact = { icon: IconName; title: string; body: string };
+export type Fact = { icon: Icon3DName; title: string; body: string };
 
 /** Standard long-form page: hero → copy with a fact rail → related links. */
 export function ContentPage({
@@ -35,9 +35,7 @@ export function ContentPage({
           {facts.map((f, i) => (
             <Reveal key={f.title} delay={0.1 + i * 0.07}>
               <div className="flex gap-4 rounded-2xl bg-paper/70 p-5">
-                <span className="grid size-11 shrink-0 place-items-center rounded-full bg-leaf text-white">
-                  <Icon name={f.icon} className="size-5" />
-                </span>
+                <Icon3D name={f.icon} className="size-12" />
                 <div>
                   <p className="font-semibold text-ink">{f.title}</p>
                   <p className="mt-1 text-sm text-ink-soft">{f.body}</p>

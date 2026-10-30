@@ -13,8 +13,8 @@ const POSTER_ALT = "Dew-covered mangoes, okra, guava and sugarcane in warm morni
  */
 export function Hero({ storeCount }: { storeCount: number }) {
   // Art-directed poster: a vertical crop on phones, the wide frame elsewhere.
-  const { props: desktop } = getImageProps({ src: "/video/hero-poster.jpg", alt: POSTER_ALT, width: 1280, height: 720, sizes: "100vw" });
-  const { props: mobile } = getImageProps({ src: "/video/hero-poster-mobile.jpg", alt: POSTER_ALT, width: 544, height: 960, sizes: "100vw" });
+  const { props: desktop } = getImageProps({ src: "/video/hero-poster.jpg", alt: POSTER_ALT, width: 1920, height: 1080, sizes: "100vw" });
+  const { props: mobile } = getImageProps({ src: "/video/hero-poster-mobile.jpg", alt: POSTER_ALT, width: 544, height: 966, sizes: "100vw" });
 
   return (
     <section className="relative flex h-[100svh] max-h-[68rem] min-h-[36rem] flex-col">

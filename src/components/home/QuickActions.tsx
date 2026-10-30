@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Reveal } from "@/components/motion/primitives";
 import { NearestStore } from "@/components/stores/NearestStore";
 import { Arrow } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
+import { Icon3D } from "@/components/ui/Icon3D";
 import type { Flyer, Store } from "@/lib/content/types";
 
 /** The two signature boxes from the legacy homepage, green “Weekly Specials”, yellow “Find a location”. */
@@ -16,9 +16,7 @@ export function QuickActions({ flyers, stores }: { flyers: Flyer[]; stores: Stor
         <div className="grain group/card relative isolate flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-leaf p-7 text-white sm:min-h-[24rem] sm:p-10 lg:min-h-[clamp(22rem,calc(100svh-22rem),27rem)]">
           <div aria-hidden className="absolute -right-16 -bottom-24 -z-10 font-display text-[18rem] leading-none text-white/[0.07] italic">99¢</div>
           <div className="relative z-10 max-w-[19rem] sm:max-w-[56%] lg:max-w-[19rem] xl:max-w-[56%]">
-            <span className="hidden size-12 place-items-center rounded-full bg-white/15 sm:grid">
-              <Icon name="flyer" className="size-6" />
-            </span>
+            <Icon3D name="flyer" className="hidden size-16 -ml-1 sm:block" />
             <h2 className="font-display text-[clamp(2.1rem,1.5rem+1.6vw,2.6rem)] leading-[1] tracking-tight sm:mt-6">Weekly Specials</h2>
             <p className="mt-3 text-white/80">Fresh deals every week. Pick your region and browse this week’s flyer.</p>
           </div>
@@ -47,9 +45,7 @@ export function QuickActions({ flyers, stores }: { flyers: Flyer[]; stores: Stor
         <div className="relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-turmeric p-7 text-forest sm:min-h-[24rem] sm:p-10 lg:min-h-[clamp(22rem,calc(100svh-22rem),27rem)]">
           <div className="flex items-start justify-between gap-6">
             <div className="max-w-[19rem]">
-              <span className="hidden size-12 place-items-center rounded-full bg-forest/10 sm:grid">
-                <Icon name="pin" className="size-6" />
-              </span>
+              <Icon3D name="pin" className="hidden size-16 -ml-1 sm:block" />
               <h2 className="font-display text-[clamp(2.1rem,1.5rem+1.6vw,2.6rem)] leading-[1] tracking-tight sm:mt-6">Find a location near you</h2>
               <p className="mt-3 text-forest/75">{retail.length} stores across BC and Alberta. There’s sure to be a Fruiticana near you.</p>
             </div>

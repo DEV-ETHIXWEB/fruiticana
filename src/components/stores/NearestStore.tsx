@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
+import { Icon3D } from "@/components/ui/Icon3D";
 import type { Store } from "@/lib/content/types";
 import { distanceKm, formatKm } from "@/lib/geo";
 import { openState } from "@/lib/hours";
@@ -47,9 +48,7 @@ export function NearestStore({ stores, tone = "dark" }: { stores: Store[]; tone?
               href={`/storefinder/${state.store.slug}`}
               className={`group flex items-center gap-4 rounded-2xl p-4 transition-colors ${dark ? "bg-forest text-cream hover:bg-forest-deep" : "bg-white hover:bg-cream"}`}
             >
-              <span className="grid size-11 shrink-0 place-items-center rounded-full bg-chili text-white">
-                <Icon name="pin" className="size-5" strokeWidth={2} />
-              </span>
+              <Icon3D name="pin" className="size-11" />
               <span className="min-w-0 flex-1">
                 <span className="block text-[0.75rem] font-semibold tracking-[0.18em] uppercase opacity-60">Closest to you · {formatKm(state.km)}</span>
                 <span className="block truncate font-display text-xl">Fruiticana {state.store.name}</span>

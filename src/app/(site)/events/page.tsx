@@ -3,7 +3,7 @@ import { Reveal } from "@/components/motion/primitives";
 import { PageHero } from "@/components/page/PageHero";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { ButtonLink } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
+import { Icon3D } from "@/components/ui/Icon3D";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { getEvents } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
@@ -63,9 +63,7 @@ export default async function EventsPage() {
           <Reveal>
             <div className="grid grid-cols-[minmax(0,1fr)] gap-10 overflow-hidden rounded-[var(--radius-card)] bg-turmeric p-6 text-forest max-sm:p-5 sm:p-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center max-sm:gap-7">
               <div>
-                <span className="grid size-14 place-items-center rounded-full bg-forest/10">
-                  <Icon name="calendar" className="size-7" />
-                </span>
+                <Icon3D name="calendar" className="size-20 -ml-1" />
                 <h2 className="mt-6 font-display text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-tight">There are no events right now.</h2>
                 <p className="mt-4 max-w-md text-forest/75">New dates are announced in our newsletter first. Sign up and we’ll let you know about the next celebration at your store.</p>
                 <ButtonLink href="/blog" variant="primary" className="mt-8">
