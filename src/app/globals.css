@@ -11,7 +11,7 @@
   --color-sand: #e7dbc0;
   --color-ink: #1c1a15;
   --color-ink-soft: #4a463c;
-  --color-muted: #7b7566;
+  --color-muted: #686252;
 
   --color-leaf: #0b7a3b;      /* logo green */
   --color-leaf-bright: #18a14f;
@@ -21,7 +21,7 @@
   --color-chili-deep: #b5170f;
   --color-turmeric: #f6d21c;  /* brand yellow */
   --color-mango: #f39a1e;
-  --color-saffron: #e8731a;
+  --color-saffron: #a84d0d; /* deep saffron: AA on cream and paper */
 
   --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
   --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
@@ -70,7 +70,7 @@
     border-radius: 6px;
   }
   .font-display {
-    font-variation-settings: "SOFT" 60, "WONK" 0;
+    font-variation-settings: "SOFT" 60;
   }
   h1, h2, h3 {
     text-wrap: balance;
@@ -83,7 +83,7 @@
 @layer components {
   /* Eyebrow / kicker labels */
   .eyebrow {
-    @apply inline-flex items-center gap-2.5 text-[0.72rem] font-semibold tracking-[0.22em] uppercase;
+    @apply inline-flex items-center gap-2.5 text-[0.75rem] font-semibold tracking-[0.22em] uppercase;
   }
   .eyebrow::before {
     content: "";
@@ -113,6 +113,7 @@
 }
 
 @layer utilities {
+
   /* Paper grain, a fixed SVG noise layer so flat colour never looks digital */
   .grain::after {
     content: "";
@@ -171,3 +172,49 @@ html.lenis, html.lenis body { height: auto; }
   box-shadow: 0 0 0 8px rgb(37 99 235 / 0.18);
 }
 .maplibregl-ctrl-group { border-radius: 9999px !important; overflow: hidden; }
+
+/* Hand-drawn red swash under an accent word: draws in once, always aligned to the word.
+   Plain CSS (outside Tailwind layers) so it is never dropped by the utility scanner. */
+.brush-underline {
+  padding-bottom: 0.12em;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 20' preserveAspectRatio='none'><path d='M3 13.5c38-6.2 79-8.6 121-8.2 44 .4 87 3.2 128 4.4 15 .4 30 .3 45-.9M18 16.2c52-3.4 110-4.4 168-2.8' fill='none' stroke='%23e2231a' stroke-width='4.5' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 0.2em;
+  animation: brush-draw 1.1s cubic-bezier(0.65, 0, 0.35, 1) 1.1s both;
+}
+@keyframes brush-draw {
+  from { background-size: 0% 0.2em; }
+  to { background-size: 100% 0.2em; }
+}
+
+/* Shown only on screens that are both wide and tall enough to keep the section on one screen */
+.show-when-roomy { display: none; }
+@media (min-width: 1280px) and (min-height: 860px) {
+  .show-when-roomy { display: block; }
+}
+
+/* ---------- First-paint entrance animations (no JavaScript needed) ----------
+   Above-the-fold content animates with CSS so it starts on first paint and
+   never waits for hydration; reduced-motion users get the final state. */
+.split-word { display: inline-block; animation: split-rise 1s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes split-rise { from { transform: translateY(105%) rotate(4deg); } to { transform: none; } }
+
+.enter-rise { animation: enter-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes enter-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* The hero photo is never invisible (keeps LCP fast): it only un-masks. */
+.enter-unmask { animation: enter-unmask 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both; }
+@keyframes enter-unmask {
+  from { clip-path: inset(12% 12% 12% 12% round 2rem); transform: scale(0.94); }
+  to { clip-path: inset(0 0 0 0 round 0); transform: none; }
+}
+
+.enter-drop { animation: enter-drop 1.3s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both; }
+@keyframes enter-drop {
+  from { opacity: 0; transform: translateY(60px) rotate(-9deg); }
+  to { opacity: 1; transform: rotate(-5deg); }
+}
+
+.enter-pop { animation: enter-pop 1.1s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes enter-pop { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: none; } }

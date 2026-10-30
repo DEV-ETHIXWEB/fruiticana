@@ -35,7 +35,7 @@ export default async function StoreFinderPage() {
         intro={`${retail.length} stores across British Columbia and Alberta. Search by postal code, browse by city, or let us find the closest one.`}
         crumbs={[{ name: "Store Locator", path: PATH }]}
       />
-      <section className="container-x py-12 lg:py-16">
+      <section className="container-x py-10 lg:py-10">
         <StoreLocator stores={stores} />
       </section>
 
@@ -45,7 +45,7 @@ export default async function StoreFinderPage() {
         <div className="mt-10 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           {byCity.map(([city, list], i) => (
             <Reveal key={city} delay={(i % 4) * 0.05} id={citySlug(city)} className="scroll-mt-28">
-              <h3 className="flex items-baseline justify-between border-b border-ink/10 pb-3 text-[0.72rem] font-semibold tracking-[0.2em] text-muted uppercase">
+              <h3 className="flex items-baseline justify-between border-b border-ink/10 pb-3 text-[0.75rem] font-semibold tracking-[0.2em] text-muted uppercase">
                 {city} <span>{list.length}</span>
               </h3>
               <ul className="mt-4 space-y-3">

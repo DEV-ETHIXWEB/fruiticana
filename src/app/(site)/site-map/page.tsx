@@ -19,7 +19,7 @@ export default async function SiteMapPage() {
       <section className="container-x grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-4 lg:py-24">
         {groups.map((g) => (
           <div key={g.title}>
-            <h2 className="border-b border-ink/10 pb-3 text-[0.72rem] font-semibold tracking-[0.2em] text-muted uppercase">{g.title}</h2>
+            <h2 className="border-b border-ink/10 pb-3 text-[0.75rem] font-semibold tracking-[0.2em] text-muted uppercase">{g.title}</h2>
             <ul className="mt-4 space-y-2.5">
               {g.links.map((l) => (
                 <li key={l.href}>
@@ -30,7 +30,7 @@ export default async function SiteMapPage() {
           </div>
         ))}
         <div className="sm:col-span-2 lg:col-span-4">
-          <h2 className="border-b border-ink/10 pb-3 text-[0.72rem] font-semibold tracking-[0.2em] text-muted uppercase">Store locations</h2>
+          <h2 className="border-b border-ink/10 pb-3 text-[0.75rem] font-semibold tracking-[0.2em] text-muted uppercase">Store locations</h2>
           <ul className="mt-4 grid gap-x-8 gap-y-2.5 sm:grid-cols-2 lg:grid-cols-4">
             {stores.map((s) => (
               <li key={s.slug}>

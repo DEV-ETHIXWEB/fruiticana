@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Reveal, SplitHeading, ZoomSettle } from "@/components/motion/primitives";
+import { SplitHeading, ZoomSettle } from "@/components/motion/primitives";
 import type { Img } from "@/lib/content/types";
 import { Breadcrumbs } from "./Breadcrumbs";
 
@@ -28,27 +28,27 @@ export function PageHero({
         <Breadcrumbs items={crumbs} />
         <div className="mt-10 grid gap-8 lg:grid-cols-[1.3fr_1fr] lg:items-end lg:gap-16">
           <div>
-            {eyebrow && <p className="eyebrow text-leaf">{eyebrow}</p>}
+            {eyebrow && <p className="eyebrow enter-rise text-leaf">{eyebrow}</p>}
             <SplitHeading as="h1" immediate delay={0.05} text={title} className="mt-5 font-display text-headline tracking-[-0.03em] text-forest" accentClassName="italic text-chili" />
           </div>
           {intro && (
-            <Reveal delay={0.35}>
-              <p className="max-w-xl text-lg leading-relaxed text-ink-soft lg:pb-2">{intro}</p>
-            </Reveal>
+            <p className="enter-rise max-w-xl text-lg leading-relaxed text-ink-soft lg:pb-2" style={{ animationDelay: "0.35s" }}>
+              {intro}
+            </p>
           )}
         </div>
         {children}
       </div>
       {image && (
         <div className="container-x mt-12 lg:mt-16">
-          <Reveal y={50}>
+          <div className="enter-rise" style={{ animationDelay: "0.2s" }}>
             {/* Natural aspect ratio: banners with lettering are never cropped */}
             <ZoomSettle className={`relative rounded-[var(--radius-card)] ${imageClassName}`}>
               <div className="relative w-full" style={{ aspectRatio: `${image.width} / ${image.height}` }}>
                 <Image src={image.src} alt={image.alt} fill preload sizes="(min-width: 1408px) 1344px, 100vw" className="object-cover" quality={90} />
               </div>
             </ZoomSettle>
-          </Reveal>
+          </div>
         </div>
       )}
     </section>

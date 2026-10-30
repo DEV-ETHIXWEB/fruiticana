@@ -14,7 +14,14 @@ const styles: Record<Variant, string> = {
 };
 
 const base =
-  "group/btn relative inline-flex items-center justify-center gap-2.5 overflow-hidden rounded-full px-6 py-3.5 text-[0.95rem] font-semibold tracking-[-0.005em] transition-[background-color,box-shadow,color] duration-300 ease-out disabled:cursor-not-allowed disabled:opacity-60";
+  "group/btn relative inline-flex items-center justify-center overflow-hidden rounded-full font-semibold tracking-[-0.005em] whitespace-nowrap transition-[background-color,box-shadow,color] duration-300 ease-out disabled:cursor-not-allowed disabled:opacity-60";
+
+/** `fluid` is compact on phones (two buttons share a row) and full size from `sm` up. */
+type Size = "md" | "fluid";
+const sizes: Record<Size, string> = {
+  md: "gap-2.5 px-6 py-3.5 text-[0.95rem]",
+  fluid: "gap-2 px-4 py-3 text-sm sm:gap-2.5 sm:px-5 sm:py-3.5 sm:text-[0.95rem] xl:px-6",
+};
 
 export function Arrow({ className = "" }: { className?: string }) {
   return (
@@ -29,11 +36,11 @@ export function Arrow({ className = "" }: { className?: string }) {
   );
 }
 
-type Common = { variant?: Variant; children: ReactNode; className?: string; arrow?: boolean; magnetic?: boolean };
+type Common = { variant?: Variant; size?: Size; children: ReactNode; className?: string; arrow?: boolean; magnetic?: boolean };
 
-export function ButtonLink({ variant = "primary", children, className = "", arrow = true, magnetic = true, ...rest }: Common & ComponentProps<typeof Link>) {
+export function ButtonLink({ variant = "primary", size = "md", children, className = "", arrow = true, magnetic = true, ...rest }: Common & ComponentProps<typeof Link>) {
   const el = (
-    <Link className={`${base} ${styles[variant]} ${className}`} {...rest}>
+    <Link className={`${base} ${sizes[size]} ${styles[variant]} ${className}`} {...rest}>
       <span>{children}</span>
       {arrow && <Arrow />}
     </Link>
@@ -41,9 +48,9 @@ export function ButtonLink({ variant = "primary", children, className = "", arro
   return magnetic ? <Magnetic>{el}</Magnetic> : el;
 }
 
-export function Button({ variant = "primary", children, className = "", arrow = false, ...rest }: Common & ComponentProps<"button">) {
+export function Button({ variant = "primary", size = "md", children, className = "", arrow = false, ...rest }: Common & ComponentProps<"button">) {
   return (
-    <button className={`${base} ${styles[variant]} ${className}`} {...rest}>
+    <button className={`${base} ${sizes[size]} ${styles[variant]} ${className}`} {...rest}>
       <span>{children}</span>
       {arrow && <Arrow />}
     </button>

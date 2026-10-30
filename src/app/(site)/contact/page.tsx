@@ -17,7 +17,7 @@ export default async function ContactPage() {
   return (
     <>
       <PageHero eyebrow={page.eyebrow} title="Contact *Us*" intro={page.intro} crumbs={[{ name: "Contact", path: PATH }]} />
-      <section className="container-x grid gap-10 py-14 lg:grid-cols-[22rem_1fr] lg:gap-16 lg:py-20">
+      <section className="container-x grid gap-10 pt-10 pb-16 lg:grid-cols-[22rem_1fr] lg:gap-16 lg:pt-12 lg:pb-12">
         <aside className="space-y-4">
           <Reveal>
             <RichText value={page.body} />
@@ -25,7 +25,7 @@ export default async function ContactPage() {
           <Reveal delay={0.08}>
             <div className="grain relative overflow-hidden rounded-[var(--radius-card)] bg-forest p-7 text-cream">
               <div className="relative z-10 space-y-5">
-                <p className="text-[0.7rem] font-semibold tracking-[0.18em] text-turmeric uppercase">Head office</p>
+                <p className="text-[0.75rem] font-semibold tracking-[0.18em] text-turmeric uppercase">Head office</p>
                 <address className="text-lg not-italic">
                   {settings.headOffice.street},
                   <br />
@@ -50,8 +50,8 @@ export default async function ContactPage() {
           </Reveal>
         </aside>
         <Reveal delay={0.05}>
-          <div className="relative rounded-[var(--radius-card)] bg-white p-6 ring-1 ring-ink/[0.06] sm:p-10">
-            <h2 className="mb-8 font-display text-title text-forest">Leave us a message</h2>
+          <div className="relative rounded-[var(--radius-card)] bg-white p-6 ring-1 ring-ink/[0.06] sm:p-8">
+            <h2 className="mb-6 font-display text-title text-forest">Leave us a message</h2>
             <ContactForm stores={stores.map((s) => `${s.name} (${s.locality})`)} />
           </div>
         </Reveal>

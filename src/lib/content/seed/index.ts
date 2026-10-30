@@ -1,5 +1,5 @@
 import type { CampaignBanner, Event, Flyer, Img, Page, Post, SiteSettings, Video } from "../types";
-import { h3, li, p } from "../pt";
+import { h2, li, p } from "../pt";
 export { stores } from "./stores";
 
 const img = (src: string, alt: string, width: number, height: number): Img => ({ src, alt, width, height });
@@ -116,7 +116,7 @@ export const posts: Post[] = [
     excerpt: "Fruiticana begins campaign to purchase much-needed equipment for BC Children’s Hospital.",
     image: photos.anesthesiaMonitor,
     body: [
-      h3("Fruiticana begins campaign to purchase much-needed equipment for BC Children’s Hospital"),
+      h2("Fruiticana begins campaign to purchase much-needed equipment for BC Children’s Hospital"),
       p("During the month of March, all Fruiticana locations in BC will be collecting donations to help BC Children’s Hospital purchase a much-needed Anesthesia Monitor. Anesthesia monitors, which are attached to anesthesia machines, help to control and manage the delivery of drugs and ventilation to ensure a patient breathes properly."),
       p("“For our campaign this year, we wanted to help BC Children’s Hospital address a specific need”, says ", { text: "Tony Singh", marks: ["strong"] }, ", President and CEO of Fruiticana. “So, when the Hospital Foundation approached us and I learned how this Anesthesia Monitor will help such young children, we were fully committed.”"),
       p("“We are profoundly grateful for Fruiticana’s commitment to the health of children across BC,” says ", { text: "Teri Nicholas", marks: ["strong"] }, ", President and CEO of BC Children’s Hospital Foundation. “By displaying vital information during surgery, the new Anesthesia monitor will ensure we continue to deliver the best possible care.”"),

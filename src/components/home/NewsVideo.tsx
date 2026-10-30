@@ -70,8 +70,8 @@ export function NewsVideo({ clip }: { clip: NewsClip }) {
           />
         ) : null}
       </div>
-      <div className="flex flex-col gap-2 p-6">
-        <p className="flex items-center gap-2 text-[0.7rem] font-semibold tracking-[0.18em] text-turmeric uppercase">
+      <div className="flex flex-1 flex-col gap-2 p-5 xl:p-6">
+        <p className="flex items-center gap-2 text-[0.75rem] font-semibold tracking-[0.18em] text-turmeric uppercase">
           {clip.source} <span className="text-cream/50">· {clip.duration}</span>
         </p>
         <h3 className="font-display text-xl leading-snug">{clip.title}</h3>

@@ -51,7 +51,7 @@ export function NearestStore({ stores, tone = "dark" }: { stores: Store[]; tone?
                 <Icon name="pin" className="size-5" strokeWidth={2} />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-[0.7rem] font-semibold tracking-[0.18em] uppercase opacity-60">Closest to you · {formatKm(state.km)}</span>
+                <span className="block text-[0.75rem] font-semibold tracking-[0.18em] uppercase opacity-60">Closest to you · {formatKm(state.km)}</span>
                 <span className="block truncate font-display text-xl">Fruiticana {state.store.name}</span>
                 <OpenBadge store={state.store} />
               </span>

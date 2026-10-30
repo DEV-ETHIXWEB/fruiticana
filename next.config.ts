@@ -24,6 +24,11 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   devIndicators: false,
+  experimental: {
+    // The persistent build cache was observed shipping stale CSS after design-token
+    // (@theme) edits in globals.css. Production builds always compile fresh.
+    turbopackFileSystemCacheForBuild: false,
+  },
   turbopack: {
     rules: {
       "*.css": { loaders: ["@tailwindcss/turbopack"], as: "*.css" },

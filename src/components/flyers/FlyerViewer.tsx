@@ -37,7 +37,7 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
 
   return (
     <div className="min-w-0">
-      <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="min-w-0">
         <div role="tablist" aria-label="Choose your region" className="scrollbar-none -mx-5 flex min-w-0 gap-2 overflow-x-auto px-5 sm:mx-0 sm:px-0">
           {flyers.map((f) => {
             const active = f.region === region;
@@ -57,22 +57,25 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
             );
           })}
         </div>
-        <div className="flex gap-2">
-          <button type="button" onClick={() => setZoomed(true)} className="inline-flex items-center gap-2 rounded-full bg-forest px-5 py-3 text-sm font-semibold text-cream transition-colors hover:bg-forest-deep">
-            <Icon name="zoomIn" className="size-4" /> Zoom
-          </button>
-          <a href={flyer.image.src} download className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ring-1 ring-ink/15 transition hover:ring-ink/40">
-            <Icon name="download" className="size-4" /> Save
-          </a>
-        </div>
       </div>
 
-      <div id="flyer-panel" role="tabpanel" aria-labelledby={`tab-${region}`} className="mt-8">
-        <div className="mb-4 flex items-baseline justify-between text-sm">
-          <p className="font-display text-2xl text-forest">{flyer.label} flyer</p>
-          <p className="text-muted">{validity ?? "This week’s specials"}</p>
+      <div id="flyer-panel" role="tabpanel" aria-labelledby={`tab-${region}`} className="mt-5">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="font-display text-2xl text-forest">{flyer.label} flyer</p>
+            <p className="text-sm text-muted">{validity ?? "This week’s specials"}</p>
+          </div>
+          <div className="flex gap-2">
+            <button type="button" onClick={() => setZoomed(true)} className="inline-flex items-center gap-2 rounded-full bg-forest px-5 py-3 text-sm font-semibold text-cream transition-colors hover:bg-forest-deep">
+              <Icon name="zoomIn" className="size-4" /> Zoom
+            </button>
+            <a href={flyer.image.src} download className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ring-1 ring-ink/15 transition hover:ring-ink/40">
+              <Icon name="download" className="size-4" /> Save
+            </a>
+          </div>
         </div>
-        <AnimatePresence mode="wait">
+        {/* initial={false}: the first flyer is the page's LCP, so it renders visible immediately; region switches still animate */}
+        <AnimatePresence mode="wait" initial={false}>
           <motion.button
             key={flyer.region}
             type="button"
@@ -81,7 +84,7 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
             animate={{ opacity: 1, y: 0, rotate: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="group relative block w-full cursor-zoom-in overflow-hidden rounded-[var(--radius-card)] bg-white p-2 shadow-[0_40px_90px_-40px_rgb(15_59_38/0.5)] ring-1 ring-ink/[0.06] sm:p-3"
+            className="group relative mx-auto block w-full max-w-[calc((100svh-21.5rem)*0.77)] cursor-zoom-in overflow-hidden rounded-[var(--radius-card)] bg-white p-2 shadow-[0_40px_90px_-40px_rgb(15_59_38/0.5)] ring-1 ring-ink/[0.06] sm:p-3"
             aria-label={`Open the ${flyer.label} flyer full screen`}
           >
             <Image

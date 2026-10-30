@@ -60,7 +60,7 @@ export function NewsletterForm({ tone = "dark", compact = false, stacked = false
                 {pending ? <span className="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white" /> : "Subscribe"}
               </button>
             </div>
-            <p id={`nl-msg-${tone}`} aria-live="polite" className={`mt-2.5 px-5 text-[0.8rem] ${compact && state.status !== "error" ? "sr-only" : "min-h-5"} ${state.status === "error" ? (dark ? "text-[#ff8a80]" : "text-chili") : dark ? "text-cream/65" : "text-muted"}`}>
+            <p id={`nl-msg-${tone}`} aria-live="polite" className={`mt-2.5 px-5 text-[0.8rem] ${compact && state.status !== "error" ? "sr-only" : "min-h-5"} ${state.status === "error" ? (dark ? "text-[#ff8a80]" : "text-chili-deep") : dark ? "text-cream/65" : "text-muted"}`}>
               {state.status === "error" ? state.message : "Weekly specials and event news. No spam, unsubscribe anytime."}
             </p>
           </motion.form>

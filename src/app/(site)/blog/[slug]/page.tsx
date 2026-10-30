@@ -56,7 +56,7 @@ export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
           <RichText value={post.body} className="dropcap" />
         </Reveal>
         <aside className="flex gap-3 lg:flex-col lg:pt-2">
-          <p className="hidden text-[0.7rem] font-semibold tracking-[0.18em] text-muted uppercase lg:block">Share</p>
+          <p className="hidden text-[0.75rem] font-semibold tracking-[0.18em] text-muted uppercase lg:block">Share</p>
           <a
             className="grid size-11 place-items-center rounded-full ring-1 ring-ink/15 transition hover:bg-forest hover:text-cream"
             href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(url)}`}

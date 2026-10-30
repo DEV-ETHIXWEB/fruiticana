@@ -26,7 +26,7 @@ const explore = [
   { label: "Labour Report 2024-25", href: "/forced-and-child-labour-report-2024-25" },
 ];
 
-const heading = "text-[0.7rem] font-semibold tracking-[0.2em] text-cream/65 uppercase";
+const heading = "text-[0.75rem] font-semibold tracking-[0.2em] text-cream/65 uppercase";
 const link = "text-[0.9rem] text-cream/85 transition-colors hover:text-turmeric";
 
 export function Footer({ settings, stores }: { settings: SiteSettings; stores: Store[] }) {
@@ -38,9 +38,11 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
 
   return (
     <footer className="grain relative overflow-hidden bg-forest-deep text-cream">
-      <div className="container-x relative z-10 grid grid-cols-2 gap-x-6 gap-y-10 py-12 lg:grid-cols-12 lg:gap-8 lg:py-14">
+      {/* Phones: 2 cols. md-lg: brand row, 3 link columns, newsletter row. xl: single 12-col row. */}
+      <div className="container-x relative z-10 grid grid-cols-2 gap-x-6 gap-y-10 py-12 md:grid-cols-3 md:gap-x-8 xl:grid-cols-12 xl:gap-8 xl:py-14">
         {/* Brand */}
-        <div className="col-span-2 lg:col-span-3">
+        <div className="col-span-2 md:col-span-3 md:flex md:items-end md:justify-between md:gap-8 xl:col-span-3 xl:block">
+          <div>
           <Link href="/" aria-label="Fruiticana home" className="inline-flex items-end gap-2">
             <Image src="/brand/wordmark-cream.png" alt="Fruiticana, since 1994" width={380} height={89} className="h-auto w-[150px]" />
             <Image src="/brand/mark.png" alt="" width={118} height={118} className="mb-0.5 h-auto w-[38px]" />
@@ -48,7 +50,8 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
           <p className="mt-4 max-w-[17rem] text-[0.9rem] leading-relaxed text-cream/70">
             Fresh fruits, vegetables and spices at the best price, since {settings.founded}.
           </p>
-          <ul className="mt-5 flex gap-2" aria-label="Fruiticana on social media">
+          </div>
+          <ul className="mt-5 flex shrink-0 gap-2 md:mt-0 xl:mt-5" aria-label="Fruiticana on social media">
             {settings.socials.map((s) => (
               <li key={s.href}>
                 <a
@@ -65,7 +68,7 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
           </ul>
         </div>
 
-        <nav aria-label="Footer" className="lg:col-span-2">
+        <nav aria-label="Footer" className="xl:col-span-2">
           <h2 className={heading}>Menu</h2>
           <ul className="mt-4 space-y-2">
             {menu.map((m) => (
@@ -78,7 +81,7 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
           </ul>
         </nav>
 
-        <nav aria-label="Explore" className="lg:col-span-2">
+        <nav aria-label="Explore" className="xl:col-span-2">
           <h2 className={heading}>Explore</h2>
           <ul className="mt-4 space-y-2">
             {explore.map((m) => (
@@ -91,7 +94,7 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
           </ul>
         </nav>
 
-        <div className="col-span-2 sm:col-span-1 lg:col-span-2">
+        <div className="col-span-2 md:col-span-1 xl:col-span-2">
           <h2 className={heading}>Head office</h2>
           <address className="mt-4 text-[0.9rem] leading-relaxed text-cream/85 not-italic">
             {settings.headOffice.street}
@@ -108,9 +111,11 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
           </div>
         </div>
 
-        <div className="col-span-2 sm:col-span-1 lg:col-span-3">
-          <h2 className={heading}>Weekly specials by email</h2>
-          <p className="mt-4 mb-4 text-[0.9rem] text-cream/70">Sign up and receive Weekly Specials and Event Information.</p>
+        <div className="col-span-2 md:col-span-3 md:grid md:grid-cols-[1fr_minmax(0,26rem)] md:items-center md:gap-8 md:border-t md:border-cream/10 md:pt-8 xl:col-span-3 xl:block xl:border-0 xl:pt-0">
+          <div>
+            <h2 className={heading}>Weekly specials by email</h2>
+            <p className="mt-4 mb-4 text-[0.9rem] text-cream/70 md:mb-0 xl:mb-4">Sign up and receive Weekly Specials and Event Information.</p>
+          </div>
           <NewsletterForm tone="dark" compact />
         </div>
       </div>
@@ -122,7 +127,7 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
             <Icon name="pin" className="size-4" strokeWidth={2} /> {retail.length} stores in BC &amp; Alberta
             <Icon name="chevron" className="size-3.5 transition-transform group-hover:translate-x-0.5" strokeWidth={2} />
           </Link>
-          <ul className="flex flex-wrap gap-1.5" aria-label="Stores by city">
+          <ul className="hidden flex-wrap gap-1.5 sm:flex" aria-label="Stores by city">
             {cities.map(([city, n]) => (
               <li key={city}>
                 <Link

@@ -24,6 +24,9 @@ The site runs with **no configuration**: every page, store, flyer and image from
 | `npm run qa -- /path out 1440` | Full-page screenshot + console/network errors for one route |
 | `node scripts/qa-sweep.mjs / /flyers …` | Every route at 1440 + 390px: errors, overflow, h1, meta length, stray dashes |
 | `node scripts/qa-footer.mjs <dir>` | Footer screenshots at 4 breakpoints + WCAG contrast + link check |
+| `node scripts/qa-sections.mjs <route> [dir]` | Per-section audit at 5 viewports: section fits one screen, no text overlap, no clipping/ellipsis/clipped placeholders, no image over text, no oversized images, no overflow. Writes section screenshots |
+| `node scripts/qa-pages.mjs <dir> <width> <routes…>` | Full-page captures + grid-edge alignment audit |
+| `node scripts/qa-lcp.mjs <routes…>` | Real first-load LCP element per route (desktop + mobile) |
 
 QA scripts use Playwright (`npx playwright install chromium` once).
 
@@ -58,6 +61,10 @@ Weekly flyer swap: Studio → Weekly flyers → replace the image for the region
 - Map tiles: OpenFreeMap (free, no key). Postal-code search geocodes via `/api/geocode` (validated Canadian postal codes only, cached 24h).
 - Commercials play on a muted loop when in view; one YouTube video blocks embedding and links out. The Global News clip uses Global's official player, which can't loop; set `newsClip.loopSrc` to a licensed MP4 to loop it.
 - Images are served as AVIF/WebP at quality 90 up to 3840px. Many legacy photos are under 1000px wide; upload original high-res files in the Studio for sharper results.
+- Layout rule: on screens 1024px and up every homepage section fits one viewport (sizes use `svh` as well as `vw`); on phones, collections become swipe rows. `qa-sections.mjs` enforces it.
+- Above-the-fold entrances are CSS animations (`.enter-*`, `.split-word` in `globals.css`), so the hero never waits for JavaScript and LCP stays fast. Scroll reveals use Motion.
+- Fonts are self-hosted via `next/font` with only the axes in use (Fraunces SOFT, Instrument Sans default). Minimum text size is 12px; colour tokens are tuned for WCAG AA.
+- `experimental.turbopackFileSystemCacheForBuild` is off: the persistent build cache shipped stale CSS after `@theme` token edits.
 - House style: no em or en dashes in copy, code or comments.
 
 ## Structure

@@ -62,9 +62,12 @@ export const staggerItem = {
 };
 
 /**
- * Word-by-word masked rise. Words stay real text (SEO + screen readers read
- * the plain string via aria-label; spans are aria-hidden).
- * Wrap a word in *asterisks* to render it in the italic accent style.
+ * Word-by-word masked rise. The words are the real text (one clean sentence
+ * for screen readers and search engines, no aria-label/duplicate copy).
+ * Wrap a word in *asterisks* to render it in the accent style.
+ *  - `immediate` (above the fold): pure CSS animation that starts on first
+ *    paint, so it never waits for JavaScript and never delays LCP.
+ *  - otherwise: reveals on scroll via Motion.
  */
 export function SplitHeading({
   text,
@@ -79,40 +82,54 @@ export function SplitHeading({
   className?: string;
   accentClassName?: string;
   delay?: number;
-  /** animate on mount (hero) instead of on scroll */
+  /** animate on first paint (heroes) instead of on scroll */
   immediate?: boolean;
 }) {
   const reduce = useReducedMotion();
-  const plain = text.replace(/\*/g, "");
   const tokens = text.split(/(\s+)/);
   let i = 0;
-  const animateProps = immediate ? { animate: "show" } : { whileInView: "show", viewport: { once: true, margin: "0px 0px -10% 0px" } };
+
+  const words = (render: (word: string, accent: boolean, index: number, key: number) => ReactNode) =>
+    tokens.map((tok, idx) => {
+      if (/^\s+$/.test(tok)) return " ";
+      const accent = tok.startsWith("*") && tok.endsWith("*");
+      const word = accent ? tok.slice(1, -1) : tok;
+      return (
+        <span key={idx} className="inline-block overflow-hidden pb-[0.08em] -mb-[0.08em] align-bottom">
+          {render(word, accent, i++, idx)}
+        </span>
+      );
+    });
+
+  if (immediate) {
+    return (
+      <Tag className={className}>
+        {words((word, accent, index) => (
+          <span className={`split-word ${accent ? accentClassName : ""}`} style={{ animationDelay: `${delay + index * 0.06}s` }}>
+            {word}
+          </span>
+        ))}
+      </Tag>
+    );
+  }
+
   return (
-    <Tag className={className} aria-label={plain}>
+    <Tag className={className}>
       <motion.span
-        aria-hidden
         className="block"
         initial={reduce ? false : "hidden"}
-        {...animateProps}
+        whileInView="show"
+        viewport={{ once: true, margin: "0px 0px -10% 0px" }}
         variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06, delayChildren: delay } } }}
       >
-        {tokens.map((tok, idx) => {
-          if (/^\s+$/.test(tok)) return " ";
-          const accent = tok.startsWith("*") && tok.endsWith("*");
-          const word = accent ? tok.slice(1, -1) : tok;
-          i++;
-          return (
-            <span key={idx} className="inline-block overflow-hidden pb-[0.08em] -mb-[0.08em] align-bottom">
-              <motion.span
-                className={`inline-block will-change-transform ${accent ? accentClassName : ""}`}
-                variants={{ hidden: { y: "105%", rotate: 4 }, show: { y: "0%", rotate: 0, transition: { duration: 1, ease: EASE } } }}
-                data-i={i}
-              >
-                {word}
-              </motion.span>
-            </span>
-          );
-        })}
+        {words((word, accent) => (
+          <motion.span
+            className={`inline-block will-change-transform ${accent ? accentClassName : ""}`}
+            variants={{ hidden: { y: "105%", rotate: 4 }, show: { y: "0%", rotate: 0, transition: { duration: 1, ease: EASE } } }}
+          >
+            {word}
+          </motion.span>
+        ))}
       </motion.span>
     </Tag>
   );
@@ -202,25 +219,5 @@ export function Counter({ to, suffix = "", prefix = "", className, format = true
       {fmt(to)}
       {suffix}
     </span>
-  );
-}
-
-/** Hand-drawn brush underline (echoes the red swash under the logo). */
-export function BrushUnderline({ className, color = "var(--color-chili)", delay = 0.4 }: { className?: string; color?: string; delay?: number }) {
-  const reduce = useReducedMotion();
-  return (
-    <svg viewBox="0 0 300 20" preserveAspectRatio="none" className={className} aria-hidden>
-      <motion.path
-        d="M3 13.5c38-6.2 79-8.6 121-8.2 44 .4 87 3.2 128 4.4 15 .4 30 .3 45-.9M18 16.2c52-3.4 110-4.4 168-2.8"
-        fill="none"
-        stroke={color}
-        strokeWidth="4.5"
-        strokeLinecap="round"
-        initial={reduce ? false : { pathLength: 0, opacity: 0 }}
-        whileInView={{ pathLength: 1, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.1, ease: [0.65, 0, 0.35, 1], delay }}
-      />
-    </svg>
   );
 }

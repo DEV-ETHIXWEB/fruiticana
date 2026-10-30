@@ -24,11 +24,11 @@ export default async function CommunityPage() {
           </Reveal>
           <dl className="grid grid-cols-2 gap-6 text-sm lg:grid-cols-1">
             <div>
-              <dt className="text-[0.7rem] font-semibold tracking-[0.18em] text-muted uppercase">Categories</dt>
+              <dt className="text-[0.75rem] font-semibold tracking-[0.18em] text-muted uppercase">Categories</dt>
               <dd className="mt-2 text-ink">{[...new Set(posts.map((p) => p.category))].join(", ")}</dd>
             </div>
             <div>
-              <dt className="text-[0.7rem] font-semibold tracking-[0.18em] text-muted uppercase">Archives</dt>
+              <dt className="text-[0.75rem] font-semibold tracking-[0.18em] text-muted uppercase">Archives</dt>
               <dd className="mt-2 text-ink">{years.join(" · ")}</dd>
             </div>
           </dl>

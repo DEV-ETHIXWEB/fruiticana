@@ -26,6 +26,13 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [view, setView] = useState<"list" | "map">("list");
+  // MapLibre is heavy: phones load it only when the Map tab is opened, desktops once the browser is idle.
+  const [mapWanted, setMapWanted] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
+  const showMap = useCallback(() => {
+    setMapWanted(true);
+    setView("map");
+  }, []);
 
   const mapEl = useRef<HTMLDivElement>(null);
   const map = useRef<MLMap | null>(null);
@@ -51,6 +58,15 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
 
   /* ------------------------------ map ------------------------------ */
   useEffect(() => {
+    if (!window.matchMedia("(min-width: 1024px)").matches) return;
+    const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 1200));
+    const cancelIdle = window.cancelIdleCallback ?? window.clearTimeout;
+    const id = idle(() => setMapWanted(true));
+    return () => cancelIdle(id);
+  }, []);
+
+  useEffect(() => {
+    if (!mapWanted) return;
     let cancelled = false;
     const pins = markers.current;
     (async () => {
@@ -80,14 +96,16 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
         const marker = new ml.Marker({ element: el, anchor: "bottom" }).setLngLat([s.lng, s.lat]).addTo(m);
         pins.set(s.slug, marker);
       }
+      setMapReady(true);
     })();
     return () => {
       cancelled = true;
       map.current?.remove();
       map.current = null;
       pins.clear();
+      setMapReady(false);
     };
-  }, [stores]);
+  }, [stores, mapWanted]);
 
   // Reflect filters on the map: hide filtered-out pins and frame the rest.
   useEffect(() => {
@@ -104,7 +122,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
       if (origin) b.extend([origin.lng, origin.lat]);
       m.fitBounds(b, { padding: 70, maxZoom: 13, duration: 900 });
     });
-  }, [results, origin, selected]);
+  }, [results, origin, selected, mapReady]);
 
   // Selection: fly to pin, highlight it, scroll its card into view.
   useEffect(() => {
@@ -113,7 +131,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
     const s = stores.find((x) => x.slug === selected);
     if (s && map.current) map.current.flyTo({ center: [s.lng, s.lat], zoom: 13.5, duration: 1100, essential: true });
     listRefs.current.get(selected)?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-  }, [selected, stores]);
+  }, [selected, stores, mapReady]);
 
   // The map lives in a hidden panel on mobile until "Map" is tapped; re-measure when it appears.
   useEffect(() => {
@@ -133,7 +151,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
     return () => {
       mk?.remove();
     };
-  }, [origin]);
+  }, [origin, mapReady]);
 
   /* --------------------------- actions ----------------------------- */
   const locate = useCallback(() => {
@@ -199,7 +217,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
                 setQuery(e.target.value);
                 setSelected(null);
               }}
-              placeholder="Enter postal code to find nearby locations, or search a city"
+              placeholder="Postal code, city or street"
               className="min-w-0 flex-1 bg-transparent py-3.5 text-[0.95rem] outline-none placeholder:text-muted"
               autoComplete="postal-code"
             />
@@ -234,7 +252,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
               className={`shrink-0 rounded-full px-4 py-2 text-[0.82rem] font-medium transition-colors ${city === c ? "bg-leaf text-white" : "bg-cream text-ink/75 hover:text-ink"}`}
             >
               {c}
-              {c !== "All" && <span className="ml-1.5 opacity-60">{stores.filter((s) => s.city === c).length}</span>}
+              {c !== "All" && <span className={`ml-1.5 ${city === c ? "text-white/90" : "text-muted"}`}>{stores.filter((s) => s.city === c).length}</span>}
             </button>
           ))}
         </div>
@@ -250,13 +268,13 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
       {/* mobile view switch */}
       <div className="grid grid-cols-2 border-b border-ink/[0.07] lg:hidden">
         {(["list", "map"] as const).map((v) => (
-          <button key={v} type="button" onClick={() => setView(v)} aria-pressed={view === v} className={`py-3 text-sm font-semibold capitalize ${view === v ? "bg-cream text-forest" : "text-muted"}`}>
+          <button key={v} type="button" onClick={() => (v === "map" ? showMap() : setView(v))} aria-pressed={view === v} className={`py-3 text-sm font-semibold capitalize ${view === v ? "bg-cream text-forest" : "text-muted"}`}>
             {v === "list" ? `List · ${results.length}` : "Map"}
           </button>
         ))}
       </div>
 
-      <div className="grid lg:h-[44rem] lg:grid-cols-[26rem_1fr]">
+      <div className="grid lg:h-[clamp(26rem,calc(100svh-24rem),44rem)] lg:grid-cols-[26rem_1fr]">
         <ul className={`overflow-y-auto overscroll-contain lg:block ${view === "list" ? "block max-h-[70vh] lg:max-h-none" : "hidden"}`} data-lenis-prevent aria-label={`${results.length} stores`}>
           {results.length === 0 && <li className="p-8 text-center text-ink-soft">No stores match “{query}”. Try a city like Surrey or Calgary.</li>}
           {results.map(({ s, km }) => (
@@ -275,10 +293,9 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
                   type="button"
                   onClick={() => {
                     setSelected(s.slug);
-                    setView("map");
+                    showMap();
                   }}
                   className="min-w-0 flex-1 text-left"
-                  aria-label={`Show Fruiticana ${s.name} on the map`}
                 >
                   <span className="flex items-baseline justify-between gap-3">
                     <span className="font-display text-xl leading-tight text-ink">{s.isHeadOffice ? "Head Office" : s.name}</span>
@@ -288,6 +305,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
                     {s.street}, {s.locality}, {s.province} {s.postalCode}
                   </span>
                   <OpenBadge store={s} className="text-ink-soft" />
+                  <span className="sr-only">, show on the map</span>
                 </button>
               </div>
               <div className="-mt-2 flex flex-wrap gap-x-5 gap-y-2 px-5 pb-5 text-[0.82rem] font-semibold">
@@ -297,7 +315,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
                 <a href={directions(s)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-forest hover:text-leaf">
                   <Icon name="directions" className="size-3.5" /> Directions
                 </a>
-                <Link href={`/storefinder/${s.slug}`} className="inline-flex items-center gap-1.5 text-chili hover:text-chili-deep">
+                <Link href={`/storefinder/${s.slug}`} className="inline-flex items-center gap-1.5 text-chili-deep hover:text-chili">
                   Store details <Icon name="chevron" className="size-3.5" strokeWidth={2} />
                 </Link>
                 <span className="inline-flex items-center gap-1.5 font-normal text-muted">

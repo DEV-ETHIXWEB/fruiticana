@@ -3,9 +3,15 @@ import { Fraunces, Instrument_Sans } from "next/font/google";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
+/*
+ * Fonts are self-hosted by next/font (no Google request, no layout shift:
+ * size-adjusted fallbacks are generated automatically) and trimmed to the
+ * axes we actually use: Fraunces keeps SOFT for its warm display curves;
+ * opsz/WONK and Instrument Sans' width axis were dropped to cut preload weight.
+ */
 const fraunces = Fraunces({
   subsets: ["latin"],
-  axes: ["SOFT", "WONK", "opsz"],
+  axes: ["SOFT"],
   style: ["normal", "italic"],
   variable: "--font-fraunces",
   display: "swap",
@@ -13,7 +19,6 @@ const fraunces = Fraunces({
 
 const instrument = Instrument_Sans({
   subsets: ["latin"],
-  axes: ["wdth"],
   variable: "--font-instrument",
   display: "swap",
 });

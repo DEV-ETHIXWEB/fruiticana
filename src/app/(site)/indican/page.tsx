@@ -57,7 +57,7 @@ export default async function IndicanPage() {
                   <span className="grid size-12 place-items-center rounded-full bg-chili text-white">
                     <Icon name={r.icon} className="size-6" />
                   </span>
-                  <span className="mt-8 text-[0.7rem] font-semibold tracking-[0.18em] text-chili uppercase">Indican</span>
+                  <span className="mt-8 text-[0.75rem] font-semibold tracking-[0.18em] text-chili-deep uppercase">Indican</span>
                   <h3 className="mt-1 font-display text-3xl">{r.title}</h3>
                   <p className="mt-2 text-ink-soft">{r.body}</p>
                 </article>

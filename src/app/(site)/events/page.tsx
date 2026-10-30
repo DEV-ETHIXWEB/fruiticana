@@ -61,7 +61,7 @@ export default async function EventsPage() {
           </>
         ) : (
           <Reveal>
-            <div className="grid gap-10 overflow-hidden rounded-[var(--radius-card)] bg-turmeric p-8 text-forest sm:p-14 lg:grid-cols-[1fr_1fr] lg:items-center">
+            <div className="grid grid-cols-[minmax(0,1fr)] gap-10 overflow-hidden rounded-[var(--radius-card)] bg-turmeric p-6 text-forest max-sm:p-5 sm:p-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center max-sm:gap-7">
               <div>
                 <span className="grid size-14 place-items-center rounded-full bg-forest/10">
                   <Icon name="calendar" className="size-7" />
@@ -74,7 +74,7 @@ export default async function EventsPage() {
               </div>
               <div className="rounded-2xl bg-forest p-6 sm:p-8">
                 <p className="mb-4 font-display text-xl text-cream">Get event news</p>
-                <NewsletterForm tone="dark" />
+                <NewsletterForm tone="dark" stacked />
               </div>
             </div>
           </Reveal>

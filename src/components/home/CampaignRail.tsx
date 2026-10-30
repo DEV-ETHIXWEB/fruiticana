@@ -58,10 +58,10 @@ export function CampaignRail({ items }: { items: CampaignBanner[] }) {
   const current = items[index];
 
   return (
-    <section aria-roledescription="carousel" aria-label="Current campaigns" className="container-x py-14 lg:py-20">
+    <section aria-roledescription="carousel" aria-label="Current campaigns" className="container-x py-[clamp(3rem,8svh,5rem)]">
       <div className="mb-6 flex items-end justify-between gap-6">
         <div>
-          <p className="eyebrow text-chili">In store now</p>
+          <p className="eyebrow text-chili-deep">In store now</p>
           <h2 className="mt-3 font-display text-title text-forest">What’s fresh at Fruiticana</h2>
         </div>
         <div className="flex gap-2">
@@ -81,7 +81,7 @@ export function CampaignRail({ items }: { items: CampaignBanner[] }) {
         onFocusCapture={() => setPaused(true)}
         onBlurCapture={() => setPaused(false)}
       >
-        <div className="relative aspect-[1800/517] min-h-[180px]">
+        <div className="relative aspect-[1800/517]">
           <AnimatePresence initial={false} custom={dir} mode="popLayout">
             <motion.div
               key={current.id}
@@ -109,30 +109,35 @@ export function CampaignRail({ items }: { items: CampaignBanner[] }) {
             >
               {current.href ? (
                 <Link href={current.href} draggable={false} className="relative block size-full">
-                  <Image src={current.image.src} alt={current.image.alt} fill sizes="(min-width: 1408px) 1344px, 100vw" className="object-cover" draggable={false} preload={index === 0} quality={90} />
+                  <Image src={current.image.src} alt={current.image.alt} fill sizes="(min-width: 1408px) 1344px, 100vw" className="object-contain" draggable={false} preload={index === 0} quality={90} />
                 </Link>
               ) : (
-                <Image src={current.image.src} alt={current.image.alt} fill sizes="100vw" className="object-cover" draggable={false} />
+                <Image src={current.image.src} alt={current.image.alt} fill sizes="100vw" className="object-contain" draggable={false} />
               )}
             </motion.div>
           </AnimatePresence>
         </div>
       </div>
 
-      {/* segmented progress, doubles as the slide picker */}
-      <div className="mt-5 grid gap-x-3 gap-y-2" style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}>
+      {/* Segmented progress doubles as the slide picker; the active slide's full title sits beneath (never truncated). */}
+      <div className="mt-5 grid gap-x-2 sm:gap-x-3" style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}>
         {items.map((item, i) => (
-          <button key={item.id} type="button" onClick={() => go(i)} className="group text-left" aria-label={`Show ${item.label}`} aria-current={i === index}>
-            <span className="block h-[3px] overflow-hidden rounded-full bg-ink/10">
+          <button key={item.id} type="button" onClick={() => go(i)} className="group py-2" aria-label={`Show ${item.label}`} aria-current={i === index}>
+            <span className="block h-[3px] overflow-hidden rounded-full bg-ink/10 transition-colors group-hover:bg-ink/20">
               <span
                 className="block h-full origin-left rounded-full bg-chili"
                 style={{ transform: `scaleX(${i < index ? 1 : i === index ? (reduce ? 1 : progress) : 0})`, opacity: i < index ? 0.35 : 1 }}
               />
             </span>
-            <span className={`mt-2 hidden truncate text-[0.78rem] transition-colors md:block ${i === index ? "font-semibold text-ink" : "text-muted group-hover:text-ink"}`}>{item.label}</span>
           </button>
         ))}
       </div>
+      <p className="mt-2 flex items-baseline gap-3 text-sm" aria-live="polite">
+        <span className="font-display text-muted tabular-nums">
+          {String(index + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}
+        </span>
+        <span className="font-semibold text-ink">{current.label}</span>
+      </p>
     </section>
   );
 }

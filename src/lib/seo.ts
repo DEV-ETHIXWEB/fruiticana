@@ -13,7 +13,8 @@ export function pageMetadata({
   title: string;
   description: string;
   path: string;
-  image?: string;
+  /** Share image. Omit for the brand card; `false` when the route has its own opengraph-image file. */
+  image?: string | false;
   /** Use the title verbatim (legacy titles already contain the brand). */
   absoluteTitle?: boolean;
 }): Metadata {
@@ -28,7 +29,10 @@ export function pageMetadata({
       siteName: "Fruiticana",
       locale: "en_CA",
       type: "website",
-      ...(image ? { images: [{ url: image }] } : {}),
+      // Every page shares with an image: its own hero photo, else the brand card.
+      ...(image === false
+        ? {}
+        : { images: [image ? { url: image } : { url: "/opengraph-image", width: 1200, height: 630, alt: "Fruiticana: the taste of home, since 1994" }] }),
     },
     twitter: { card: "summary_large_image", title, description },
   };
@@ -70,6 +74,17 @@ export function organizationLd(s: SiteSettings) {
       addressCountry: "CA",
     },
     sameAs: s.socials.map((x) => x.href),
+    areaServed: [
+      { "@type": "AdministrativeArea", name: "British Columbia" },
+      { "@type": "AdministrativeArea", name: "Alberta" },
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      telephone: `+1-${s.phone}`,
+      email: s.email,
+      areaServed: "CA",
+    },
     brand: { "@type": "Brand", name: "Indican" },
   };
 }
@@ -88,14 +103,14 @@ export function storeLd(s: Store) {
   const address = [s.street, s.locality, s.province, s.postalCode].filter(Boolean).join(", ");
   return {
     "@context": "https://schema.org",
-    "@type": "GroceryStore",
+    // The head office is an office, not a shop: typed as a generic LocalBusiness.
+    "@type": s.isHeadOffice ? "LocalBusiness" : "GroceryStore",
     "@id": absoluteUrl(`/storefinder/${s.slug}#store`),
     name: s.isHeadOffice ? "Fruiticana Head Office" : `Fruiticana ${s.name}`,
     url: absoluteUrl(`/storefinder/${s.slug}`),
     image: absoluteUrl("/images/photos/store-produce-floor.jpg"),
     telephone: `+1-${s.phone.replace(/[^\d]/g, "").replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3")}`,
-    priceRange: "$",
-    servesCuisine: undefined,
+    ...(s.isHeadOffice ? {} : { priceRange: "$", currenciesAccepted: "CAD" }),
     address: {
       "@type": "PostalAddress",
       streetAddress: s.street,

@@ -21,13 +21,13 @@ export default async function MangoesPage() {
 
       <section className="container-x grid gap-10 pt-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:pt-20">
         <Reveal y={50}>
-          <ZoomSettle className="relative aspect-[495/660] rounded-[var(--radius-card)]">
+          <ZoomSettle className="relative aspect-[4/3] rounded-[var(--radius-card)] lg:aspect-[495/660] lg:max-h-[calc(100svh-12rem)]">
             <Image src={photos.rajanMangoes.src} alt={photos.rajanMangoes.alt} fill preload sizes="(min-width: 1024px) 36vw, 100vw" className="object-cover" />
           </ZoomSettle>
         </Reveal>
         <div className="lg:pt-10">
           <Reveal>
-            <span className="inline-block rounded-full bg-mango px-3.5 py-1.5 text-xs font-semibold tracking-[0.16em] text-white uppercase">Rajan · exclusive to Fruiticana</span>
+            <span className="inline-block rounded-full bg-mango px-3.5 py-1.5 text-xs font-semibold tracking-[0.16em] text-forest-deep uppercase">Rajan · exclusive to Fruiticana</span>
             <RichText value={page.body} className="dropcap mt-8" />
           </Reveal>
           <div className="mt-10 grid grid-cols-2 gap-4">
@@ -42,24 +42,34 @@ export default async function MangoesPage() {
         </div>
       </section>
 
-      <section className="container-x py-24 lg:py-32">
-        <p className="eyebrow text-saffron">Good for you</p>
-        <SplitHeading text="5 health benefits of eating *mangoes*" className="mt-5 max-w-3xl font-display text-headline tracking-[-0.03em] text-forest" accentClassName="italic text-saffron" />
-        <p className="mt-6 max-w-2xl text-lg text-ink-soft">
-          Nothing beats a fresh, sweet and juicy mango as the weather starts to get warmer. But the great taste is only part of the reason why you should eat them. Here’s why you should pick some up at your nearest Fruiticana.
-        </p>
-        <Stagger className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-5" gap={0.07}>
+      <section className="container-x py-[clamp(3.5rem,9svh,6rem)]">
+        <div className="grid gap-5 lg:grid-cols-[1fr_1fr] lg:items-end lg:gap-16">
+          <div>
+            <p className="eyebrow text-saffron">Good for you</p>
+            <SplitHeading text="5 health benefits of eating *mangoes*" className="mt-4 font-display text-[clamp(2rem,min(1rem+3vw,6.5svh),3.75rem)] leading-[1.02] tracking-[-0.03em] text-forest" accentClassName="italic text-saffron" />
+          </div>
+          <p className="text-ink-soft lg:text-lg">
+            Nothing beats a fresh, sweet and juicy mango as the weather starts to get warmer. But the great taste is only part of the reason why you should eat them. Here’s why you should pick some up at your nearest Fruiticana.
+          </p>
+        </div>
+        <Stagger
+          className="scrollbar-none -mx-5 mt-[clamp(2rem,5svh,3rem)] flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12 xl:mx-0 xl:grid xl:grid-cols-5 xl:overflow-visible xl:px-0"
+          gap={0.07}
+        >
           {mangoBenefits.map((b, i) => (
-            <MotionItem key={b.title} className={`flex flex-col rounded-[var(--radius-card)] p-7 text-forest-deep ${i % 2 ? "bg-turmeric" : "bg-mango"}`}>
-              <span className="text-xs font-semibold tracking-[0.18em] uppercase opacity-70">0{i + 1}</span>
-              <h3 className="mt-6 font-display text-[1.75rem] leading-tight">{b.title}</h3>
-              <p className="mt-1 font-display text-4xl italic">{b.stat}</p>
-              <p className="text-xs uppercase opacity-70">{b.unit}</p>
-              <p className="mt-6 text-sm text-forest-deep/85">{b.body}</p>
+            <MotionItem key={b.title} className={`flex w-[78%] shrink-0 snap-start flex-col rounded-[var(--radius-card)] p-6 text-forest-deep sm:w-[19rem] xl:w-auto ${i % 2 ? "bg-turmeric" : "bg-mango"}`}>
+              <span className="text-xs font-semibold tracking-[0.18em] uppercase opacity-80">0{i + 1}</span>
+              <h3 className="mt-4 font-display text-2xl leading-tight">{b.title}</h3>
+              <p className="mt-1 font-display text-[2rem] leading-tight italic">{b.stat}</p>
+              <p className="text-xs uppercase opacity-80">{b.unit}</p>
+              <p className="mt-4 text-sm leading-relaxed text-forest-deep/90">{b.body}</p>
             </MotionItem>
           ))}
         </Stagger>
-        <Reveal className="mt-14 grid gap-8 rounded-[var(--radius-card)] bg-paper p-8 md:grid-cols-[1fr_auto] md:items-center sm:p-12">
+      </section>
+
+      <section className="container-x pb-[clamp(3.5rem,9svh,6rem)]">
+        <Reveal className="grid gap-6 rounded-[var(--radius-card)] bg-paper p-7 md:grid-cols-[1fr_auto] md:items-center sm:p-10">
           <RichText value={mangoOutro} />
           <ButtonLink href="/storefinder" variant="primary">Find your nearest store</ButtonLink>
         </Reveal>

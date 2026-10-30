@@ -91,7 +91,7 @@ export default async function OurCompanyPage() {
 
       {/* Mission */}
       <section className="container-x py-24 text-center lg:py-32">
-        <p className="eyebrow justify-center text-chili">Mission statement</p>
+        <p className="eyebrow justify-center text-chili-deep">Mission statement</p>
         <SplitHeading as="p" text={settings.mission} className="mx-auto mt-8 max-w-5xl font-display text-[clamp(1.7rem,1rem+2.4vw,3.25rem)] leading-[1.15] tracking-[-0.02em] text-forest" />
       </section>
 

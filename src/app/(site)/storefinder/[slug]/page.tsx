@@ -25,9 +25,10 @@ export async function generateMetadata({ params }: PageProps<"/storefinder/[slug
   const s = await getStore((await params).slug);
   if (!s) return {};
   return pageMetadata({
-    title: `${title(s)} | Hours, Directions & Weekly Specials`,
+    title: `${title(s)}: Hours & Directions`,
     description: `Fruiticana ${s.name} at ${s.street}, ${s.locality}, ${s.province}${s.postalCode ? ` ${s.postalCode}` : ""}. Open daily ${formatHours(s)}. Call ${s.phone}. Fresh produce, Indican spices and more.`,
     path: `/storefinder/${s.slug}`,
+    image: false,
     absoluteTitle: true,
   });
 }
@@ -68,7 +69,7 @@ export default async function StorePage({ params }: PageProps<"/storefinder/[slu
               </div>
               <dl className="mt-10 grid gap-6 sm:grid-cols-2">
                 <div>
-                  <dt className="text-[0.7rem] font-semibold tracking-[0.18em] text-muted uppercase">Address</dt>
+                  <dt className="text-[0.75rem] font-semibold tracking-[0.18em] text-muted uppercase">Address</dt>
                   <dd className="mt-2 text-lg text-ink not-italic">
                     {store.street}
                     <br />
@@ -76,7 +77,7 @@ export default async function StorePage({ params }: PageProps<"/storefinder/[slu
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-[0.7rem] font-semibold tracking-[0.18em] text-muted uppercase">Hours</dt>
+                  <dt className="text-[0.75rem] font-semibold tracking-[0.18em] text-muted uppercase">Hours</dt>
                   <dd className="mt-2 text-lg text-ink">
                     {store.isHeadOffice ? "Office hours" : "Open 7 days"}
                     <br />
@@ -84,7 +85,7 @@ export default async function StorePage({ params }: PageProps<"/storefinder/[slu
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-[0.7rem] font-semibold tracking-[0.18em] text-muted uppercase">Phone</dt>
+                  <dt className="text-[0.75rem] font-semibold tracking-[0.18em] text-muted uppercase">Phone</dt>
                   <dd className="mt-2 text-lg">
                     <a href={tel} className="text-ink underline decoration-ink/20 underline-offset-4 hover:decoration-ink">
                       {store.phone}
@@ -93,7 +94,7 @@ export default async function StorePage({ params }: PageProps<"/storefinder/[slu
                 </div>
                 {!store.isHeadOffice && (
                   <div>
-                    <dt className="text-[0.7rem] font-semibold tracking-[0.18em] text-muted uppercase">Weekly flyer</dt>
+                    <dt className="text-[0.75rem] font-semibold tracking-[0.18em] text-muted uppercase">Weekly flyer</dt>
                     <dd className="mt-2 text-lg">
                       <Link href={`/flyers?region=${flyer.region}`} className="text-leaf underline decoration-leaf/30 underline-offset-4 hover:decoration-leaf">
                         {flyer.label} specials
@@ -165,7 +166,7 @@ export default async function StorePage({ params }: PageProps<"/storefinder/[slu
                   {s.street}, {s.locality}
                 </span>
                 <OpenBadge store={s} className="text-ink-soft" />
-                <span className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-semibold text-chili">
+                <span className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-semibold text-chili-deep">
                   View store <Arrow />
                 </span>
               </Link>

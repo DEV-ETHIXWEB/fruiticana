@@ -28,7 +28,7 @@ export default async function FlyersPage() {
     <>
       <PageHero eyebrow="Weekly Specials" title="This week’s *best* prices." intro="Choose your region to see the specials at your nearest Fruiticana. Flyers refresh every week." crumbs={[{ name: "Weekly Specials", path: PATH }]} />
 
-      <section className="container-x grid grid-cols-1 gap-12 py-14 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16 lg:py-20">
+      <section className="container-x grid grid-cols-1 gap-12 pt-8 pb-14 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16 lg:pt-10 lg:pb-20">
         <Suspense
           fallback={
             <div className="overflow-hidden rounded-[var(--radius-card)] bg-white p-3">
@@ -42,7 +42,7 @@ export default async function FlyersPage() {
         <aside className="space-y-5 lg:sticky lg:top-28 lg:self-start">
           <Reveal>
             <div className="rounded-[var(--radius-card)] bg-paper p-6">
-              <p className="text-[0.7rem] font-semibold tracking-[0.18em] text-muted uppercase">Which flyer is mine?</p>
+              <p className="text-[0.75rem] font-semibold tracking-[0.18em] text-muted uppercase">Which flyer is mine?</p>
               <ul className="mt-4 space-y-3 text-sm">
                 {flyers.map((f) => (
                   <li key={f.region} className="flex justify-between gap-4">

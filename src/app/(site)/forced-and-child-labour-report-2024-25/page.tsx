@@ -32,24 +32,30 @@ export default async function ReportPage() {
         </div>
       </PageHero>
       <section className="container-x py-16 lg:py-20">
-        <div className="mx-auto max-w-4xl overflow-hidden rounded-[var(--radius-card)] bg-white ring-1 ring-ink/10">
+        <div className="mx-auto max-w-[min(72rem,calc((100svh-12rem)*1.55))] overflow-hidden rounded-[var(--radius-card)] bg-white ring-1 ring-ink/10">
           <div className="flex items-center justify-between border-b border-ink/10 px-6 py-4 text-sm">
             <span className="font-medium">Fruiticana Produce Ltd. · Fiscal Year 2024-25</span>
             <span className="text-muted">{PAGES} pages</span>
           </div>
           {/* Rendered page images: readable on every device, no PDF plugin needed */}
-          <ol className="space-y-px bg-ink/10">
+          {/* Two-page spreads from md up so a page never exceeds the screen; tap a page to read it full size */}
+          <ol className="grid gap-px bg-ink/10 md:grid-cols-2">
             {Array.from({ length: PAGES }, (_, i) => (
               <li key={i} className="bg-white">
+                <a href={`/docs/report-p${i + 1}.jpg`} target="_blank" rel="noopener noreferrer" className="group relative block" aria-label={`Open page ${i + 1} of ${PAGES} full size`}>
                 <Image
                   src={`/docs/report-p${i + 1}.jpg`}
                   alt={`Forced and Child Labour Report 2024-25, page ${i + 1} of ${PAGES}`}
                   width={1222}
                   height={1580}
-                  sizes="(min-width: 896px) 56rem, 100vw"
+                  sizes="(min-width: 768px) 36rem, 100vw"
                   preload={i === 0}
                   className="h-auto w-full"
                 />
+                <span className="absolute right-3 bottom-3 rounded-full bg-forest/85 px-3 py-1.5 text-xs font-semibold text-cream opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                  Page {i + 1} · open full size
+                </span>
+                </a>
               </li>
             ))}
           </ol>

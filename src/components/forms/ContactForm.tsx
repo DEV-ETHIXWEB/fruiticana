@@ -15,10 +15,10 @@ function Field({ label, name, error, required, children }: { label: string; name
         {label}
         {required ? <span className="text-xs font-normal text-muted">Required</span> : <span className="text-xs font-normal text-muted">Optional</span>}
       </label>
-      <div className="mt-2">{children}</div>
+      <div className="mt-1.5">{children}</div>
       <AnimatePresence>
         {error && (
-          <motion.p id={`${name}-error`} initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-1.5 text-sm text-chili">
+          <motion.p id={`${name}-error`} initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-1.5 text-sm text-chili-deep">
             {error}
           </motion.p>
         )}
@@ -28,7 +28,7 @@ function Field({ label, name, error, required, children }: { label: string; name
 }
 
 const input =
-  "w-full rounded-2xl bg-cream px-4 py-3.5 text-[0.95rem] text-ink ring-1 ring-ink/10 outline-none transition-shadow placeholder:text-muted focus:ring-2 focus:ring-leaf aria-[invalid=true]:ring-chili";
+  "w-full rounded-2xl bg-cream px-4 py-3 text-[0.95rem] text-ink ring-1 ring-ink/10 outline-none transition-shadow placeholder:text-muted focus:ring-2 focus:ring-leaf aria-[invalid=true]:ring-chili";
 
 export function ContactForm({ stores }: { stores: string[] }) {
   const [state, action, pending] = useActionState<FormState, FormData>(sendContact, { status: "idle" });
@@ -48,7 +48,7 @@ export function ContactForm({ stores }: { stores: string[] }) {
   }
 
   return (
-    <form action={action} noValidate className="space-y-5">
+    <form action={action} noValidate className="space-y-4">
       <input type="hidden" name="_t" value={t} />
       <div aria-hidden className="absolute -left-[9999px]">
         <label htmlFor="company_website">Website</label>
@@ -87,10 +87,10 @@ export function ContactForm({ stores }: { stores: string[] }) {
         </div>
       </fieldset>
       <Field label="Comments, questions or suggestions" name="message" error={e.message} required>
-        <textarea id="message" name="message" rows={6} required aria-invalid={Boolean(e.message)} aria-describedby={e.message ? "message-error" : undefined} className={`${input} resize-y`} />
+        <textarea id="message" name="message" rows={3} required aria-invalid={Boolean(e.message)} aria-describedby={e.message ? "message-error" : undefined} className={`${input} resize-y`} />
       </Field>
       <div className="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
-        <p aria-live="polite" className={`text-sm ${state.status === "error" ? "text-chili" : "text-muted"}`}>
+        <p aria-live="polite" className={`text-sm ${state.status === "error" ? "text-chili-deep" : "text-muted"}`}>
           {state.status === "error" ? state.message : "We reply from head office, usually within two business days."}
         </p>
         <Button type="submit" variant="chili" disabled={pending} arrow className="shrink-0">
