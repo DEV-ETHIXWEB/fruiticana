@@ -6,12 +6,14 @@ import "./globals.css";
 /*
  * Fonts are self-hosted by next/font (no Google request, no layout shift:
  * size-adjusted fallbacks are generated automatically) and trimmed to the
- * axes we actually use: Fraunces keeps SOFT for its warm display curves;
- * opsz/WONK and Instrument Sans' width axis were dropped to cut preload weight.
+ * axes we actually use: Fraunces keeps SOFT (warm curves), WONK (the leaning,
+ * hand-drawn italic and n/m/h shapes) and opsz (tighter, higher-contrast cuts
+ * at display sizes, chosen automatically per font size). Instrument Sans'
+ * width axis is dropped to cut preload weight.
  */
 const fraunces = Fraunces({
   subsets: ["latin"],
-  axes: ["SOFT"],
+  axes: ["SOFT", "WONK"],
   style: ["normal", "italic"],
   variable: "--font-fraunces",
   display: "swap",
