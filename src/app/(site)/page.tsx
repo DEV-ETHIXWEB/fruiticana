@@ -215,7 +215,7 @@ export default async function HomePage() {
             </ButtonLink>
           </div>
         </div>
-        <div className="scrollbar-none -mx-5 mt-[clamp(1.75rem,5svh,3rem)] flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0">
+        <div className="scrollbar-none -mx-5 mt-[calc(clamp(1.75rem,5svh,3rem)-0.25rem)] -mb-1 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 py-1 md:mx-0 md:mt-[clamp(1.75rem,5svh,3rem)] md:mb-0 md:py-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0">
           {posts.slice(0, 2).map((post, i) => (
             <Reveal key={post.slug} delay={i * 0.08} className="w-[82%] shrink-0 snap-start md:w-auto">
               <Link href={`/blog/${post.slug}`} className="group/btn flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-white ring-1 ring-ink/[0.06] transition-shadow hover:shadow-[0_30px_60px_-30px_rgb(15_59_38/0.35)]">

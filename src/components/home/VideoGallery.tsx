@@ -108,7 +108,7 @@ export function VideoGallery({ videos, nonEmbeddable, intro }: { videos: Video[]
       <p className="-mt-1 font-display text-lg leading-snug text-cream sm:hidden">{v.title}</p>
 
       <ul
-        className="scrollbar-none -mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 lg:col-start-2 lg:row-start-2 lg:grid-cols-1 lg:content-start"
+        className="scrollbar-none -mx-5 -my-1 flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 py-1 sm:mx-0 sm:my-0 sm:py-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 lg:col-start-2 lg:row-start-2 lg:grid-cols-1 lg:content-start"
         aria-label="More commercials"
       >
         {videos.map((item, i) => (

@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,19 +14,13 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
   const pathname = usePathname();
   const [open, setOpen] = useState<string | null>(null);
   const [mobile, setMobile] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { scrollY } = useScroll();
   const closeTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const reduce = useReducedMotion();
 
-  useMotionValueEvent(scrollY, "change", (y) => {
-    const prev = scrollY.getPrevious() ?? 0;
-    setScrolled(y > 24);
-    // Hide on the way down, return on the way up, never while a menu is open.
-    setHidden(y > 320 && y > prev + 4 && !open && !mobile);
-    if (y < prev - 4) setHidden(false);
-  });
+  // The header always stays on screen (Locations / Specials are one tap away); once the page
+  // scrolls it condenses into a slim frosted bar instead of hiding.
+  useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 24));
 
   // Close menus on navigation (state adjusted during render, no effect round-trip).
   const [lastPath, setLastPath] = useState(pathname);
@@ -63,11 +57,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
         Skip to content
       </a>
 
-      <motion.header
-        className="fixed inset-x-0 top-0 z-50"
-        animate={{ y: hidden ? "-100%" : "0%" }}
-        transition={{ duration: reduce ? 0 : 0.5, ease: EASE }}
-      >
+      <header className="fixed inset-x-0 top-0 z-50">
         {announcement?.text && !scrolled && (
           <div className="bg-forest text-cream">
             <div className="container-x flex h-9 items-center justify-center gap-3 text-[0.8rem] font-medium">
@@ -92,8 +82,8 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
             <Link href="/" className="relative shrink-0" aria-label="Fruiticana home">
               {onDark ? (
                 <span className="flex items-end gap-1.5">
-                  <Image src="/brand/wordmark-cream.png" alt="Fruiticana, since 1994" width={380} height={89} preload className="h-auto w-[128px] lg:w-[154px]" />
-                  <Image src="/brand/mark.png" alt="" width={118} height={118} preload className="mb-0.5 h-auto w-[32px] lg:w-[38px]" />
+                  <Image src="/brand/wordmark-cream.png" alt="Fruiticana, since 1994" width={380} height={89} preload className="h-auto w-[150px] lg:w-[188px]" />
+                  <Image src="/brand/mark.png" alt="" width={118} height={118} preload className="mb-0.5 h-auto w-[38px] lg:w-[46px]" />
                 </span>
               ) : (
                 <Image
@@ -102,7 +92,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
                   width={482}
                   height={118}
                   preload
-                  className={`h-auto transition-[width] duration-500 ${scrolled ? "w-[148px]" : "w-[164px] lg:w-[196px]"}`}
+                  className={`h-auto transition-[width] duration-500 ${scrolled ? "w-[172px] lg:w-[188px]" : "w-[190px] lg:w-[236px]"}`}
                 />
               )}
             </Link>
@@ -193,7 +183,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
             </div>
           </div>
         </div>
-      </motion.header>
+      </header>
 
       <AnimatePresence>
         {mobile && (

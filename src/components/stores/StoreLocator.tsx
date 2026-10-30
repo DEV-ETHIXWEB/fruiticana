@@ -239,7 +239,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
             </button>
           </div>
         </form>
-        <div className="scrollbar-none -mx-4 mt-4 flex gap-2 overflow-x-auto px-4 sm:-mx-5 sm:px-5" role="group" aria-label="Filter by city">
+        <div className="scrollbar-none -mx-4 mt-2 -mb-3 flex gap-2 overflow-x-auto px-4 pt-2 pb-3 sm:-mx-5 sm:px-5" role="group" aria-label="Filter by city">
           {cities.map((c) => (
             <button
               key={c}
@@ -249,7 +249,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
                 setSelected(null);
               }}
               aria-pressed={city === c}
-              className={`shrink-0 rounded-full px-4 py-2 text-[0.82rem] font-medium transition-colors ${city === c ? "bg-leaf text-white" : "bg-cream text-ink/75 hover:text-ink"}`}
+              className={`shrink-0 rounded-full px-4 py-2 text-[0.82rem] font-medium transition-colors ${city === c ? "btn-3d btn-leaf bg-leaf text-white" : "bg-cream text-ink/75 hover:text-ink"}`}
             >
               {c}
               {c !== "All" && <span className={`ml-1.5 ${city === c ? "text-white/90" : "text-muted"}`}>{stores.filter((s) => s.city === c).length}</span>}

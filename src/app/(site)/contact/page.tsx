@@ -2,8 +2,9 @@ import { ContactForm } from "@/components/forms/ContactForm";
 import { Reveal } from "@/components/motion/primitives";
 import { PageHero } from "@/components/page/PageHero";
 import { RichText } from "@/components/page/RichText";
+import { StoreMap } from "@/components/stores/StoreMap";
 import { Icon } from "@/components/ui/Icon";
-import { getPage, getRetailStores, getSettings } from "@/lib/content";
+import { getPage, getRetailStores, getSettings, getStores } from "@/lib/content";
 import { metaFromPage } from "@/lib/seo";
 
 const PATH = "/contact";
@@ -12,7 +13,8 @@ export async function generateMetadata() {
 }
 
 export default async function ContactPage() {
-  const [page, settings, stores] = await Promise.all([getPage("contact"), getSettings(), getRetailStores()]);
+  const [page, settings, stores, all] = await Promise.all([getPage("contact"), getSettings(), getRetailStores(), getStores()]);
+  const office = all.find((s) => s.isHeadOffice);
   const tel = `tel:+1${settings.phone.replace(/\D/g, "")}`;
   return (
     <>
@@ -48,6 +50,13 @@ export default async function ContactPage() {
               </div>
             </div>
           </Reveal>
+          {office && (
+            <Reveal delay={0.12}>
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-card)] bg-paper ring-1 ring-ink/10">
+                <StoreMap lat={office.lat} lng={office.lng} label="Fruiticana Head Office" />
+              </div>
+            </Reveal>
+          )}
         </aside>
         <Reveal delay={0.05}>
           <div className="relative rounded-[var(--radius-card)] bg-white p-6 ring-1 ring-ink/[0.06] sm:p-8">

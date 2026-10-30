@@ -23,6 +23,10 @@ export const metadata: Metadata = pageMetadata({
 export default async function FlyersPage() {
   const [flyers, stores] = await Promise.all([getFlyers(), getRetailStores()]);
   const countBy = (r: string) => stores.filter((s) => s.flyerRegion === r).length;
+  // Stores whose region has no flyer online right now: told to ask in store, never shown another region’s prices.
+  const unlisted = stores.filter((s) => !flyers.some((f) => f.region === s.flyerRegion));
+  const noFlyer = unlisted.length;
+  const noFlyerLabel = [...new Set(unlisted.map((s) => (s.province === "AB" ? "Alberta" : s.locality)))].join(", ");
 
   return (
     <>
@@ -50,6 +54,14 @@ export default async function FlyersPage() {
                     <span className="text-muted">{f.region === "greater-vancouver" ? `${countBy(f.region)} BC stores` : `${countBy(f.region)} store${countBy(f.region) === 1 ? "" : "s"}`}</span>
                   </li>
                 ))}
+                {noFlyer > 0 && (
+                  <li className="flex justify-between gap-4 border-t border-ink/10 pt-3">
+                    <span className="font-medium text-ink">{noFlyerLabel}</span>
+                    <span className="text-right text-muted">
+                      {noFlyer} store{noFlyer === 1 ? "" : "s"}: ask in store
+                    </span>
+                  </li>
+                )}
               </ul>
               <Link href="/storefinder" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-leaf">
                 <Icon name="pin" className="size-4" /> Find your store

@@ -53,9 +53,6 @@ export const settings: SiteSettings = {
 /* ------------------------------------------------------------------ */
 export const flyers: Flyer[] = [
   { region: "greater-vancouver", label: "Greater Vancouver", image: img("/images/flyers/greater-vancouver.jpg", "Fruiticana weekly specials flyer for Greater Vancouver & BC", 1230, 1594) },
-  { region: "calgary", label: "Calgary", image: img("/images/flyers/calgary.jpg", "Fruiticana weekly specials flyer for Calgary", 1230, 1710) },
-  { region: "chestermere", label: "Chestermere", image: img("/images/flyers/chestermere.jpg", "Fruiticana weekly specials flyer for Chestermere", 1230, 1710) },
-  { region: "edmonton", label: "Edmonton", image: img("/images/flyers/edmonton.jpg", "Fruiticana weekly specials flyer for Edmonton", 1230, 1710) },
 ];
 
 /* The rotating banners from the legacy homepage, kept as a campaign rail. */
@@ -267,7 +264,7 @@ export const mangoBenefits = [
   { title: "Antioxidants", stat: "Packed", unit: "in every serving", body: "Antioxidants are natural substances found in food that may help lower risks of chronic diseases, like cancer and cardiovascular disease. Luckily there are a number of antioxidants packed in each serving of a mango." },
   { title: "Vitamin A", stat: "~25%", unit: "daily intake", body: "Vitamin A is important for bone growth, vision and reproduction. Poor vitamin A intake can also lead to decreased ability to fight infections. One mango serving contains nearly 25% of the daily required intake." },
   { title: "Vitamin C", stat: "75%", unit: "daily intake", body: "Vitamin C helps lower the risk of chronic diseases, and is needed for growth and development and to make collagen, a protein found in skin, tendons and ligaments. One serving can give you up to 75% of the daily suggested intake." },
-  { title: "Fiber", stat: "12%", unit: "daily intake", body: "Mangoes are a great source of fiber which helps foster proper digestion. A high fiber diet can also lower the risk of developing heart disease, diverticular disease and Type 2 diabetes." },
+  { title: "Fiber", stat: "12%", unit: "daily intake", body: "Mangoes are a great source of fiber which helps foster proper digestion and prevent constipation. A high fiber diet can also lower the risk of developing heart disease, diverticular disease and Type 2 diabetes. The average serving of mango provides 12% of the suggested daily intake of dietary fiber." },
 ];
 
 export const mangoOutro = [

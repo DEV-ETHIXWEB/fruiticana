@@ -49,7 +49,8 @@ export default async function StorePage({ params }: PageProps<"/storefinder/[slu
     .map((s) => ({ s, km: distanceKm(store, s) }))
     .sort((a, b) => a.km - b.km)
     .slice(0, 3);
-  const flyer = flyers.find((f) => f.region === store.flyerRegion) ?? flyers[0];
+  // Only this store’s own regional flyer: another region’s prices would be wrong here.
+  const flyer = flyers.find((f) => f.region === store.flyerRegion);
   const address = `${store.street}, ${store.locality}, ${store.province}${store.postalCode ? ` ${store.postalCode}` : ""}`;
   const dirs = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`Fruiticana ${address}`)}`;
   const tel = `tel:+1${store.phone.replace(/\D/g, "")}`;
@@ -57,7 +58,7 @@ export default async function StorePage({ params }: PageProps<"/storefinder/[slu
   return (
     <>
       <JsonLd data={storeLd(store)} />
-      <section className="relative overflow-hidden pt-28 lg:pt-36">
+      <section className="relative overflow-hidden pt-28 pb-8 lg:pt-36">
         <div aria-hidden className="pointer-events-none absolute -top-48 right-[-12%] size-[40rem] rounded-full bg-[radial-gradient(circle,rgb(246_210_28/0.28),transparent_65%)] blur-2xl" />
         <div className="container-x relative">
           <Breadcrumbs items={[{ name: "Store Locator", path: "/storefinder" }, { name: store.isHeadOffice ? "Head Office" : store.name, path: `/storefinder/${store.slug}` }]} />
@@ -97,9 +98,15 @@ export default async function StorePage({ params }: PageProps<"/storefinder/[slu
                   <div>
                     <dt className="text-[0.75rem] font-semibold tracking-[0.18em] text-muted uppercase">Weekly flyer</dt>
                     <dd className="mt-2 text-lg">
-                      <Link href={`/flyers?region=${flyer.region}`} className="text-leaf underline decoration-leaf/30 underline-offset-4 hover:decoration-leaf">
-                        {flyer.label} specials
-                      </Link>
+                      {flyer ? (
+                        <Link href={`/flyers?region=${flyer.region}`} className="text-leaf underline decoration-leaf/30 underline-offset-4 hover:decoration-leaf">
+                          {flyer.label} specials
+                        </Link>
+                      ) : (
+                        <a href={tel} className="text-leaf underline decoration-leaf/30 underline-offset-4 hover:decoration-leaf">
+                          Call for this week’s specials
+                        </a>
+                      )}
                     </dd>
                   </div>
                 )}
@@ -140,14 +147,26 @@ export default async function StorePage({ params }: PageProps<"/storefinder/[slu
               ))}
             </div>
             <Reveal delay={0.1} className="h-full">
-            <Link href={`/flyers?region=${flyer.region}`} className="group/btn flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-leaf p-4 text-white">
-              <div className="relative min-h-40 flex-1 overflow-hidden rounded-2xl bg-white">
-                <Image src={flyer.image.src} alt={flyer.image.alt} fill sizes="22rem" className="object-cover object-top transition-transform duration-[1.2s] group-hover/btn:scale-105" />
+            {flyer ? (
+              <Link href={`/flyers?region=${flyer.region}`} className="group/btn flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-leaf p-4 text-white">
+                <div className="relative min-h-40 flex-1 overflow-hidden rounded-2xl bg-white">
+                  <Image src={flyer.image.src} alt={flyer.image.alt} fill sizes="22rem" className="object-cover object-top transition-transform duration-[1.2s] group-hover/btn:scale-105" />
+                </div>
+                <p className="mt-4 flex items-center justify-between px-2 pb-1 font-semibold">
+                  This week’s {flyer.label} flyer <Arrow />
+                </p>
+              </Link>
+            ) : (
+              // No flyer is published for this region right now: point to the store, never to another region’s prices.
+              <div className="flex h-full flex-col rounded-[var(--radius-card)] bg-leaf p-7 text-white">
+                <Icon3D name="flyer" className="size-16 -ml-1" />
+                <p className="mt-5 font-display text-2xl leading-tight">This week’s specials</p>
+                <p className="mt-2 text-sm text-white/80">There’s no {store.locality} flyer online this week. Call the store to hear what’s on special.</p>
+                <ButtonLink href={tel} variant="light" magnetic={false} arrow={false} className="mt-auto self-start">
+                  <span className="inline-flex items-center gap-2"><Icon name="phone" className="size-4" /> {store.phone}</span>
+                </ButtonLink>
               </div>
-              <p className="mt-4 flex items-center justify-between px-2 pb-1 font-semibold">
-                This week’s {flyer.label} flyer <Arrow />
-              </p>
-            </Link>
+            )}
             </Reveal>
           </div>
         </section>

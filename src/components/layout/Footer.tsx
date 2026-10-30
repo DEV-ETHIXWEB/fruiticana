@@ -23,7 +23,7 @@ const explore = [
   { label: "Farm to Table", href: "/farm-to-table" },
   { label: "Rajan Mangoes", href: "/mangoes" },
   { label: "Events", href: "/events" },
-  { label: "Labour Report 2024-25", href: "/forced-and-child-labour-report-2024-25" },
+  { label: "Forced and Child Labour Report 2024-25", href: "/forced-and-child-labour-report-2024-25" },
 ];
 
 const heading = "text-[0.75rem] font-semibold tracking-[0.2em] text-cream/65 uppercase";
@@ -44,8 +44,8 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
         <div className="col-span-2 md:col-span-3 md:flex md:items-end md:justify-between md:gap-8 xl:col-span-3 xl:block">
           <div>
           <Link href="/" aria-label="Fruiticana home" className="inline-flex items-end gap-2">
-            <Image src="/brand/wordmark-cream.png" alt="Fruiticana, since 1994" width={380} height={89} className="h-auto w-[150px]" />
-            <Image src="/brand/mark.png" alt="" width={118} height={118} className="mb-0.5 h-auto w-[38px]" />
+            <Image src="/brand/wordmark-cream.png" alt="Fruiticana, since 1994" width={380} height={89} className="h-auto w-[176px] sm:w-[190px]" />
+            <Image src="/brand/mark.png" alt="" width={118} height={118} className="mb-0.5 h-auto w-[48px] sm:w-[52px]" />
           </Link>
           <p className="mt-4 max-w-[17rem] text-[0.9rem] leading-relaxed text-cream/70">
             Fresh fruits, vegetables and spices at the best price, since {settings.founded}.

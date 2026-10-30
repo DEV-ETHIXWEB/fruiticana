@@ -38,7 +38,7 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
   return (
     <div className="min-w-0">
       <div className="min-w-0">
-        <div role="tablist" aria-label="Choose your region" className="scrollbar-none -mx-5 flex min-w-0 gap-2 overflow-x-auto px-5 sm:mx-0 sm:px-0">
+        <div role="tablist" aria-label="Choose your region" className="scrollbar-none -mx-5 -my-4 flex min-w-0 gap-2 overflow-x-auto px-5 py-4 sm:-mx-2 sm:px-2">
           {flyers.map((f) => {
             const active = f.region === region;
             return (
@@ -49,9 +49,9 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
                 aria-selected={active}
                 aria-controls="flyer-panel"
                 onClick={() => choose(f.region)}
-                className={`relative shrink-0 rounded-full px-5 py-3 text-sm font-semibold transition-colors ${active ? "text-white" : "text-ink/70 ring-1 ring-ink/15 hover:text-ink hover:ring-ink/35"}`}
+                className={`relative shrink-0 rounded-full px-5 py-3 text-sm font-semibold transition-colors ${active ? "text-white" : "btn-glass text-ink/70 hover:text-ink"}`}
               >
-                {active && <motion.span layoutId="flyer-tab" className="absolute inset-0 rounded-full bg-leaf" transition={{ type: "spring", stiffness: 380, damping: 32 }} />}
+                {active && <motion.span layoutId="flyer-tab" className="btn-3d btn-leaf absolute inset-0 rounded-full bg-leaf" transition={{ type: "spring", stiffness: 380, damping: 32 }} />}
                 <span className="relative">{f.label}</span>
               </button>
             );

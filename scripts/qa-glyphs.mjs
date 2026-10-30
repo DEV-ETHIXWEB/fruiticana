@@ -1,5 +1,6 @@
 // Finds text that is visibly cut: any line of text whose glyph box extends past an ancestor that clips
 // (overflow hidden/clip/auto/scroll, or clip-path), plus text truncated with an ellipsis or line-clamp.
+// Also finds outer box-shadows (button rings, 3D bevels and glows) sliced off by a clipping ancestor.
 // Usage: node scripts/qa-glyphs.mjs [route...]   (default: every URL in /sitemap.xml)
 // Env: QA_BASE (default http://localhost:4318), QA_VIEWPORTS (default 1440x900,1024x768,768x1024,390x844)
 import { chromium } from "playwright";
@@ -78,6 +79,43 @@ for (const [width, height] of viewports) {
           }
         }
         seen.add(el);
+      }
+      // Outer box-shadows (rings, glows) cut by a clipping ancestor
+      for (const el of document.querySelectorAll("body *")) {
+        const cs = getComputedStyle(el);
+        if (cs.boxShadow === "none" || el.closest(".maplibregl-map,[data-qa-skip]") || !visible(el)) continue;
+        const ext = { l: 0, r: 0, t: 0, b: 0 };
+        for (const sh of cs.boxShadow.split(/,(?![^(]*\))/)) {
+          if (sh.includes("inset")) continue;
+          const [x = 0, y = 0, blur = 0, spread = 0] = (sh.replace(/rgba?\([^)]*\)/, "").match(/-?[\d.]+px/g) || []).map(parseFloat);
+          if (/rgba?\([^)]*,\s*0\)/.test(sh)) continue; // fully transparent
+          const reach = spread + blur * 0.5;
+          ext.l = Math.max(ext.l, reach - x); ext.r = Math.max(ext.r, reach + x);
+          ext.t = Math.max(ext.t, reach - y); ext.b = Math.max(ext.b, reach + y);
+        }
+        if (Math.max(ext.l, ext.r, ext.t, ext.b) < 1) continue;
+        const r = el.getBoundingClientRect();
+        if (r.width < 1 || r.height < 1) continue;
+        for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) {
+          if (!clips(a)) continue;
+          const b = a.getBoundingClientRect();
+          // the element itself runs past this edge (scrolled out, or bleeds by design): not a shadow problem
+          const inside = { l: r.left >= b.left - 0.5, r: r.right <= b.right + 0.5, t: r.top >= b.top - 0.5, b: r.bottom <= b.bottom + 0.5 };
+          if (!inside.l && !inside.r) break;
+          if (!inside.t && !inside.b) break;
+          const cut = {
+            l: inside.l ? Math.min(ext.l, b.left - (r.left - ext.l)) : 0,
+            r: inside.r ? Math.min(ext.r, r.right + ext.r - b.right) : 0,
+            t: inside.t ? Math.min(ext.t, b.top - (r.top - ext.t)) : 0,
+            b: inside.b ? Math.min(ext.b, r.bottom + ext.b - b.bottom) : 0,
+          };
+          // report when at least half of a side's ring/glow is sliced off
+          const sides = ["l", "r", "t", "b"].filter((k) => ext[k] >= 1 && cut[k] >= Math.max(1, ext[k] * 0.5));
+          if (sides.length) {
+            out.push({ kind: "SHADOW", text: (el.textContent.trim() || el.getAttribute("aria-label") || el.tagName).slice(0, 50), px: Math.round(Math.max(...sides.map((k) => cut[k]))), side: sides.join(""), by: `${a.tagName.toLowerCase()}.${String(a.className).split(" ").slice(0, 4).join(".")}` });
+          }
+          break;
+        }
       }
       return out;
     });

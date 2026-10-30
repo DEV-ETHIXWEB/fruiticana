@@ -10,6 +10,7 @@ const legacyRedirects = [
   { source: "/weekly-specials", destination: "/flyers" },
   { source: "/in-the-community", destination: "/blog" },
   { source: "/community", destination: "/blog" },
+  { source: "/home", destination: "/" },
   { source: "/tempwg", destination: "/" },
   { source: "/index.php", destination: "/" },
   { source: "/uploads/content/ForcedandChildLabourReport202425.pdf", destination: "/docs/forced-and-child-labour-report-2024-25.pdf" },
