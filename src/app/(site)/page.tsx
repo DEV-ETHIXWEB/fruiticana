@@ -87,25 +87,24 @@ export default async function HomePage() {
               className="font-display text-[clamp(1.55rem,min(0.9rem+1.9vw,4.5svh),2.75rem)] leading-[1.14] tracking-[-0.02em] text-forest"
               accentClassName="italic text-chili"
             />
-            <div className="mt-[clamp(1.75rem,5svh,3rem)] grid grid-cols-2 gap-x-6 gap-y-6 border-t border-ink/10 pt-[clamp(1.25rem,4svh,2.25rem)] md:grid-cols-4">
+            {/* Three facts and one way on: kept deliberately sparse */}
+            <div className="mt-[clamp(1.75rem,5svh,3rem)] grid grid-cols-3 items-start gap-x-3 gap-y-6 border-t border-ink/10 pt-[clamp(1.25rem,4svh,2.25rem)] sm:flex sm:flex-wrap sm:items-end sm:gap-x-14">
               {[
-                { value: <Counter to={settings.founded} format={false} />, label: "Founded in Surrey with a single store" },
-                { value: <Counter to={retail.length} />, label: "Locations across BC & Alberta" },
-                { value: <Counter to={settings.warehouseSqFt / 1000} suffix="k" />, label: "Sq. ft warehouse in Surrey" },
-                { value: <>12-24<span className="text-[0.5em]">h</span></>, label: "From local farm to our shelves" },
+                { value: <Counter to={settings.founded} format={false} />, label: "Founded in Surrey" },
+                { value: <Counter to={retail.length} />, label: "Stores in BC & Alberta" },
+                { value: <Counter to={settings.warehouseSqFt / 1000} suffix="k" />, label: "Sq. ft warehouse" },
               ].map((s, i) => (
                 <Reveal key={i} delay={i * 0.08}>
-                  <p className="font-display text-[clamp(2.1rem,min(1.2rem+2.4vw,7svh),4rem)] leading-none tracking-tight whitespace-nowrap text-leaf">{s.value}</p>
-                  <p className="mt-2 max-w-[12rem] text-sm text-muted">{s.label}</p>
+                  <p className="font-display text-[clamp(2.1rem,min(1.2rem+2.4vw,7svh),3.75rem)] leading-none tracking-tight whitespace-nowrap text-leaf">{s.value}</p>
+                  <p className="mt-2 text-[0.8rem] leading-snug text-muted sm:text-sm">{s.label}</p>
                 </Reveal>
               ))}
+              <Reveal delay={0.24} className="col-span-3 sm:ml-auto">
+                <ButtonLink href="/our-company" variant="ghost">
+                  Our company
+                </ButtonLink>
+              </Reveal>
             </div>
-            <Reveal className="mt-[clamp(1.5rem,4svh,2.5rem)] flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-              <p className="hidden max-w-2xl text-ink-soft sm:block lg:text-lg">{settings.companySummary}</p>
-              <ButtonLink href="/our-company" variant="ghost" className="self-start sm:self-auto sm:shrink-0">
-                Our company
-              </ButtonLink>
-            </Reveal>
           </div>
         </div>
       </section>
