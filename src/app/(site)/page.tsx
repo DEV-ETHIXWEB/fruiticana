@@ -8,6 +8,7 @@ import { NewsVideo } from "@/components/home/NewsVideo";
 import { VideoGallery } from "@/components/home/VideoGallery";
 import { Counter, Reveal, SplitHeading } from "@/components/motion/primitives";
 import { Arrow, ButtonLink } from "@/components/ui/Button";
+import { Icon3D } from "@/components/ui/Icon3D";
 import { isSmallImage, ProductShot } from "@/components/ui/ProductShot";
 import {
   getCampaigns,
@@ -33,6 +34,17 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const dateFmt = new Intl.DateTimeFormat("en-CA", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+
+/**
+ * Marks phrases for SplitHeading's accent style (*word*), keeping trailing punctuation
+ * inside the accent: "the very best." -> "the *very* *best.*". The CMS text stays plain.
+ */
+function accentPhrases(text: string, phrases: string[]) {
+  return phrases.reduce(
+    (t, phrase) => t.replace(new RegExp(`\\b${phrase}([.,;!?]?)`, "i"), (m, punct: string) => m.slice(0, m.length - punct.length).split(" ").map((w, i, all) => `*${w}${i === all.length - 1 ? punct : ""}*`).join(" ")),
+    text,
+  );
+}
 
 export default async function HomePage() {
   const [settings, campaigns, flyers, stores, retail, videos, posts] = await Promise.all([
@@ -176,23 +188,60 @@ export default async function HomePage() {
         ))}
       </section>
 
-      {/* ---------------- President's message ---------------- */}
-      <section className="relative overflow-hidden bg-paper py-[clamp(3.5rem,11svh,7rem)]">
-        <div aria-hidden className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 font-display text-[clamp(9rem,22svh,16rem)] leading-[0.85] text-leaf/[0.08] select-none">“</div>
-        <div className="container-x relative max-w-5xl text-center">
-          <p className="eyebrow justify-center text-chili-deep">President’s message</p>
-          <SplitHeading
-            as="blockquote"
-            text={settings.presidentQuote}
-            className="mt-6 font-display text-[clamp(1.55rem,min(1rem+2.2vw,5.4svh),3rem)] leading-[1.16] tracking-[-0.02em] text-forest"
-          />
-          <Reveal delay={0.2} className="mt-8 inline-flex items-center gap-4">
-            <Image src={photos.president.src} alt={photos.president.alt} width={64} height={64} className="size-14 rounded-full object-cover ring-4 ring-cream" />
-            <span className="text-left">
-              <span className="block font-display text-xl text-ink">{settings.presidentName}</span>
-              <span className="block text-sm text-muted">{settings.presidentTitle}, Fruiticana</span>
-            </span>
-          </Reveal>
+      {/* ---------------- President's message ----------------
+          A dark editorial band: the founder's words, then the three things that keep the promise. */}
+      <section className="grain relative isolate overflow-hidden bg-forest-deep py-12 text-cream sm:py-[clamp(3.5rem,11svh,7rem)]">
+        <div aria-hidden className="pointer-events-none absolute -top-40 -left-40 -z-10 size-[36rem] rounded-full bg-[radial-gradient(circle,rgb(246_210_28/0.16),transparent_65%)] blur-2xl" />
+        <div aria-hidden className="pointer-events-none absolute -right-32 -bottom-48 -z-10 size-[34rem] rounded-full bg-[radial-gradient(circle,rgb(226_35_26/0.14),transparent_65%)] blur-2xl" />
+        <div className="container-x grid items-center gap-8 sm:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:gap-16 xl:gap-24">
+          <figure className="relative">
+            <p className="eyebrow text-turmeric">President’s message</p>
+            <Reveal y={24} delay={0.05}>
+              <span aria-hidden className="mt-3 block h-[0.5em] font-display text-[clamp(4rem,12svh,7.5rem)] leading-[0.95] text-turmeric sm:mt-4">“</span>
+            </Reveal>
+            <SplitHeading
+              as="blockquote"
+              text={accentPhrases(settings.presidentQuote, ["very best", "best price"])}
+              className="mt-3 font-display text-[clamp(1.3rem,min(0.9rem+1.75vw,4.8svh),2.6rem)] leading-[1.2] tracking-[-0.015em] text-cream"
+              accentClassName="italic text-turmeric"
+            />
+            <Reveal delay={0.2}>
+              <figcaption className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-cream/15 pt-5 sm:mt-8 sm:pt-6">
+                <span className="flex items-center gap-4">
+                  <Image src={photos.president.src} alt={photos.president.alt} width={64} height={64} className="size-14 rounded-full object-cover ring-2 ring-turmeric ring-offset-4 ring-offset-forest-deep" />
+                  <span>
+                    <span className="block font-display text-xl text-cream">{settings.presidentName}</span>
+                    <span className="block text-sm text-cream/65">{settings.presidentTitle}, Fruiticana</span>
+                  </span>
+                </span>
+                <Link href="/our-company" className="group/btn ml-auto inline-flex items-center gap-2 text-sm font-semibold text-turmeric">
+                  Read our story <Arrow />
+                </Link>
+              </figcaption>
+            </Reveal>
+          </figure>
+
+          <div>
+            <p className="text-[0.75rem] font-semibold tracking-[0.18em] text-cream/60 uppercase">How we keep that promise</p>
+            <ul className="mt-4 grid grid-cols-3 gap-2 sm:mt-5 sm:block sm:space-y-3">
+              {[
+                { icon: "leaf" as const, title: "Fresh, every day", body: "Local farm produce on our shelves within 12-24 hours.", href: "/farm-to-table" },
+                { icon: "truck" as const, title: "Direct from the source", body: "We deal directly with growers and packers, and run our own facilities in India.", href: "/commitment-to-quality" },
+                { icon: "badge" as const, title: "Indican, since 1997", body: "Our own brand of premium spices, lentils and juices.", href: "/indican" },
+              ].map((item, i) => (
+                <Reveal as="li" key={item.href} delay={0.1 + i * 0.08}>
+                  <Link href={item.href} className="group/btn flex h-full flex-col items-center gap-2 rounded-2xl bg-cream/[0.05] p-3 text-center ring-1 ring-cream/10 transition-colors hover:bg-cream/[0.09] hover:ring-turmeric/40 sm:flex-row sm:gap-4 sm:p-4 sm:text-left">
+                    <Icon3D name={item.icon} className="size-10 transition-transform sm:size-12 duration-500 ease-[var(--ease-out-expo)] group-hover/btn:-rotate-6 group-hover/btn:scale-110" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[0.8rem] leading-tight font-semibold text-cream sm:text-base">{item.title}</span>
+                      <span className="mt-0.5 hidden text-sm leading-snug text-cream/70 sm:block">{item.body}</span>
+                    </span>
+                    <Arrow className="hidden shrink-0 text-turmeric sm:inline-flex" />
+                  </Link>
+                </Reveal>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 

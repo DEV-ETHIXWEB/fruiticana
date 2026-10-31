@@ -13,8 +13,10 @@ export function QuickActions({ flyers, stores }: { flyers: Flyer[]; stores: Stor
   return (
     <section className="container-x grid gap-5 pb-6 lg:grid-cols-2">
       <Reveal className="h-full">
-        <div className="grain group/card relative isolate flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-leaf p-7 text-white sm:min-h-[24rem] sm:p-10 lg:min-h-[clamp(22rem,calc(100svh-22rem),27rem)]">
-          <div aria-hidden className="absolute -right-16 -bottom-24 -z-10 font-display text-[18rem] leading-none text-white/[0.07] italic">99¢</div>
+        <div className="grain group/card relative isolate flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] [container-type:inline-size] bg-leaf p-7 text-white sm:min-h-[24rem] sm:p-10 lg:min-h-[clamp(22rem,calc(100svh-22rem),27rem)]">
+          {/* Decorative numerals sit fully inside the card (sized to its width), never cut by its edge.
+              Hidden sm-lg, where the flyer fills the corner it would sit in. */}
+          <div aria-hidden className="pointer-events-none absolute right-[5%] bottom-[4%] -z-10 pr-[0.06em] font-display text-[24cqw] leading-[0.8] text-white/[0.09] italic sm:hidden lg:block lg:text-[21cqw] xl:text-[17cqw]">99¢</div>
           <div className="relative z-10 max-w-[19rem] sm:max-w-[56%] lg:max-w-[19rem] xl:max-w-[56%]">
             <Icon3D name="flyer" className="hidden size-16 -ml-1 sm:block" />
             <h2 className="font-display text-[clamp(2.1rem,1.5rem+1.6vw,2.6rem)] leading-[1] tracking-tight sm:mt-6">Weekly Specials</h2>
@@ -42,7 +44,7 @@ export function QuickActions({ flyers, stores }: { flyers: Flyer[]; stores: Stor
       </Reveal>
 
       <Reveal delay={0.1} className="h-full">
-        <div className="relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-turmeric p-7 text-forest sm:min-h-[24rem] sm:p-10 lg:min-h-[clamp(22rem,calc(100svh-22rem),27rem)]">
+        <div className="relative isolate flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] [container-type:inline-size] bg-turmeric p-7 text-forest sm:min-h-[24rem] sm:p-10 lg:min-h-[clamp(22rem,calc(100svh-22rem),27rem)]">
           <div className="flex items-start justify-between gap-6">
             <div className="max-w-[19rem]">
               <Icon3D name="pin" className="hidden size-16 -ml-1 sm:block" />
@@ -50,7 +52,7 @@ export function QuickActions({ flyers, stores }: { flyers: Flyer[]; stores: Stor
               <p className="mt-3 text-forest/75">{retail.length} stores across BC and Alberta. There’s sure to be a Fruiticana near you.</p>
             </div>
           </div>
-          <div aria-hidden className="pointer-events-none absolute -right-6 -bottom-20 font-display text-[18rem] leading-none text-forest/[0.07] italic">{retail.length}</div>
+          <div aria-hidden className="pointer-events-none absolute right-[5%] bottom-[4%] -z-10 pr-[0.06em] font-display text-[30cqw] leading-[0.8] text-forest/[0.09] italic lg:text-[26cqw]">{retail.length}</div>
           <div className="mt-auto space-y-4 pt-6 sm:pt-8">
             <NearestStore stores={retail} tone="dark" />
             <Link href="/storefinder" className="group/btn inline-flex items-center gap-2 text-sm font-semibold underline decoration-forest/30 underline-offset-4 hover:decoration-forest">
