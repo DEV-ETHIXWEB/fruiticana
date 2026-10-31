@@ -6,7 +6,7 @@ import { Hero } from "@/components/home/Hero";
 import { QuickActions } from "@/components/home/QuickActions";
 import { NewsVideo } from "@/components/home/NewsVideo";
 import { VideoGallery } from "@/components/home/VideoGallery";
-import { Counter, Reveal, SplitHeading } from "@/components/motion/primitives";
+import { Counter, Reveal, SplitHeading, ZoomSettle } from "@/components/motion/primitives";
 import { Arrow, ButtonLink } from "@/components/ui/Button";
 import { Icon3D } from "@/components/ui/Icon3D";
 import { isSmallImage, ProductShot } from "@/components/ui/ProductShot";
@@ -66,16 +66,25 @@ export default async function HomePage() {
       <QuickActions flyers={flyers} stores={stores} />
 
       {/* ---------------- Mission + company ---------------- */}
-      <section className="container-x py-[clamp(3.5rem,10svh,7rem)]">
-        <div className="grid gap-6 lg:grid-cols-[13rem_1fr] lg:gap-16">
-          <Reveal>
-            <p className="eyebrow text-leaf">Mission statement</p>
-          </Reveal>
+      <section className="container-x py-[clamp(3rem,9svh,7rem)]">
+        {/* lg+: the label heads a tall store photo that stretches to the text column's height
+            (absolutely filled, so it never adds height); below lg the columns stack without it. */}
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,1.45fr)] lg:gap-12 xl:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] xl:gap-20">
+          <div className="flex flex-col gap-6">
+            <Reveal>
+              <p className="eyebrow text-leaf">Mission statement</p>
+            </Reveal>
+            <Reveal y={40} className="relative hidden min-h-64 flex-1 lg:block">
+              <ZoomSettle className="absolute inset-0 rounded-[var(--radius-card)]">
+                <Image src={photos.produceFloor.src} alt={photos.produceFloor.alt} fill sizes="(min-width: 1024px) 34vw, 1px" className="object-cover" />
+              </ZoomSettle>
+            </Reveal>
+          </div>
           <div>
             <SplitHeading
               as="h2"
               text={settings.mission.replace("the taste of home", "*the* *taste* *of* *home*")}
-              className="font-display text-[clamp(1.55rem,min(1rem+2.2vw,4.7svh),3.25rem)] leading-[1.14] tracking-[-0.02em] text-forest"
+              className="font-display text-[clamp(1.55rem,min(0.9rem+1.9vw,4.5svh),2.75rem)] leading-[1.14] tracking-[-0.02em] text-forest"
               accentClassName="italic text-chili"
             />
             <div className="mt-[clamp(1.75rem,5svh,3rem)] grid grid-cols-2 gap-x-6 gap-y-6 border-t border-ink/10 pt-[clamp(1.25rem,4svh,2.25rem)] md:grid-cols-4">
