@@ -90,7 +90,7 @@ export const getVideos = cache(async (): Promise<Video[]> => {
 
 export const getPosts = cache(async (): Promise<Post[]> => {
   const data = await sanityFetch<(Omit<Post, "image"> & { image: RawImg })[]>(
-    groq`*[_type == "post" && defined(slug.current)] | order(date desc){ title, "slug": slug.current, date, category, excerpt, "image": image${IMG}, ${BODY} }`,
+    groq`*[_type == "post" && defined(slug.current)] | order(date desc){ title, "slug": slug.current, date, category, excerpt, "image": image${IMG}, ${BODY}, seoTitle, seoDescription }`,
     {},
     ["post"],
   );

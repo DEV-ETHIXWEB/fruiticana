@@ -35,6 +35,7 @@ const ico = (images) => {
 };
 
 await copyFile(join(root, "scripts/brand/mark.svg"), join(root, "src/app/icon.svg"));
+await copyFile(join(root, "scripts/brand/mark.svg"), join(root, "public/brand/mark.svg"));
 await writeFile(join(root, "src/app/favicon.ico"), ico(await Promise.all([16, 32, 48].map(async (size) => ({ size, data: await png(size) })))));
 await writeFile(join(root, "src/app/icon.png"), await png(96));
 await writeFile(join(root, "src/app/apple-icon.png"), await tile(180, 0.78));

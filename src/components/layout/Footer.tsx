@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { Icon, socialIcon } from "@/components/ui/Icon";
+import { Logo } from "@/components/ui/Logo";
 import type { SiteSettings, Store } from "@/lib/content/types";
 import { citySlug } from "@/lib/site";
 import { BackToTop } from "./BackToTop";
@@ -43,9 +43,8 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
         {/* Brand */}
         <div className="col-span-2 md:col-span-3 md:flex md:items-end md:justify-between md:gap-8 xl:col-span-3 xl:block">
           <div>
-          <Link href="/" aria-label="Fruiticana home" className="inline-flex items-end gap-2">
-            <Image src="/brand/wordmark-cream.png" alt="Fruiticana, since 1994" width={380} height={89} className="h-auto w-[176px] sm:w-[190px]" />
-            <Image src="/brand/mark.png" alt="" width={118} height={118} className="mb-0.5 h-auto w-[48px] sm:w-[52px]" />
+          <Link href="/" aria-label="Fruiticana home" className="inline-flex">
+            <Logo tone="light" className="w-[220px] sm:w-[244px]" />
           </Link>
           <p className="mt-4 max-w-[17rem] text-[0.9rem] leading-relaxed text-cream/70">
             Fresh fruits, vegetables and spices at the best price, since {settings.founded}.

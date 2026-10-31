@@ -18,8 +18,36 @@ const writeClient =
     ? createClient({ projectId, dataset, apiVersion, token: process.env.SANITY_API_WRITE_TOKEN, useCdn: false })
     : null;
 
+/*
+ * Newsletter sign-ups go to Fruiticana's existing Mailchimp audience, the same list the
+ * current site's form posts to, so subscribers keep receiving the weekly specials.
+ * Production uses it by default; MAILCHIMP_FORM_URL overrides it ("off" disables it).
+ * Development never posts to the real list unless MAILCHIMP_FORM_URL is set explicitly.
+ */
+const MAILCHIMP_DEFAULT = "https://fruiticana.us14.list-manage.com/subscribe/post?u=3747eafc90754c0ebc3bcdbce&id=dacba6c26b";
+const mailchimpUrl = () => {
+  const env = process.env.MAILCHIMP_FORM_URL?.trim();
+  if (env === "off") return null;
+  return env || (process.env.NODE_ENV === "production" ? MAILCHIMP_DEFAULT : null);
+};
+
+async function subscribeMailchimp(formUrl: string, email: string) {
+  // The embedded-form endpoint has a JSON(P) twin: /subscribe/post-json?...&EMAIL=...&c=<callback>
+  const url = new URL(formUrl.replace("/subscribe/post?", "/subscribe/post-json?"));
+  url.searchParams.set("EMAIL", email);
+  url.searchParams.set("c", "cb");
+  const res = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(8000) });
+  const body = await res.text();
+  const json = JSON.parse(body.slice(body.indexOf("(") + 1, body.lastIndexOf(")"))) as { result: string; msg?: string };
+  // Someone already on the list is a success from the shopper's point of view.
+  if (json.result !== "success" && !/already subscribed/i.test(json.msg ?? "")) throw new Error(`Mailchimp: ${json.msg ?? json.result}`);
+}
+
 async function deliver(kind: "contact" | "newsletter", subject: string, fields: Record<string, string | undefined>) {
   const tasks: Promise<unknown>[] = [];
+
+  const mailchimp = kind === "newsletter" && fields.email ? mailchimpUrl() : null;
+  if (mailchimp && fields.email) tasks.push(subscribeMailchimp(mailchimp, fields.email));
 
   if (process.env.RESEND_API_KEY && process.env.CONTACT_TO_EMAIL) {
     const text = Object.entries(fields)

@@ -125,6 +125,7 @@ export const posts: Post[] = [
   {
     slug: "fruiticana-staff-and-customers-raise-over-40-000-for-bc-children-s-hospital",
     title: "Fruiticana staff and customers raise over $40,000 for BC Children’s Hospital",
+    seoTitle: "Staff & Customers Raise $40,000 for BC Children’s",
     date: "2016-06-05",
     category: "Philanthropic Initiatives",
     excerpt: "During the month of May, Fruiticana staff and customers participated in a fundraising campaign for the BC Children’s Hospital Foundation Miracle Weekend.",

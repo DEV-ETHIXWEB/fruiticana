@@ -1,11 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
+import { Logo } from "@/components/ui/Logo";
 import { nav } from "@/lib/site";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -80,21 +80,11 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
         >
           <div className={`container-x flex items-center justify-between gap-6 transition-[height] duration-500 ${scrolled ? "h-[4.25rem]" : "h-20 lg:h-24"}`}>
             <Link href="/" className="relative shrink-0" aria-label="Fruiticana home">
-              {onDark ? (
-                <span className="flex items-end gap-1.5">
-                  <Image src="/brand/wordmark-cream.png" alt="Fruiticana, since 1994" width={380} height={89} preload className="h-auto w-[150px] lg:w-[188px]" />
-                  <Image src="/brand/mark.png" alt="" width={118} height={118} preload className="mb-0.5 h-auto w-[38px] lg:w-[46px]" />
-                </span>
-              ) : (
-                <Image
-                  src="/brand/logo.png"
-                  alt="Fruiticana, since 1994"
-                  width={482}
-                  height={118}
-                  preload
-                  className={`h-auto transition-[width] duration-500 ${scrolled ? "w-[172px] lg:w-[188px]" : "w-[190px] lg:w-[236px]"}`}
-                />
-              )}
+              <Logo
+                tone={onDark ? "light" : "color"}
+                preload
+                className={`transition-[width] duration-500 ${scrolled ? "w-[172px] lg:w-[190px]" : "w-[196px] lg:w-[244px]"}`}
+              />
             </Link>
 
             <nav aria-label="Primary" className="hidden xl:block">

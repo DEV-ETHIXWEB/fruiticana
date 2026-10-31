@@ -1,13 +1,10 @@
-"use client";
-
-import { motion } from "motion/react";
 import type { ReactNode } from "react";
-import { staggerItem } from "./primitives";
 
+/** One item inside a <Stagger>: the container animates these in sequence on scroll. */
 export function MotionItem({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <motion.div variants={staggerItem} className={className}>
+    <div data-stagger-item className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }

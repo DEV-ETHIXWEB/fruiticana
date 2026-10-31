@@ -27,7 +27,7 @@ export default async function StoreOgImage({ params }: { params: Promise<{ slug:
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: "100%", height: "100%", padding: 72, background: "#0f3b26", color: "#faf5ea" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", background: "#faf5ea", borderRadius: 20, padding: "14px 22px" }}>
-            <img src={logoSrc} width={260} height={64} alt="" />
+            <img src={logoSrc} width={274} height={64} alt="" />
           </div>
           <div style={{ display: "flex", background: "#f6d21c", color: "#0f3b26", borderRadius: 999, padding: "12px 26px", fontSize: 26 }}>Store locator</div>
         </div>

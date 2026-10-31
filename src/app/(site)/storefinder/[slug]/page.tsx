@@ -25,9 +25,12 @@ const title = (s: { name: string; isHeadOffice?: boolean; locality: string }) =>
 export async function generateMetadata({ params }: PageProps<"/storefinder/[slug]">): Promise<Metadata> {
   const s = await getStore((await params).slug);
   if (!s) return {};
+  // Address, hours and phone always; the tagline only while it fits Google's ~160-character snippet.
+  const facts = `Fruiticana ${s.name} at ${s.street}, ${s.locality}, ${s.province}${s.postalCode ? ` ${s.postalCode}` : ""}. Open daily ${formatHours(s)}. Call ${s.phone}.`;
+  const tagline = " Fresh produce and Indican spices.";
   return pageMetadata({
     title: `${title(s)}: Hours & Directions`,
-    description: `Fruiticana ${s.name} at ${s.street}, ${s.locality}, ${s.province}${s.postalCode ? ` ${s.postalCode}` : ""}. Open daily ${formatHours(s)}. Call ${s.phone}. Fresh produce, Indican spices and more.`,
+    description: facts.length + tagline.length <= 160 ? facts + tagline : facts,
     path: `/storefinder/${s.slug}`,
     image: false,
     absoluteTitle: true,

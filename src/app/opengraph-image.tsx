@@ -16,7 +16,7 @@ export default async function OgImage() {
     (
       <div style={{ display: "flex", width: "100%", height: "100%", background: "#faf5ea" }}>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: 640, padding: 64 }}>
-          <img src={src(logo, "image/png")} width={320} height={78} alt="" />
+          <img src={src(logo, "image/png")} width={334} height={78} alt="" />
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ fontSize: 76, lineHeight: 1, color: "#0f3b26", letterSpacing: -2, fontFamily: "serif" }}>The taste of home,</div>
             <div style={{ fontSize: 76, lineHeight: 1.05, color: "#e2231a", fontStyle: "italic", letterSpacing: -2, fontFamily: "serif" }}>since 1994.</div>

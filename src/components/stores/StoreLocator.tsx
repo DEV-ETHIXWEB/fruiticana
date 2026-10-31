@@ -88,7 +88,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
         el.type = "button";
         el.className = "fr-pin";
         el.setAttribute("aria-label", `Fruiticana ${s.name}`);
-        el.innerHTML = `<span class="fr-pin-dot${s.isHeadOffice ? " is-office" : ""}"><img src="/brand/mark.png" alt="" /></span>`;
+        el.innerHTML = `<span class="fr-pin-dot${s.isHeadOffice ? " is-office" : ""}"><img src="/brand/mark.svg" alt="" /></span>`;
         el.addEventListener("click", (e) => {
           e.stopPropagation();
           setSelected(s.slug);

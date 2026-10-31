@@ -63,6 +63,8 @@ export type Post = {
   excerpt: string;
   image?: Img;
   body: PortableTextBlock[];
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 export type Event = {

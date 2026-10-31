@@ -9,57 +9,82 @@ import {
   useScroll,
   useSpring,
   useTransform,
-  type HTMLMotionProps,
 } from "motion/react";
-import { useEffect, useRef, type ElementType, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, type ElementType, type ReactNode } from "react";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-/** Fade + rise into view, once. */
+/*
+ * Scroll reveals are progressive enhancement. The server HTML is always fully visible, so
+ * first-screen content paints (and counts for LCP) without waiting for JavaScript. After
+ * hydration, only elements that are still below the fold are hidden and then animated in
+ * as they scroll into view; anything already on screen is left exactly as rendered.
+ */
+const belowFold = (el: Element) => el.getBoundingClientRect().top > window.innerHeight * 0.88;
+
+function onEnter(el: Element, run: () => void) {
+  const io = new IntersectionObserver(
+    ([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      run();
+    },
+    { rootMargin: "0px 0px -12% 0px" },
+  );
+  io.observe(el);
+  return () => io.disconnect();
+}
+
+/** Fade-and-rise on scroll (see note above: never hides first-screen content). */
 export function Reveal({
   children,
   delay = 0,
   y = 28,
   className,
   as = "div",
-  ...rest
-}: { children: ReactNode; delay?: number; y?: number; className?: string; as?: "div" | "li" | "section" | "article" | "span" } & Omit<HTMLMotionProps<"div">, "children">) {
+  id,
+}: { children: ReactNode; delay?: number; y?: number; className?: string; as?: "div" | "li" | "section" | "article" | "span"; id?: string }) {
+  const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
-  const Tag = motion[as] as typeof motion.div;
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || reduce || !belowFold(el)) return;
+    el.style.opacity = "0";
+    el.style.transform = `translateY(${y}px)`;
+    return onEnter(el, () => {
+      animate(el, { opacity: [0, 1], transform: [`translateY(${y}px)`, "translateY(0px)"] }, { duration: 0.9, ease: EASE, delay });
+    });
+  }, [reduce, y, delay]);
+  const Tag = as as ElementType;
   return (
-    <Tag
-      className={className}
-      initial={reduce ? false : { opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px -12% 0px" }}
-      transition={{ duration: 0.9, ease: EASE, delay }}
-      {...rest}
-    >
+    <Tag ref={ref} id={id} className={className}>
       {children}
     </Tag>
   );
 }
 
-/** Stagger container for lists of Reveal-like children. */
+/** Stagger container: its <MotionItem> children rise in one after another on scroll. */
 export function Stagger({ children, className, gap = 0.08 }: { children: ReactNode; className?: string; gap?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || reduce || !belowFold(el)) return;
+    const items = [...el.querySelectorAll<HTMLElement>(":scope > [data-stagger-item]")];
+    items.forEach((it) => {
+      it.style.opacity = "0";
+      it.style.transform = "translateY(24px)";
+    });
+    return onEnter(el, () => {
+      items.forEach((it, i) => animate(it, { opacity: [0, 1], transform: ["translateY(24px)", "translateY(0px)"] }, { duration: 0.8, ease: EASE, delay: i * gap }));
+    });
+  }, [reduce, gap]);
   return (
-    <motion.div
-      className={className}
-      initial={reduce ? false : "hidden"}
-      whileInView="show"
-      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-      variants={{ hidden: {}, show: { transition: { staggerChildren: gap } } }}
-    >
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }
-
-export const staggerItem = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE } },
-};
 
 /**
  * Word-by-word masked rise. The words are the real text (one clean sentence
