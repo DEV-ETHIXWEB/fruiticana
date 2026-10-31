@@ -204,8 +204,130 @@ def trace(mask, sigma_src=0.8, eps_src=0.14, min_area_src=1.5):
     return paths
 
 
+# ---------------------------------------------------------------------------
+# The apple mark, traced from the same artwork so it matches the original exactly.
+# Palette measured with k-means on the apple's opaque pixels.
+# ---------------------------------------------------------------------------
+APPLE_BOX = (389, 0, 482, 118)
+PALETTE = {
+    "green": (3, 110, 53),
+    "red": (236, 28, 41),
+    "white": (246, 245, 244),
+    "grey": (201, 193, 187),  # the baked-in drop shadow: dropped
+    "yellow": (240, 237, 7),
+    "pink": (239, 115, 109),
+    "leafhi": (116, 154, 94),
+    "darkgreen": (0, 86, 18),
+    "darkred": (149, 42, 37),
+}
+APPLE_GREEN = "#036E35"
+APPLE_YELLOW = "#F0ED07"
+
+
+def memberships(img, temp=26.0):
+    """Soft colour-class membership per pixel (softmax over palette distances)."""
+    rgb = img[..., :3]
+    names = list(PALETTE)
+    d2 = np.stack([((rgb - np.array(PALETTE[n])) ** 2).sum(-1) for n in names], -1)
+    w = np.exp(-(d2 - d2.min(-1, keepdims=True)) / (2 * temp**2))
+    w /= w.sum(-1, keepdims=True)
+    return {n: w[..., i] for i, n in enumerate(names)}
+
+
+def apple_layers(img):
+    """Soft 0-1 coverage of each apple layer, measured so anti-aliased edges sit at 0.5.
+
+    Snapping edge pixels to the nearest palette colour fattens outlines (a pixel half green,
+    half white halo is still "nearest green"), so coverage is measured continuously instead:
+      silhouette: colour intensity (chroma); the white/grey halo has almost none
+      body:       position between the brand green and the brand red (the gloss reads as red)
+      yellow:     yellowness, min(R, G) - B
+    """
+    from scipy import ndimage
+
+    a = img[..., 3] / 255.0
+    r, g, b = img[..., 0], img[..., 1], img[..., 2]
+    box = crop(np.ones_like(a), APPLE_BOX)
+    chroma = img[..., :3].max(-1) - img[..., :3].min(-1)
+    coloured = a * box * np.clip(chroma / 95.0, 0, 1)
+    solid = ndimage.binary_fill_holes(coloured > 0.5)
+    # keep only the apple itself (drop stray specks of tinted shadow)
+    lab, n = ndimage.label(solid)
+    sizes = ndimage.sum(solid, lab, range(1, n + 1))
+    solid = np.isin(lab, 1 + np.nonzero(sizes >= 0.02 * sizes.max())[0])
+    silhouette = np.where(solid, np.maximum(coloured, (coloured <= 0.5) * 1.0), coloured * 0)
+    silhouette = np.where(solid & (coloured > 0.5), coloured, silhouette)
+    G, R = np.array(PALETTE["green"]), np.array(PALETTE["red"])
+    t = np.einsum("hwc,c->hw", img[..., :3] - G, R - G) / float((R - G) @ (R - G))
+    # inside the outline the gloss counts as body; outside it, only real colour does (no halo)
+    body = a * box * np.clip(t, 0, 1) * np.where(solid, 1.0, coloured)
+    yellow = a * box * np.clip((np.minimum(r, g) - b) / 230.0, 0, 1)
+    # the glossy sheen: body pixels lifted towards white (pink to white), measured by green/blue lift
+    lift = np.clip((np.minimum(g, b) - 45) / 110.0, 0, 1)
+    gloss = np.where(solid, 1.0, 0) * np.clip(t, 0, 1) * lift * (yellow < 0.2)
+    return silhouette, body, yellow, gloss
+
+
+def body_gradient(img, body, yellow):
+    """Vertical gradient stops sampled from the original's row colours (its gloss).
+
+    Only clean body pixels are sampled: well inside the red, away from the yellow ring.
+    """
+    body = np.where(yellow < 0.12, body, 0)
+    ys = np.nonzero((body > 0.6).any(1))[0]
+    y0, y1 = int(ys.min()), int(ys.max())
+    rows = []
+    for y in range(y0, y1 + 1):
+        m = body[y] > 0.9
+        if m.sum() >= 3:
+            rows.append((y, img[y, m, :3].mean(0)))
+    stops = []
+    for t in np.linspace(0, 1, 9):
+        y = y0 + t * (y1 - y0)
+        near = [c for (yy, c) in rows if abs(yy - y) <= 2.5]
+        c = np.mean(near, 0) if near else rows[int(t * (len(rows) - 1))][1]
+        stops.append((t, "#%02X%02X%02X" % tuple(int(round(v)) for v in c)))
+    return y0, y1, stops
+
+
+def apple_svg(img, viewbox):
+    silhouette, body, yellow, gloss = apple_layers(img)
+    gy = np.nonzero((gloss > 0.5).any(1))[0]
+    g0, g1 = int(gy.min()), int(gy.max())
+    glo = trace(gloss, sigma_src=1.1, eps_src=0.12, min_area_src=6)
+    y0, y1, stops = body_gradient(img, body, yellow)
+    grad = "".join(f'<stop offset="{t:.3f}" stop-color="{c}"/>' for t, c in stops)
+    sil = trace(silhouette, sigma_src=0.9, eps_src=0.1)
+    bod = trace(body, sigma_src=0.8, eps_src=0.1, min_area_src=2)
+    yel = trace(yellow, sigma_src=0.75, eps_src=0.08, min_area_src=1)
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{viewbox}">'
+        f'<defs><linearGradient id="fr-apple-body" gradientUnits="userSpaceOnUse" x1="0" y1="{y0}" x2="0" y2="{y1}">{grad}</linearGradient>'
+        f'<linearGradient id="fr-apple-gloss" gradientUnits="userSpaceOnUse" x1="0" y1="{g0}" x2="0" y2="{g1}"><stop offset="0" stop-color="#fff" stop-opacity="0.95"/><stop offset="0.55" stop-color="#fbd0cf" stop-opacity="0.6"/><stop offset="1" stop-color="#f6a3a3" stop-opacity="0"/></linearGradient></defs>'
+        # the original's thin white "sticker" rim, which keeps the dark outline legible on dark backgrounds
+        f'<path fill="#fff" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" d="{"".join(sil)}"/>'
+        f'<path fill="{APPLE_GREEN}" fill-rule="evenodd" d="{"".join(sil)}"/>'
+        f'<path fill="url(#fr-apple-body)" fill-rule="evenodd" d="{"".join(bod)}"/>'
+        f'<path fill="url(#fr-apple-gloss)" fill-rule="evenodd" d="{"".join(glo)}"/>'
+        f'<path fill="{APPLE_YELLOW}" fill-rule="evenodd" d="{"".join(yel)}"/>'
+        "</svg>"
+    )
+
+
 def main():
     img = np.asarray(Image.open(SRC).convert("RGBA")).astype(float)
+
+    # apple: in the lockup's own coordinates, plus a square version for favicons / pins
+    x0, y0, x1, y1 = APPLE_BOX
+    apple = apple_svg(img, f"{x0} {y0} {x1 - x0} {y1 - y0}")
+    with open(os.path.join(ROOT, "public/brand/apple.svg"), "w") as fh:
+        fh.write(apple)
+    cx = (x0 + x1) / 2
+    square = apple.replace(f'viewBox="{x0} {y0} {x1 - x0} {y1 - y0}"', f'viewBox="{cx - 59:.1f} 0 118 118"', 1)
+    with open(os.path.join(ROOT, "scripts/brand/mark.svg"), "w") as fh:
+        fh.write(square)
+    print("apple.svg", f"{len(apple) / 1024:.1f} KB; scripts/brand/mark.svg (square) written")
+
     green, red = soft_layers(img)
     letters = trace(crop(green, WORD_BOX))
     brush = trace(crop(red, BRUSH_BOX), sigma_src=0.35, min_area_src=3)
