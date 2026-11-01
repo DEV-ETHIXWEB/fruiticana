@@ -23,8 +23,8 @@
   --color-mango: #f39a1e;
   --color-saffron: #a84d0d; /* deep saffron: AA on cream and paper */
 
-  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
-  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), var(--font-gurmukhi-serif), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-instrument), var(--font-gurmukhi-sans), ui-sans-serif, system-ui, sans-serif;
 
   --text-display: clamp(3rem, 1.2rem + 7.2vw, 8.75rem);
   --text-display--line-height: 0.92;
@@ -304,3 +304,12 @@ html.lenis, html.lenis body { height: auto; }
     .btn-3d, .btn-3d:hover, .btn-3d:active, .btn-glass, .btn-glass:hover, .btn-glass:active { transform: none; }
   }
 }
+
+/* ---------- Punjabi (Gurmukhi) ----------
+   Gurmukhi has no true italic and is never slanted in print: accent words keep their
+   colour but stay upright. Its vowel signs sit above the headline and below the baseline,
+   so running text gets a little more line height. */
+:lang(pa) .italic,
+:lang(pa) em,
+:lang(pa) i { font-style: normal; }
+:lang(pa) body { line-height: 1.65; }

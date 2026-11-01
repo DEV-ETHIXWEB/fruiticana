@@ -1,9 +1,10 @@
-import Link from "next/link";
+import Link from "@/i18n/Link";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { Icon, socialIcon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
 import type { SiteSettings, Store } from "@/lib/content/types";
 import { citySlug } from "@/lib/site";
+import { LanguageSwitcher } from "@/i18n/LanguageSwitcher";
 import { BackToTop } from "./BackToTop";
 
 /* Same menu as the legacy footer, in the same order. */
@@ -147,6 +148,7 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
             © {new Date().getFullYear()} Fruiticana. All Rights Reserved. <span className="ml-1 font-display text-cream/80 italic">Fruiticana hee jaana!</span>
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <LanguageSwitcher variant="text" tone="dark" className="text-cream" />
             <Link href="/site-map" className="hover:text-cream">
               Site Map
             </Link>

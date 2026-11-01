@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/i18n/Link";
 import { PageHero } from "@/components/page/PageHero";
 import { getPosts, getRetailStores } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";

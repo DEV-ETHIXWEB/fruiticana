@@ -1,7 +1,9 @@
 "use client";
 
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
-import Link from "next/link";
+import Link from "@/i18n/Link";
+import { stripLocale } from "@/i18n/config";
+import { LanguageSwitcher } from "@/i18n/LanguageSwitcher";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
@@ -11,7 +13,8 @@ import { nav } from "@/lib/site";
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 export function Header({ announcement, phone }: { announcement?: { text: string; href?: string }; phone: string }) {
-  const pathname = usePathname();
+  // compare against the path without the /pa prefix, so active states work in both languages
+  const pathname = stripLocale(usePathname() || "/").path;
   const [open, setOpen] = useState<string | null>(null);
   const [mobile, setMobile] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -78,12 +81,12 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
             scrolled || open ? "bg-cream/85 shadow-[0_1px_0_rgb(28_26_21/0.08)] backdrop-blur-xl backdrop-saturate-150" : "bg-transparent"
           }`}
         >
-          <div className={`container-x flex items-center justify-between gap-6 transition-[height] duration-500 ${scrolled ? "h-[4.25rem]" : "h-20 lg:h-24"}`}>
+          <div className={`container-x flex items-center justify-between gap-3 transition-[height] sm:gap-6 duration-500 ${scrolled ? "h-[4.25rem]" : "h-20 lg:h-24"}`}>
             <Link href="/" className="relative shrink-0" aria-label="Fruiticana home">
               <Logo
                 tone={onDark ? "light" : "color"}
                 preload
-                className={`transition-[width] duration-500 ${scrolled ? "w-[172px] lg:w-[190px]" : "w-[196px] lg:w-[244px]"}`}
+                className={`transition-[width] duration-500 ${scrolled ? "w-[min(172px,44vw)] lg:w-[190px]" : "w-[min(196px,44vw)] lg:w-[244px] xl:max-2xl:w-[210px]"}`}
               />
             </Link>
 
@@ -96,7 +99,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
                     <li key={item.label} className="relative" onMouseEnter={() => children && enter(item.label)} onMouseLeave={() => children && leave()}>
                       <Link
                         href={item.href}
-                        className={`group relative flex items-center gap-1 rounded-full px-3 py-2 text-[0.9rem] font-medium whitespace-nowrap transition-colors ${
+                        className={`group relative flex items-center gap-1 rounded-full px-2.5 py-2 text-[0.88rem] font-medium whitespace-nowrap transition-colors 2xl:px-3 2xl:text-[0.9rem] ${
                           onDark ? (active ? "text-turmeric" : "text-cream/90 hover:text-white") : active ? "text-forest" : "text-ink/75 hover:text-ink"
                         }`}
                         aria-expanded={children ? open === item.label : undefined}
@@ -147,18 +150,19 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
             </nav>
 
             <div className="flex items-center gap-2">
+              <LanguageSwitcher tone={onDark ? "dark" : "light"} />
               {/* The two red / green header buttons from the original site, kept on purpose. */}
               <Link
                 href="/storefinder"
                 className="hidden items-center gap-2 btn-3d btn-chili rounded-full bg-chili px-4 py-2.5 text-[0.82rem] font-semibold tracking-wide text-white uppercase hover:bg-chili-deep sm:inline-flex"
               >
-                <Icon name="pin" className="size-4" strokeWidth={2} /> Locations
+                <Icon name="pin" className="size-4 xl:max-2xl:hidden" strokeWidth={2} /> Locations
               </Link>
               <Link
                 href="/flyers"
                 className="hidden items-center gap-2 btn-3d btn-leaf rounded-full bg-leaf px-4 py-2.5 text-[0.82rem] font-semibold tracking-wide text-white uppercase hover:bg-forest sm:inline-flex"
               >
-                <Icon name="flyer" className="size-4" strokeWidth={2} /> <span className="hidden 2xl:inline">Weekly</span> Specials
+                <Icon name="flyer" className="size-4 xl:max-2xl:hidden" strokeWidth={2} /> Specials
               </Link>
               <button
                 type="button"
@@ -214,6 +218,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
                 <Link href="/flyers" className="flex items-center justify-center btn-3d btn-turmeric gap-2 rounded-full bg-turmeric py-3.5 text-sm font-semibold text-forest uppercase">
                   <Icon name="flyer" className="size-4" /> Specials
                 </Link>
+                <LanguageSwitcher variant="menu" className="col-span-2" />
                 <a href={`tel:+1${phone.replace(/\D/g, "")}`} className="col-span-2 mt-2 text-center text-sm text-cream/60">
                   Head office · {phone}
                 </a>

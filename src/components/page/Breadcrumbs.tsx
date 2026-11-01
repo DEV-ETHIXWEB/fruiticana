@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/i18n/Link";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbLd } from "@/lib/seo";
 

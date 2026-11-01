@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/i18n/Link";
 import { CampaignRail } from "@/components/home/CampaignRail";
 import { Hero } from "@/components/home/Hero";
 import { QuickActions } from "@/components/home/QuickActions";

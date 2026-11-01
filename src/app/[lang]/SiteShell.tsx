@@ -5,7 +5,8 @@ import { JsonLd } from "@/components/ui/JsonLd";
 import { getSettings, getStores } from "@/lib/content";
 import { organizationLd, websiteLd } from "@/lib/seo";
 
-export default async function SiteLayout({ children }: { children: React.ReactNode }) {
+/** The site chrome around every page: structured data, header, main, footer. */
+export async function SiteShell({ children }: { children: React.ReactNode }) {
   const [settings, stores] = await Promise.all([getSettings(), getStores()]);
   return (
     <>

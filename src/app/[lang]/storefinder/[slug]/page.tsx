@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/i18n/Link";
 import { notFound } from "next/navigation";
 import { Reveal, SplitHeading } from "@/components/motion/primitives";
 import { Breadcrumbs } from "@/components/page/Breadcrumbs";
@@ -22,7 +22,7 @@ export async function generateStaticParams() {
 const title = (s: { name: string; isHeadOffice?: boolean; locality: string }) =>
   s.isHeadOffice ? "Fruiticana Head Office, Surrey" : `Fruiticana ${s.name}${s.name.includes(s.locality) ? "" : `, ${s.locality}`}`;
 
-export async function generateMetadata({ params }: PageProps<"/storefinder/[slug]">): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<"/[lang]/storefinder/[slug]">): Promise<Metadata> {
   const s = await getStore((await params).slug);
   if (!s) return {};
   // Address, hours and phone always; the tagline only while it fits Google's ~160-character snippet.
@@ -43,7 +43,7 @@ const aisles = [
   { icon: "mango" as const, title: "Rajan mangoes", body: "Our signature mango, in season from March through summer." },
 ];
 
-export default async function StorePage({ params }: PageProps<"/storefinder/[slug]">) {
+export default async function StorePage({ params }: PageProps<"/[lang]/storefinder/[slug]">) {
   const { slug } = await params;
   const [store, all, flyers] = await Promise.all([getStore(slug), getStores(), getFlyers()]);
   if (!store) notFound();

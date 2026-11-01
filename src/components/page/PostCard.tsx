@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/i18n/Link";
 import { Arrow } from "@/components/ui/Button";
 import { isSmallImage, ProductShot } from "@/components/ui/ProductShot";
 import type { Post } from "@/lib/content/types";

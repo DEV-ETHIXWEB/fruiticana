@@ -70,13 +70,16 @@ Weekly flyer swap: Studio → Weekly flyers → replace the image for the region
 - The logo is fully vector and traced from the client's original artwork (`scripts/brand/source/logo-original.png`) by `python3 scripts/brand/trace-logo.py`: the wordmark and brush strokes (`public/brand/wordmark*.svg`) and the apple mark with its gloss and white rim (`public/brand/apple.svg`, plus the square `scripts/brand/mark.svg` used for favicons and map pins). `<Logo tone="color" | "light" />` assembles them on the original 482 x 118 grid with "SINCE 1994" as live text. `node scripts/brand/build-logo.mjs` renders `public/brand/logo*.svg` / `logo*.png` (1446px) for Open Graph and structured data, and `node scripts/brand/build-icons.mjs` the favicons. If the client supplies an official vector logo, drop it in and these scripts become optional.
 - Favicons and app icons are generated from the vector mark `scripts/brand/mark.svg`: `node scripts/brand/build-icons.mjs` writes `src/app/icon.svg`, `favicon.ico`, `icon.png`, `apple-icon.png` and the PWA icons.
 - `node scripts/qa-glyphs.mjs` checks every sitemap page at four viewports for text cut by a clipping parent (descenders, italic overhangs) or truncated with an ellipsis / line-clamp.
+- Languages: English and Punjabi (Gurmukhi). English keeps every existing URL; Punjabi mirrors each page under `/pa`. `src/proxy.ts` rewrites English requests to the `en` tree, so URLs never change. Interface text lives in `src/i18n/dictionaries/en.ts` and `pa.ts`, and `pa.ts` is typed against `en.ts`, so a missing Punjabi string fails the build. Use `Link` from `@/i18n/Link` (it keeps visitors in their language). The Punjabi version is released by setting `NEXT_PUBLIC_PUNJABI_LIVE=1`; until then the switcher is hidden and `/pa` returns 404.
 - Feature icons are a custom 3D set (`<Icon3D name="..." />`, `public/icons3d/*.webp`), modelled in three.js in the brand palette. Edit the models in `scripts/icons/studio.html`, then run `node scripts/icons/build.mjs` (renders, trims and writes 256px WebP). Small UI glyphs (arrows, close, search) and social logos stay as line icons in `Icon.tsx`.
 - House style: no em or en dashes in copy, code or comments.
 
 ## Structure
 
 ```
-src/app/(site)/        pages (legacy URL structure)
+src/app/[lang]/        pages, one tree per language (en at the old URLs, pa under /pa)
+src/i18n/              languages: config, dictionaries (en/pa), provider, Link, switcher
+src/proxy.ts           language routing (rewrites English, serves /pa, 308s /en)
 src/app/api/           geocode, revalidate
 src/app/studio/        embedded Sanity Studio
 src/components/        layout, home, page, stores, flyers, forms, motion, ui

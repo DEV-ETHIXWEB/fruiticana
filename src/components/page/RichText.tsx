@@ -1,7 +1,7 @@
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/i18n/Link";
 
 const components: PortableTextComponents = {
   marks: {

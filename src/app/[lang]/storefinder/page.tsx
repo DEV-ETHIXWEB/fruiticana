@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/i18n/Link";
 import { Reveal } from "@/components/motion/primitives";
 import { PageHero } from "@/components/page/PageHero";
 import { StoreLocator } from "@/components/stores/StoreLocator";

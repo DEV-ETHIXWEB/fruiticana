@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/i18n/Link";
 import { notFound } from "next/navigation";
 import { Reveal, SplitHeading } from "@/components/motion/primitives";
 import { Breadcrumbs } from "@/components/page/Breadcrumbs";
@@ -17,14 +17,14 @@ export async function generateStaticParams() {
   return (await getPosts()).map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<"/[lang]/blog/[slug]">): Promise<Metadata> {
   const post = await getPost((await params).slug);
   if (!post) return {};
   const meta = pageMetadata({ title: post.seoTitle || post.title, description: post.seoDescription || post.excerpt, path: `/blog/${post.slug}`, image: post.image?.src });
   return { ...meta, openGraph: { ...meta.openGraph, type: "article", publishedTime: post.date } };
 }
 
-export default async function PostPage({ params }: PageProps<"/blog/[slug]">) {
+export default async function PostPage({ params }: PageProps<"/[lang]/blog/[slug]">) {
   const { slug } = await params;
   const post = await getPost(slug);
   if (!post) notFound();

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/i18n/Link";
 import { Reveal } from "@/components/motion/primitives";
 import { NearestStore } from "@/components/stores/NearestStore";
 import { Arrow } from "@/components/ui/Button";

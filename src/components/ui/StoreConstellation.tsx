@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/i18n/Link";
 import type { Store } from "@/lib/content/types";
 
 type Box = { minLng: number; maxLng: number; minLat: number; maxLat: number };

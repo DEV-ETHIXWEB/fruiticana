@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/i18n/Link";
 import { Suspense } from "react";
 import { FlyerViewer } from "@/components/flyers/FlyerViewer";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";

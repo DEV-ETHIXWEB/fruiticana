@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/i18n/Link";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { Icon3D } from "@/components/ui/Icon3D";
