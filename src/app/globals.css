@@ -103,6 +103,7 @@
     @apply text-[1.075rem] leading-[1.75] text-ink-soft;
   }
   .prose-fr > * + * { margin-top: 1.25em; }
+  .prose-fr > :first-child { margin-top: 0; }
   .prose-fr h2 { @apply font-display text-title text-ink mt-14; }
   .prose-fr h3 { @apply font-display text-2xl leading-tight text-ink mt-10; }
   .prose-fr a { @apply text-leaf underline decoration-leaf/30 underline-offset-4 transition-colors hover:decoration-leaf; }
@@ -324,3 +325,38 @@ html:lang(pa) .text-xs:not(:lang(en)),
 html:lang(pa) [class*="text-[0.75rem]"]:not(:lang(en)),
 html:lang(pa) [class*="text-[0.78rem]"]:not(:lang(en)) { font-size: 0.84rem; }
 :lang(pa) body { line-height: 1.65; }
+
+/* ---------------- Language switch: page transition ----------------
+   English <-> Punjabi is a full page change; the browser cross-fades the two documents
+   (cross-document view transitions; Chrome, Edge, Safari 18.2+, elsewhere an instant swap).
+   The page softly dissolves into the other language while the header and the language
+   toggle stay in place, and the toggle's yellow highlight glides to the new language.
+   In-site links are client-side navigations, so only full page loads use this. */
+@view-transition {
+  navigation: auto;
+}
+
+.site-header { view-transition-name: site-header; }
+.lang-pill { view-transition-name: lang-pill; }
+.lang-tab { view-transition-name: lang-tab; }
+
+::view-transition-group(*) {
+  animation-duration: 0.55s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+::view-transition-old(root) {
+  animation: fr-page-out 0.28s cubic-bezier(0.4, 0, 1, 1) both;
+}
+::view-transition-new(root) {
+  animation: fr-page-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
+}
+@keyframes fr-page-out {
+  to { opacity: 0; filter: blur(3px); transform: scale(0.995); }
+}
+@keyframes fr-page-in {
+  from { opacity: 0; filter: blur(3px); transform: translateY(10px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}

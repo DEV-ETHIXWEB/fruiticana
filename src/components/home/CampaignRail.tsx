@@ -60,7 +60,7 @@ export function CampaignRail({ items }: { items: CampaignBanner[] }) {
   const current = items[index];
 
   return (
-    <section aria-roledescription="carousel" aria-label={t.home.campaignsLabel} className="container-x py-[clamp(3rem,8svh,5rem)]">
+    <section aria-roledescription="carousel" aria-label={t.home.campaignsLabel} className="container-x py-[clamp(3rem,8svh,5rem)] max-sm:py-12 max-[380px]:py-10!">
       <div className="mb-6 flex items-end justify-between gap-6">
         <div>
           <p className="eyebrow text-chili-deep">{t.home.campaignsEyebrow}</p>

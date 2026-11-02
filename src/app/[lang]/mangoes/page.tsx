@@ -44,7 +44,7 @@ export default async function MangoesPage() {
         </div>
       </section>
 
-      <section className="container-x py-[clamp(3.5rem,9svh,6rem)]">
+      <section className="container-x py-[clamp(3.5rem,9svh,6rem)] max-sm:py-12">
         <div className="grid gap-5 lg:grid-cols-[1fr_1fr] lg:items-end lg:gap-16">
           <div>
             <p className="eyebrow text-saffron">{t.pages.goodForYou}</p>
@@ -70,7 +70,7 @@ export default async function MangoesPage() {
         </Stagger>
       </section>
 
-      <section className="container-x pb-[clamp(3.5rem,9svh,6rem)]">
+      <section className="container-x pb-[clamp(3.5rem,9svh,6rem)] max-sm:pb-12">
         <Reveal className="grid gap-6 rounded-[var(--radius-card)] bg-paper p-7 md:grid-cols-[1fr_auto] md:items-center sm:p-10">
           <RichText value={mangoOutro} />
           <ButtonLink href="/storefinder" variant="primary">{t.pages.findNearest}</ButtonLink>

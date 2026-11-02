@@ -23,7 +23,7 @@ export async function RelatedLinks({ exclude, n = 3 }: { exclude: string; n?: nu
     .filter((l) => l.href !== exclude)
     .slice(0, n);
   return (
-    <section className="container-x pb-20 lg:pb-28">
+    <section className="container-x pb-14 sm:pb-20 lg:pb-28">
       <h2 className="border-t border-ink/10 pt-14 font-display text-title text-forest">{t.pages.keepExploring}</h2>
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         {items.map((it, i) => (

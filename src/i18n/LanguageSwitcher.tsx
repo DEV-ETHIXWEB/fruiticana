@@ -1,21 +1,31 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { LANG_COOKIE, localizePath, punjabiLive, stripLocale, type Locale } from "./config";
+import { LANG_COOKIE, localizePath, punjabiLive, stripLocale, SWITCH_KEY, type Locale } from "./config";
 import { useI18n } from "./I18nProvider";
 
 /**
- * Switches to the same page in the other language. It is a real link (works without
- * JavaScript and is crawlable), labelled in the target language's own script, and it
- * remembers the choice so the homepage opens in that language next time.
+ * href + click handler for "this page in `target`": remembers the choice (cookie), keeps any
+ * ?query, and notes how far down the page the reader was. The page change itself is a
+ * cross-document view transition (globals.css), and the target page is prerendered on hover
+ * (speculation rules in the layout), so switching feels instant and smooth.
  */
-/** href + click handler for "this page in `target`": remembers the choice, keeps any ?query. */
 export function useLanguageLink(target: Locale) {
   const { path } = stripLocale(usePathname() || "/");
   const href = localizePath(path, target);
   const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     document.cookie = `${LANG_COOKIE}=${target}; path=/; max-age=31536000; samesite=lax`;
     const to = href + window.location.search;
+    try {
+      // the section in view and how far into it, so the same section opens in the other
+      // language (both versions share one layout; text lengths differ)
+      const sections = [...(document.querySelector("main")?.children ?? [])];
+      const i = sections.findIndex((el) => el.getBoundingClientRect().bottom > 80);
+      const box = sections[i]?.getBoundingClientRect();
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const spot = window.scrollY < 10 ? null : { i, frac: box ? Math.max(0, (80 - box.top) / box.height) : 0, ratio: max > 0 ? window.scrollY / max : 0 };
+      sessionStorage.setItem(SWITCH_KEY, JSON.stringify({ to, spot }));
+    } catch {}
     if (to !== href) {
       e.preventDefault();
       window.location.assign(to);
@@ -24,6 +34,11 @@ export function useLanguageLink(target: Locale) {
   return { href, onClick };
 }
 
+/**
+ * Switches to the same page in the other language. It is a real link (works without
+ * JavaScript and is crawlable), labelled in the target language's own script, and it
+ * remembers the choice so the homepage opens in that language next time.
+ */
 export function LanguageSwitcher({ variant = "pill", tone = "light", className = "" }: { variant?: "pill" | "menu" | "text"; tone?: "light" | "dark"; className?: string }) {
   const { lang, t } = useI18n();
   const target: Locale = lang === "en" ? "pa" : "en";

@@ -19,7 +19,7 @@ export default async function CommunityPage() {
   return (
     <>
       <PageHero eyebrow={page.eyebrow} title={t.pages.communityTitle} intro={page.intro} image={page.heroImage} crumbs={[{ name: t.nav.community, path: PATH }]} />
-      <section className="container-x py-16 lg:py-24">
+      <section className="container-x py-12 sm:py-16 lg:py-24">
         <div className="grid gap-10 lg:grid-cols-[1fr_16rem]">
           <Reveal>
             <RichText value={page.body} className="max-w-3xl text-xl" />

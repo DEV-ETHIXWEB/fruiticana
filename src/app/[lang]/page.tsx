@@ -70,7 +70,7 @@ export default async function HomePage() {
       <QuickActions flyers={flyers} stores={stores} />
 
       {/* ---------------- Mission + company ---------------- */}
-      <section className="container-x py-[clamp(3rem,9svh,7rem)]">
+      <section className="container-x py-[clamp(3rem,9svh,7rem)] max-sm:py-12 max-[380px]:py-10!">
         {/* lg+: the label heads a tall store photo that stretches to the text column's height
             (absolutely filled, so it never adds height); below lg the columns stack without it. */}
         <div className="grid gap-6 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,1.45fr)] lg:gap-12 xl:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] xl:gap-20">
@@ -118,7 +118,7 @@ export default async function HomePage() {
       </section>
 
       {/* ---------------- Commercials ---------------- */}
-      <section className="grain relative overflow-hidden bg-forest py-[clamp(3.5rem,9svh,6rem)] text-cream">
+      <section className="grain relative overflow-hidden bg-forest py-[clamp(3.5rem,9svh,6rem)] max-sm:py-12 max-[380px]:py-10! text-cream">
         <div className="container-x relative z-10">
           <Reveal>
             <VideoGallery
@@ -143,7 +143,7 @@ export default async function HomePage() {
       </section>
 
       {/* ---------------- Story: one-screen horizontal timeline ---------------- */}
-      <section className="container-x py-[clamp(3rem,8svh,7rem)] lg:py-[clamp(3.5rem,10svh,7rem)]">
+      <section className="container-x py-[clamp(3rem,8svh,7rem)] max-sm:py-12 max-[380px]:py-10! lg:py-[clamp(3.5rem,10svh,7rem)]">
         <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
           <div>
             <p className="eyebrow text-leaf">{t.home.storyEyebrow}</p>
@@ -167,7 +167,7 @@ export default async function HomePage() {
               as="li"
               key={i}
               delay={i * 0.07}
-              className="relative w-[78%] shrink-0 snap-start rounded-[var(--radius-card)] bg-paper/70 p-6 sm:w-[44%] lg:w-auto lg:rounded-none lg:border-t lg:border-ink/15 lg:bg-transparent lg:p-0 lg:pt-8 lg:pr-8"
+              className="relative w-[84%] shrink-0 snap-start rounded-[var(--radius-card)] bg-paper/70 p-5 sm:w-[44%] sm:p-6 lg:w-auto lg:rounded-none lg:border-t lg:border-ink/15 lg:bg-transparent lg:p-0 lg:pt-8 lg:pr-8"
             >
               <span className="absolute -top-[5px] left-0 hidden size-2.5 rounded-full bg-chili ring-4 ring-cream lg:block" />
               <p className="font-display text-[clamp(2.25rem,min(1.4rem+1.6vw,6svh),3rem)] leading-none tracking-tight text-leaf italic">{m.year}</p>
@@ -179,7 +179,7 @@ export default async function HomePage() {
       </section>
 
       {/* ---------------- Indican + Mangoes ---------------- */}
-      <section className="container-x grid gap-4 pb-[clamp(3.5rem,10svh,7rem)] md:grid-cols-2 md:gap-5">
+      <section className="container-x grid gap-4 pb-[clamp(3.5rem,10svh,7rem)] max-sm:pb-12 max-[380px]:pb-10! md:grid-cols-2 md:gap-5">
         {[
           { href: "/indican", eyebrow: t.home.indicanEyebrow, title: "Indican", body: t.home.indicanBody, image: photos.spiceAisle, tone: "bg-chili text-white" },
           { href: "/mangoes", eyebrow: t.home.mangoEyebrow, title: t.common.rajanMangoes, body: t.home.mangoBody, image: photos.mangoLassi, tone: "bg-mango text-forest-deep" },
@@ -206,7 +206,7 @@ export default async function HomePage() {
 
       {/* ---------------- President's message ----------------
           A dark editorial band: the founder's words, then the three things that keep the promise. */}
-      <section className="grain relative isolate overflow-hidden bg-forest-deep py-12 text-cream sm:py-[clamp(3.5rem,11svh,7rem)]">
+      <section className="grain relative isolate overflow-hidden bg-forest-deep py-12 text-cream max-[380px]:py-10! sm:py-[clamp(3.5rem,11svh,7rem)]">
         <div aria-hidden className="pointer-events-none absolute -top-40 -left-40 -z-10 size-[36rem] rounded-full bg-[radial-gradient(circle,rgb(246_210_28/0.16),transparent_65%)] blur-2xl" />
         <div aria-hidden className="pointer-events-none absolute -right-32 -bottom-48 -z-10 size-[34rem] rounded-full bg-[radial-gradient(circle,rgb(226_35_26/0.14),transparent_65%)] blur-2xl" />
         <div className="container-x grid items-center gap-8 sm:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:gap-16 xl:gap-24">
@@ -262,7 +262,7 @@ export default async function HomePage() {
       </section>
 
       {/* ---------------- Community ---------------- */}
-      <section className="container-x py-[clamp(3rem,8svh,7rem)] lg:py-[clamp(3rem,9svh,7rem)]">
+      <section className="container-x py-[clamp(3rem,8svh,7rem)] max-sm:py-12 max-[380px]:py-10! lg:py-[clamp(3rem,9svh,7rem)]">
         <div className="flex items-end justify-between gap-6">
           <div>
             <p className="eyebrow text-leaf">{t.home.communityEyebrow}</p>
@@ -285,7 +285,7 @@ export default async function HomePage() {
             <Reveal key={post.slug} delay={i * 0.08} className="w-[82%] shrink-0 snap-start md:w-auto">
               <Link href={`/blog/${post.slug}`} className="group/btn flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-white ring-1 ring-ink/[0.06] transition-shadow hover:shadow-[0_30px_60px_-30px_rgb(15_59_38/0.35)]">
                 {post.image && (
-                  <div className={`relative aspect-[16/9] overflow-hidden lg:aspect-[2/1] ${post.image.width < 400 ? "bg-white" : "bg-paper"}`}>
+                  <div className={`relative aspect-[16/9] overflow-hidden max-[380px]:aspect-[2/1] lg:aspect-[2/1] ${post.image.width < 400 ? "bg-white" : "bg-paper"}`}>
                     {isSmallImage(post.image) ? (
                       <ProductShot image={post.image} />
                     ) : (

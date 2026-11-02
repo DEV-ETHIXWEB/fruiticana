@@ -148,7 +148,7 @@ export async function Footer({ settings, stores }: { settings: SiteSettings; sto
       <div className="relative z-10 border-t border-cream/10">
         <div className="container-x flex flex-col gap-3 py-5 text-[0.78rem] text-cream/65 sm:flex-row sm:items-center sm:justify-between">
           <p>
-            {t.footer.rights(new Date().getFullYear())} <span className="ml-1 font-display text-cream/80 italic">{t.footer.slogan}</span>
+            {t.footer.rights(new Date().getFullYear())} <span className="ml-1 inline-block font-display whitespace-nowrap text-cream/80 italic">{t.footer.slogan}</span>
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <LanguageSwitcher variant="text" tone="dark" className="text-cream" />

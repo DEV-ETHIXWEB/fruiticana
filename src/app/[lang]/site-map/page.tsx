@@ -19,7 +19,7 @@ export default async function SiteMapPage() {
   return (
     <>
       <PageHero eyebrow={t.siteMap.eyebrow} title={t.siteMap.title} crumbs={[{ name: t.siteMap.metaTitle, path: "/site-map" }]} />
-      <section className="container-x grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-4 lg:py-24">
+      <section className="container-x grid gap-12 py-12 sm:py-16 sm:grid-cols-2 lg:grid-cols-4 lg:py-24">
         {groups.map((g) => (
           <div key={g.title}>
             <h2 className="border-b border-ink/10 pb-3 text-[0.75rem] font-semibold tracking-[0.2em] text-muted uppercase">{g.title}</h2>

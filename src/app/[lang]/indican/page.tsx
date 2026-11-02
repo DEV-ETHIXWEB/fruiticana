@@ -28,7 +28,7 @@ export default async function IndicanPage() {
     <>
       <PageHero eyebrow={page.eyebrow} title={t.pages.indicanTitle} intro={page.intro} image={page.heroImage} crumbs={[{ name: t.nav.indican, path: PATH }]} />
 
-      <section className="container-x grid gap-14 py-20 lg:grid-cols-[1fr_1fr] lg:gap-24 lg:py-28">
+      <section className="container-x grid gap-14 py-14 sm:py-20 lg:grid-cols-[1fr_1fr] lg:gap-24 lg:py-28">
         <div>
           <Reveal>
             <RichText value={lead ? [lead] : []} className="dropcap text-xl" />
@@ -48,7 +48,7 @@ export default async function IndicanPage() {
         </Reveal>
       </section>
 
-      <section className="grain relative overflow-hidden bg-chili py-24 text-white lg:py-32">
+      <section className="grain relative overflow-hidden bg-chili py-16 sm:py-24 text-white lg:py-32">
         <div className="container-x relative z-10">
           <p className="eyebrow text-turmeric">{t.pages.theRange}</p>
           <SplitHeading text={t.pages.rangeTitle} className="mt-5 max-w-3xl font-display text-headline tracking-[-0.03em]" accentClassName="italic text-turmeric" />

@@ -6,7 +6,7 @@ import Link from "@/i18n/Link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Map as MLMap, Marker } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { loadMapLibre, MAP_STYLE } from "@/lib/map/load";
+import { foldAttribution, loadMapLibre, MAP_STYLE } from "@/lib/map/load";
 import { Icon } from "@/components/ui/Icon";
 import type { Store } from "@/lib/content/types";
 import { distanceKm, formatKm, POSTAL_RE } from "@/lib/geo";
@@ -84,6 +84,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
         cooperativeGestures: window.matchMedia("(pointer: coarse)").matches,
       });
       m.addControl(new ml.NavigationControl({ showCompass: false }), "bottom-right");
+      m.once("load", () => mapEl.current && foldAttribution(mapEl.current));
       map.current = m;
 
       for (const s of stores) {

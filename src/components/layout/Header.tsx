@@ -63,7 +63,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
         {t.common.skipToContent}
       </a>
 
-      <header className="fixed inset-x-0 top-0 z-50">
+      <header className="site-header fixed inset-x-0 top-0 z-50">
         {announcement?.text && !scrolled && (
           <div className="bg-forest text-cream">
             <div className="container-x flex h-9 items-center justify-center gap-3 text-[0.8rem] font-medium">

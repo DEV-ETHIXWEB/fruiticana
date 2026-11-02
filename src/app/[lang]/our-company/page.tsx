@@ -21,7 +21,7 @@ export default async function OurCompanyPage() {
     <>
       <PageHero eyebrow={page.eyebrow} title={t.pages.storyTitle} intro={page.intro} crumbs={[{ name: t.nav.ourCompany, path: PATH }]} />
 
-      <section className="container-x grid gap-14 py-20 lg:grid-cols-[1fr_1fr] lg:gap-24 lg:py-28">
+      <section className="container-x grid gap-14 py-14 sm:py-20 lg:grid-cols-[1fr_1fr] lg:gap-24 lg:py-28">
         <Reveal>
           <RichText value={lead ? [lead] : []} className="dropcap text-xl" />
         </Reveal>
@@ -64,7 +64,7 @@ export default async function OurCompanyPage() {
         </Reveal>
       </section>
 
-      <section className="container-x grid gap-8 py-20 lg:grid-cols-[1fr_1fr] lg:gap-24 lg:py-28">
+      <section className="container-x grid gap-8 py-14 sm:py-20 lg:grid-cols-[1fr_1fr] lg:gap-24 lg:py-28">
         <Reveal>
           <p className="eyebrow text-leaf">{t.pages.howWeGrew}</p>
           <p className="mt-5 max-w-md font-display text-title text-forest">{t.pages.howWeGrewBody}</p>
@@ -75,7 +75,7 @@ export default async function OurCompanyPage() {
       </section>
 
       {/* Timeline band */}
-      <section className="grain relative overflow-hidden bg-forest py-24 text-cream">
+      <section className="grain relative overflow-hidden bg-forest py-16 sm:py-24 text-cream">
         <div className="container-x relative z-10">
           <p className="eyebrow text-turmeric">{t.pages.milestones}</p>
           <SplitHeading text={t.pages.milestonesTitle} className="mt-5 max-w-3xl font-display text-headline tracking-[-0.03em]" accentClassName="italic text-turmeric" />
@@ -92,7 +92,7 @@ export default async function OurCompanyPage() {
       </section>
 
       {/* Mission */}
-      <section className="container-x py-24 text-center lg:py-32">
+      <section className="container-x py-16 sm:py-24 text-center lg:py-32">
         <p className="eyebrow justify-center text-chili-deep">{t.home.missionEyebrow}</p>
         <SplitHeading as="p" text={settings.mission} className="mx-auto mt-8 max-w-5xl font-display text-[clamp(1.7rem,1rem+2.4vw,3.25rem)] leading-[1.15] tracking-[-0.02em] text-forest" />
       </section>

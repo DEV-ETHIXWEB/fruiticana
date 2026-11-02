@@ -61,7 +61,7 @@ export function VideoGallery({ videos, nonEmbeddable, intro }: { videos: Video[]
         className="relative aspect-video w-full overflow-hidden rounded-[var(--radius-card)] bg-forest-deep ring-1 ring-cream/10 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:max-w-[calc((100svh-10rem)*16/9)] lg:self-center"
       >
         {/* Poster always underneath: instant paint, and the fallback while the iframe boots */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div key={`p-${v.youtubeId}`} initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0">
             <Image src={v.poster.src} alt={v.poster.alt} fill sizes="(min-width: 1024px) 62vw, 100vw" className={`object-cover ${letterbox(v.poster)}`} />
           </motion.div>
@@ -122,14 +122,14 @@ export function VideoGallery({ videos, nonEmbeddable, intro }: { videos: Video[]
                 setMode("ambient");
               }}
               aria-current={i === active}
-              className={`group flex h-full w-full items-center gap-3 rounded-2xl p-2 text-left transition-colors lg:gap-4 ${i === active ? "bg-cream/10 ring-1 ring-cream/20" : "hover:bg-cream/5"}`}
+              className={`group flex h-full w-full items-center gap-3 rounded-2xl p-2 text-left transition-colors sm:flex-col sm:items-stretch sm:gap-2.5 lg:flex-row lg:items-center lg:gap-4 ${i === active ? "bg-cream/10 ring-1 ring-cream/20" : "hover:bg-cream/5"}`}
             >
-              <span className="relative aspect-video w-24 shrink-0 overflow-hidden rounded-xl">
-                <Image src={item.poster.src} alt="" fill sizes="7rem" className={`object-cover ${letterbox(item.poster)}`} />
+              <span className="relative aspect-video w-24 shrink-0 overflow-hidden rounded-xl sm:aspect-[2/1] sm:w-full lg:aspect-video lg:w-24">
+                <Image src={item.poster.src} alt="" fill sizes="(min-width: 1024px) 7rem, (min-width: 640px) 30vw, 7rem" className={`object-cover ${letterbox(item.poster)}`} />
                 {i === active && <span className="absolute inset-0 ring-2 ring-turmeric ring-inset" />}
               </span>
-              <span className="min-w-0">
-                <span className="block text-[0.75rem] font-semibold tracking-[0.18em] text-cream/45 uppercase">
+              <span className="min-w-0 sm:px-1 lg:px-0">
+                <span className="block text-[0.75rem] font-semibold tracking-[0.18em] text-cream/45 uppercase sm:max-lg:sr-only">
                   0{i + 1}
                   {nonEmbeddable.includes(item.youtubeId) ? " · YouTube" : ""}
                 </span>

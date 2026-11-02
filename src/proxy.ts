@@ -26,7 +26,10 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(`${pathname.slice(3) || "/"}${search}`, request.url), 308);
   }
 
-  if (punjabiLive && pathname === "/" && request.cookies.get(LANG_COOKIE)?.value === "pa") {
+  // (not for prefetch / prerender requests: the language link the reader is about to click
+  // sets the cookie only on click, so a prerendered "/" must stay English)
+  const speculative = /prefetch|prerender/.test(request.headers.get("sec-purpose") ?? "");
+  if (punjabiLive && pathname === "/" && !speculative && request.cookies.get(LANG_COOKIE)?.value === "pa") {
     return NextResponse.redirect(new URL(`/pa${search}`, request.url), 307);
   }
 

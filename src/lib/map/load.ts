@@ -14,3 +14,8 @@ export function loadMapLibre() {
   });
   return ready;
 }
+
+/** MapLibre opens the compact credits expanded; start them folded behind the (i) button. */
+export function foldAttribution(container: HTMLElement) {
+  container.querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show");
+}

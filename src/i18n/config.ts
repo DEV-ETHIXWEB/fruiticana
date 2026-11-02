@@ -24,6 +24,9 @@ export const ogLocale: Record<Locale, string> = { en: "en_CA", pa: "pa_IN" };
 export const languageName: Record<Locale, string> = { en: "English", pa: "ਪੰਜਾਬੀ" };
 
 /** Cookie remembering a visitor's explicit language choice. */
+/** sessionStorage key: where the reader was, so the other language opens at the same spot */
+export const SWITCH_KEY = "fr-lang-switch";
+
 export const LANG_COOKIE = "fr_lang";
 
 /** Paths that are never localized: API routes, the CMS, files (PDFs, images, feeds). */

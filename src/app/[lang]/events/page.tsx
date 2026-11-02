@@ -25,7 +25,7 @@ export default async function EventsPage() {
   return (
     <>
       <PageHero eyebrow={t.nav.community} title={t.pages.eventsTitle} intro={t.pages.eventsIntro} crumbs={[{ name: t.nav.community, path: "/blog" }, { name: t.nav.events, path: PATH }]} />
-      <section className="container-x py-16 lg:py-24">
+      <section className="container-x py-12 sm:py-16 lg:py-24">
         {events.length ? (
           <>
             <JsonLd

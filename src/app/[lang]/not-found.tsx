@@ -10,7 +10,7 @@ export async function generateMetadata() {
 export default async function NotFound() {
   const t = await getT();
   return (
-    <section className="container-x grid min-h-[80vh] place-items-center pt-28 pb-20 text-center">
+    <section className="container-x grid min-h-[80vh] place-items-center pt-28 pb-14 sm:pb-20 text-center">
       <div>
         <Image src="/brand/mark.svg" alt="" width={512} height={512} unoptimized className="mx-auto w-20 -rotate-12" />
         <p className="mt-8 font-display text-[clamp(5rem,3rem+10vw,12rem)] leading-none tracking-tight text-forest">

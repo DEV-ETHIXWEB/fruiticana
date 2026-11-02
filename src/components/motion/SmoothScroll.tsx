@@ -33,8 +33,14 @@ export function SmoothScroll() {
     };
   }, []);
 
-  // Route change → start at the top instantly.
+  // Route change → start at the top instantly. Not on the first render: a full page load
+  // keeps the position the browser (or the language switch) restored.
+  const first = useRef(true);
   useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
     lenis.current?.scrollTo(0, { immediate: true });
   }, [pathname]);
 

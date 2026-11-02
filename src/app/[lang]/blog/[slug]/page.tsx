@@ -55,7 +55,7 @@ export default async function PostPage({ params }: PageProps<"/[lang]/blog/[slug
           </div>
         </Reveal>
       )}
-      <div className="container-x grid max-w-5xl gap-12 py-16 lg:grid-cols-[1fr_12rem] lg:py-24">
+      <div className="container-x grid max-w-5xl gap-10 py-12 sm:gap-12 sm:py-16 lg:grid-cols-[1fr_12rem] lg:py-24">
         <Reveal>
           <RichText value={post.body} className="dropcap" />
         </Reveal>
@@ -82,10 +82,10 @@ export default async function PostPage({ params }: PageProps<"/[lang]/blog/[slug
         </aside>
       </div>
       {others.length > 0 && (
-        <section className="container-x max-w-5xl pb-24">
-          <div className="flex items-baseline justify-between border-t border-ink/10 pt-10">
+        <section className="container-x max-w-5xl pb-16 sm:pb-24">
+          <div className="flex items-baseline justify-between gap-4 border-t border-ink/10 pt-10">
             <h2 className="font-display text-title text-forest">{t.pages.moreFromCommunity}</h2>
-            <Link href="/blog" className="text-sm font-semibold text-leaf">{t.home.allStories}</Link>
+            <Link href="/blog" className="shrink-0 text-sm font-semibold whitespace-nowrap text-leaf">{t.home.allStories}</Link>
           </div>
           <div className={`mt-8 grid gap-5 ${others.length > 1 ? "md:grid-cols-2" : ""}`}>
             {others.map((p) => (

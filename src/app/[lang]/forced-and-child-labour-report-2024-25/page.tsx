@@ -33,11 +33,11 @@ export default async function ReportPage() {
           </ButtonLink>
         </div>
       </PageHero>
-      <section className="container-x py-16 lg:py-20">
+      <section className="container-x py-12 sm:py-16 lg:py-20">
         <div className="mx-auto max-w-[min(72rem,calc((100svh-12rem)*1.55))] overflow-hidden rounded-[var(--radius-card)] bg-white ring-1 ring-ink/10">
           <div className="flex items-center justify-between border-b border-ink/10 px-6 py-4 text-sm">
             <span className="font-medium">{t.pages.fiscalYear}</span>
-            <span className="text-muted">{t.pages.reportPages(PAGES)}</span>
+            <span className="shrink-0 whitespace-nowrap text-muted">{t.pages.reportPages(PAGES)}</span>
           </div>
           {/* Punjabi only: the official report itself is published in English */}
           {t.pages.reportLanguageNote && <p className="border-b border-ink/10 bg-paper/60 px-6 py-3 text-sm text-ink-soft">{t.pages.reportLanguageNote}</p>}

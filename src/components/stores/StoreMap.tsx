@@ -3,7 +3,7 @@
 import { useI18n } from "@/i18n/I18nProvider";
 import { useEffect, useRef } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { loadMapLibre, MAP_STYLE } from "@/lib/map/load";
+import { foldAttribution, loadMapLibre, MAP_STYLE } from "@/lib/map/load";
 
 /**
  * Single-store map for store and contact pages. Scroll-zoom off so the page scrolls normally.
@@ -31,6 +31,7 @@ export function StoreMap({ lat, lng, label }: { lat: number; lng: number; label:
       if (cancelled || !el.current) return;
       map = new ml.Map({ locale: { "NavigationControl.ZoomIn": t.stores.mapZoomIn, "NavigationControl.ZoomOut": t.stores.mapZoomOut, "AttributionControl.ToggleAttribution": t.stores.mapAttribution }, container: el.current, style: MAP_STYLE, center: [lng, lat], zoom: 14.2, scrollZoom: false, attributionControl: { compact: true } });
       map.addControl(new ml.NavigationControl({ showCompass: false }), "bottom-right");
+      map.once("load", () => el.current && foldAttribution(el.current));
       const pin = document.createElement("div");
       pin.className = "fr-pin is-active";
       pin.innerHTML = `<span class="fr-pin-dot"><img src="/brand/mark.svg" alt="" /></span>`;

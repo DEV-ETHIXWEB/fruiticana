@@ -138,7 +138,7 @@ export default async function StorePage({ params }: PageProps<"/[lang]/storefind
       </section>
 
       {!store.isHeadOffice && (
-        <section className="container-x py-20 lg:py-28">
+        <section className="container-x py-14 sm:py-20 lg:py-28">
           <h2 className="font-display text-title text-forest">{t.stores.inStore}</h2>
           <div className="mt-8 grid gap-4 lg:grid-cols-[1fr_22rem]">
             <div className="grid gap-4 sm:grid-cols-3">
@@ -178,7 +178,7 @@ export default async function StorePage({ params }: PageProps<"/[lang]/storefind
         </section>
       )}
 
-      <section className="container-x pb-24 lg:pb-32">
+      <section className="container-x pb-16 sm:pb-24 lg:pb-32">
         <h2 className="font-display text-title text-forest">{t.stores.nearbyTitle}</h2>
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {nearby.map(({ s, km }, i) => (

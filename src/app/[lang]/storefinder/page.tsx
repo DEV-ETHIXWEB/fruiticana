@@ -39,7 +39,7 @@ export default async function StoreFinderPage() {
       </section>
 
       {/* Crawlable directory: every store linked by city */}
-      <section className="container-x pb-24 lg:pb-32">
+      <section className="container-x pb-16 sm:pb-24 lg:pb-32">
         <h2 className="font-display text-title text-forest">{t.stores.allLocations}</h2>
         <div className="mt-10 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           {byCity.map(([city, list], i) => (
