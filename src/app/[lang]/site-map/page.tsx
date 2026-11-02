@@ -1,21 +1,24 @@
-import type { Metadata } from "next";
 import Link from "@/i18n/Link";
 import { PageHero } from "@/components/page/PageHero";
 import { getPosts, getRetailStores } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
-import { nav } from "@/lib/site";
+import { localizedNav } from "@/lib/site";
+import { getLocale, getT } from "@/i18n/server";
 
-export const metadata: Metadata = pageMetadata({ title: "Site Map", description: "Every page on fruiticana.com: company, Indican, community, weekly specials, all 25 store locations and contact.", path: "/site-map" });
+export async function generateMetadata() {
+  const t = await getT();
+  return pageMetadata({ title: t.siteMap.metaTitle, description: t.siteMap.metaDescription, path: "/site-map", lang: await getLocale() });
+}
 
 export default async function SiteMapPage() {
-  const [stores, posts] = await Promise.all([getRetailStores(), getPosts()]);
+  const [stores, posts, t] = await Promise.all([getRetailStores(), getPosts(), getT()]);
   const groups = [
-    ...nav.map((n) => ({ title: n.label, links: "children" in n ? n.children.map((c) => ({ href: c.href, label: c.label })) : [{ href: n.href, label: n.label }] })),
-    { title: "Community stories", links: posts.map((p) => ({ href: `/blog/${p.slug}`, label: p.title })) },
+    ...localizedNav(t).map((n) => ({ title: n.label, links: n.children ? n.children.map((c) => ({ href: c.href, label: c.label })) : [{ href: n.href, label: n.label }] })),
+    { title: t.siteMap.communityStories, links: posts.map((p) => ({ href: `/blog/${p.slug}`, label: p.title })) },
   ];
   return (
     <>
-      <PageHero eyebrow="Site Map" title="Everything, *in* *one* *place.*" crumbs={[{ name: "Site Map", path: "/site-map" }]} />
+      <PageHero eyebrow={t.siteMap.eyebrow} title={t.siteMap.title} crumbs={[{ name: t.siteMap.metaTitle, path: "/site-map" }]} />
       <section className="container-x grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-4 lg:py-24">
         {groups.map((g) => (
           <div key={g.title}>
@@ -30,7 +33,7 @@ export default async function SiteMapPage() {
           </div>
         ))}
         <div className="sm:col-span-2 lg:col-span-4">
-          <h2 className="border-b border-ink/10 pb-3 text-[0.75rem] font-semibold tracking-[0.2em] text-muted uppercase">Store locations</h2>
+          <h2 className="border-b border-ink/10 pb-3 text-[0.75rem] font-semibold tracking-[0.2em] text-muted uppercase">{t.siteMap.storeLocations}</h2>
           <ul className="mt-4 grid gap-x-8 gap-y-2.5 sm:grid-cols-2 lg:grid-cols-4">
             {stores.map((s) => (
               <li key={s.slug}>

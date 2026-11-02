@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/i18n/I18nProvider";
 import { useEffect, useRef } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { loadMapLibre, MAP_STYLE } from "@/lib/map/load";
@@ -10,6 +11,7 @@ import { loadMapLibre, MAP_STYLE } from "@/lib/map/load";
  * so it never competes with the page's first paint.
  */
 export function StoreMap({ lat, lng, label }: { lat: number; lng: number; label: string }) {
+  const { t } = useI18n();
   const el = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let map: import("maplibre-gl").Map | undefined;
@@ -27,7 +29,7 @@ export function StoreMap({ lat, lng, label }: { lat: number; lng: number; label:
     io.observe(node);
     const init = () => loadMapLibre().then((ml) => {
       if (cancelled || !el.current) return;
-      map = new ml.Map({ container: el.current, style: MAP_STYLE, center: [lng, lat], zoom: 14.2, scrollZoom: false, attributionControl: { compact: true } });
+      map = new ml.Map({ locale: { "NavigationControl.ZoomIn": t.stores.mapZoomIn, "NavigationControl.ZoomOut": t.stores.mapZoomOut, "AttributionControl.ToggleAttribution": t.stores.mapAttribution }, container: el.current, style: MAP_STYLE, center: [lng, lat], zoom: 14.2, scrollZoom: false, attributionControl: { compact: true } });
       map.addControl(new ml.NavigationControl({ showCompass: false }), "bottom-right");
       const pin = document.createElement("div");
       pin.className = "fr-pin is-active";
@@ -39,10 +41,10 @@ export function StoreMap({ lat, lng, label }: { lat: number; lng: number; label:
       io.disconnect();
       map?.remove();
     };
-  }, [lat, lng]);
+  }, [lat, lng, t]);
   return (
     <div className="absolute inset-0">
-      <div ref={el} className="h-full w-full" role="img" aria-label={`Map showing ${label}`} />
+      <div ref={el} className="h-full w-full" role="img" aria-label={t.stores.mapShowing(label)} />
     </div>
   );
 }

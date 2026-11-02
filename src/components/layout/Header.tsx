@@ -8,11 +8,14 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
-import { nav } from "@/lib/site";
+import { useI18n } from "@/i18n/I18nProvider";
+import { localizedNav } from "@/lib/site";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 export function Header({ announcement, phone }: { announcement?: { text: string; href?: string }; phone: string }) {
+  const { t } = useI18n();
+  const items = localizedNav(t);
   // compare against the path without the /pa prefix, so active states work in both languages
   const pathname = stripLocale(usePathname() || "/").path;
   const [open, setOpen] = useState<string | null>(null);
@@ -57,7 +60,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
   return (
     <>
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-forest focus:px-5 focus:py-3 focus:text-cream">
-        Skip to content
+        {t.common.skipToContent}
       </a>
 
       <header className="fixed inset-x-0 top-0 z-50">
@@ -82,7 +85,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
           }`}
         >
           <div className={`container-x flex items-center justify-between gap-3 transition-[height] sm:gap-6 duration-500 ${scrolled ? "h-[4.25rem]" : "h-20 lg:h-24"}`}>
-            <Link href="/" className="relative shrink-0" aria-label="Fruiticana home">
+            <Link href="/" className="relative shrink-0" aria-label={t.common.homeLink}>
               <Logo
                 tone={onDark ? "light" : "color"}
                 preload
@@ -90,9 +93,9 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
               />
             </Link>
 
-            <nav aria-label="Primary" className="hidden xl:block">
+            <nav aria-label={t.header.primaryNav} className="hidden xl:block">
               <ul className="flex items-center gap-0.5">
-                {nav.map((item) => {
+                {items.map((item) => {
                   const children = "children" in item ? item.children : undefined;
                   const active = isActive(item.href, children);
                   return (
@@ -156,18 +159,18 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
                 href="/storefinder"
                 className="hidden items-center gap-2 btn-3d btn-chili rounded-full bg-chili px-4 py-2.5 text-[0.82rem] font-semibold tracking-wide text-white uppercase hover:bg-chili-deep sm:inline-flex"
               >
-                <Icon name="pin" className="size-4 xl:max-2xl:hidden" strokeWidth={2} /> Locations
+                <Icon name="pin" className="size-4 xl:max-2xl:hidden" strokeWidth={2} /> {t.common.locations}
               </Link>
               <Link
                 href="/flyers"
                 className="hidden items-center gap-2 btn-3d btn-leaf rounded-full bg-leaf px-4 py-2.5 text-[0.82rem] font-semibold tracking-wide text-white uppercase hover:bg-forest sm:inline-flex"
               >
-                <Icon name="flyer" className="size-4 xl:max-2xl:hidden" strokeWidth={2} /> Specials
+                <Icon name="flyer" className="size-4 xl:max-2xl:hidden" strokeWidth={2} /> {t.common.specials}
               </Link>
               <button
                 type="button"
                 className={`relative grid size-11 place-items-center rounded-full text-cream transition-colors xl:hidden ${onDark ? "bg-cream/15 ring-1 ring-cream/30 backdrop-blur" : "bg-forest"}`}
-                aria-label={mobile ? "Close menu" : "Open menu"}
+                aria-label={mobile ? t.header.closeMenu : t.header.openMenu}
                 aria-expanded={mobile}
                 aria-controls="mobile-menu"
                 onClick={() => setMobile((v) => !v)}
@@ -191,13 +194,13 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
           >
             <nav aria-label="Mobile" className="container-x relative z-10 flex-1 pb-10">
               <ul className="divide-y divide-cream/10 border-y border-cream/10">
-                {nav.map((item, i) => (
+                {items.map((item, i) => (
                   <motion.li key={item.label} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.05, duration: 0.6, ease: EASE }}>
                     <Link href={item.href} className="flex items-baseline justify-between py-4 font-display text-[2rem] leading-none">
                       {item.label}
                       <span className="font-sans text-xs tracking-widest text-cream/40">0{i + 1}</span>
                     </Link>
-                    {"children" in item && (
+                    {item.children && (
                       <ul className="-mt-1 flex flex-wrap gap-2 pb-4">
                         {item.children.slice(1).map((c) => (
                           <li key={c.href}>
@@ -213,14 +216,14 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
               </ul>
               <motion.div className="mt-8 grid grid-cols-2 gap-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
                 <Link href="/storefinder" className="flex items-center justify-center btn-3d btn-chili gap-2 rounded-full bg-chili py-3.5 text-sm font-semibold uppercase">
-                  <Icon name="pin" className="size-4" /> Locations
+                  <Icon name="pin" className="size-4" /> {t.common.locations}
                 </Link>
                 <Link href="/flyers" className="flex items-center justify-center btn-3d btn-turmeric gap-2 rounded-full bg-turmeric py-3.5 text-sm font-semibold text-forest uppercase">
-                  <Icon name="flyer" className="size-4" /> Specials
+                  <Icon name="flyer" className="size-4" /> {t.common.specials}
                 </Link>
                 <LanguageSwitcher variant="menu" className="col-span-2" />
                 <a href={`tel:+1${phone.replace(/\D/g, "")}`} className="col-span-2 mt-2 text-center text-sm text-cream/60">
-                  Head office · {phone}
+                  {t.header.headOfficePhone(phone)}
                 </a>
               </motion.div>
             </nav>

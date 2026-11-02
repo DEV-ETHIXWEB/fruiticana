@@ -3,6 +3,9 @@ import { cache } from "react";
 import { groq } from "next-sanity";
 import { sanityFetch } from "@/sanity/client";
 import * as seed from "./seed";
+import { getLocale } from "@/i18n/server";
+import { localizeCampaigns, localizeEvents, localizeFlyers, localizePage, localizePosts, localizeSettings, localizeVideos } from "./localize";
+import { pa } from "./seed/pa";
 import type { CampaignBanner, Event, Flyer, FlyerRegion, Img, Page, Post, SiteSettings, Store, Video } from "./types";
 
 /*
@@ -13,6 +16,8 @@ import type { CampaignBanner, Event, Flyer, FlyerRegion, Img, Page, Post, SiteSe
 
 const IMG = `{ "src": asset->url, alt, "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height, "lqip": asset->metadata.lqip }`;
 const BODY = `body[]{ ..., _type == "image" => { "_type": "image", "src": asset->url, alt, "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height } }`;
+/** The Punjabi tab of a document (rich text resolved like the English body) */
+const PA = `"pa": pa{ ..., ${BODY} }`;
 
 type RawImg = Partial<Img> | null | undefined;
 const toImg = (raw: RawImg, fallbackAlt = ""): Img | undefined =>
@@ -20,7 +25,7 @@ const toImg = (raw: RawImg, fallbackAlt = ""): Img | undefined =>
 
 const nonEmpty = <T,>(list: T[] | null | undefined): list is T[] => Array.isArray(list) && list.length > 0;
 
-export const getSettings = cache(async (): Promise<SiteSettings> => {
+const loadSettings = cache(async (): Promise<SiteSettings> => {
   const data = await sanityFetch<Partial<SiteSettings>>(groq`*[_id == "siteSettings"][0]`, {}, ["settings"]);
   if (!data) return seed.settings;
   // Merge so a half-filled settings doc never removes the phone number from the footer.
@@ -44,9 +49,9 @@ export async function getStore(slug: string) {
   return (await getStores()).find((s) => s.slug === slug) ?? null;
 }
 
-export const getFlyers = cache(async (): Promise<Flyer[]> => {
+const loadFlyers = cache(async (): Promise<Flyer[]> => {
   const data = await sanityFetch<(Omit<Flyer, "image"> & { image: RawImg })[]>(
-    groq`*[_type == "flyer"] | order(validFrom desc){ region, label, validFrom, validTo, "image": image${IMG} }`,
+    groq`*[_type == "flyer"] | order(validFrom desc){ region, label, validFrom, validTo, "image": image${IMG}, pa }`,
     {},
     ["flyer"],
   );
@@ -62,22 +67,23 @@ export const getFlyers = cache(async (): Promise<Flyer[]> => {
   return list.length ? list : seed.flyers;
 });
 
-export const getCampaigns = cache(async (): Promise<CampaignBanner[]> => {
-  const data = await sanityFetch<{ _id: string; label: string; href?: string; image: RawImg }[]>(
-    groq`*[_type == "campaign" && active != false] | order(order asc){ _id, label, href, "image": image${IMG} }`,
+const loadCampaigns = cache(async (): Promise<CampaignBanner[]> => {
+  const data = await sanityFetch<{ _id: string; label: string; href?: string; image: RawImg; pa?: CampaignBanner["pa"] }[]>(
+    groq`*[_type == "campaign" && active != false] | order(order asc){ _id, label, href, "image": image${IMG}, pa }`,
     {},
     ["campaign"],
   );
   if (!nonEmpty(data)) return seed.campaigns;
   return data.flatMap((c) => {
     const image = toImg(c.image, c.label);
-    return image ? [{ id: c._id, label: c.label, href: c.href, image }] : [];
+    // seeded documents are "campaign.<id>"; the id is what the Punjabi copy is keyed on
+    return image ? [{ id: c._id.replace(/^(drafts\.)?campaign\./, ""), label: c.label, href: c.href, image, pa: c.pa ?? undefined }] : [];
   });
 });
 
-export const getVideos = cache(async (): Promise<Video[]> => {
-  const data = await sanityFetch<{ title: string; youtubeId: string; caption?: string; poster: RawImg }[]>(
-    groq`*[_type == "video"] | order(order asc){ title, youtubeId, caption, "poster": poster${IMG} }`,
+const loadVideos = cache(async (): Promise<Video[]> => {
+  const data = await sanityFetch<{ title: string; youtubeId: string; caption?: string; poster: RawImg; pa?: Video["pa"] }[]>(
+    groq`*[_type == "video"] | order(order asc){ title, youtubeId, caption, "poster": poster${IMG}, pa }`,
     {},
     ["video"],
   );
@@ -88,9 +94,9 @@ export const getVideos = cache(async (): Promise<Video[]> => {
   }));
 });
 
-export const getPosts = cache(async (): Promise<Post[]> => {
+const loadPosts = cache(async (): Promise<Post[]> => {
   const data = await sanityFetch<(Omit<Post, "image"> & { image: RawImg })[]>(
-    groq`*[_type == "post" && defined(slug.current)] | order(date desc){ title, "slug": slug.current, date, category, excerpt, "image": image${IMG}, ${BODY}, seoTitle, seoDescription }`,
+    groq`*[_type == "post" && defined(slug.current)] | order(date desc){ title, "slug": slug.current, date, category, excerpt, "image": image${IMG}, ${BODY}, seoTitle, seoDescription, ${PA} }`,
     {},
     ["post"],
   );
@@ -102,19 +108,19 @@ export async function getPost(slug: string) {
   return (await getPosts()).find((p) => p.slug === slug) ?? null;
 }
 
-export const getEvents = cache(async (): Promise<Event[]> => {
+const loadEvents = cache(async (): Promise<Event[]> => {
   const data = await sanityFetch<Event[]>(
-    groq`*[_type == "event" && coalesce(end, start) >= now()] | order(start asc){ "id": _id, title, start, end, location, description }`,
+    groq`*[_type == "event" && coalesce(end, start) >= now()] | order(start asc){ "id": _id, title, start, end, location, description, pa }`,
     {},
     ["event"],
   );
   return data ?? seed.events;
 });
 
-export const getPage = cache(async (slug: string): Promise<Page> => {
+const loadPage = cache(async (slug: string): Promise<Page> => {
   const fallback = seed.pages[slug];
   const data = await sanityFetch<(Omit<Page, "heroImage"> & { heroImage: RawImg }) | null>(
-    groq`*[_type == "page" && slug.current == $slug][0]{ title, "slug": slug.current, eyebrow, intro, "heroImage": heroImage${IMG}, ${BODY}, seoTitle, seoDescription }`,
+    groq`*[_type == "page" && slug.current == $slug][0]{ title, "slug": slug.current, eyebrow, intro, "heroImage": heroImage${IMG}, ${BODY}, seoTitle, seoDescription, ${PA} }`,
     { slug },
     ["page", `page:${slug}`],
   );
@@ -130,4 +136,37 @@ export const getPage = cache(async (slug: string): Promise<Page> => {
   } as Page;
 });
 
-export { photos, milestones, mangoBenefits, mangoOutro, nonEmbeddableVideos, newsClip } from "./seed";
+/* ---------------- Public getters: content in the page's language ---------------- */
+
+export const getSettings = cache(async () => localizeSettings(await loadSettings(), await getLocale()));
+export const getFlyers = cache(async () => localizeFlyers(await loadFlyers(), await getLocale()));
+export const getCampaigns = cache(async () => localizeCampaigns(await loadCampaigns(), await getLocale()));
+export const getVideos = cache(async () => localizeVideos(await loadVideos(), await getLocale()));
+export const getPosts = cache(async () => localizePosts(await loadPosts(), await getLocale()));
+export const getPage = cache(async (slug: string) => localizePage(await loadPage(slug), await getLocale()));
+export const getEvents = cache(async () => localizeEvents(await loadEvents(), await getLocale()));
+
+/** Photos with descriptions (alt text) in the page's language. */
+export const getPhotos = cache(async () => {
+  const lang = await getLocale();
+  if (lang !== "pa") return seed.photos;
+  return Object.fromEntries(Object.entries(seed.photos).map(([k, img]) => [k, { ...img, alt: pa.photos[k as keyof typeof seed.photos] }])) as typeof seed.photos;
+});
+
+/** Timeline milestones (images stay with their English entries; text is swapped). */
+export const getMilestones = cache(async () => {
+  const lang = await getLocale();
+  if (lang !== "pa") return seed.milestones;
+  const photos = await getPhotos();
+  return seed.milestones.map((m, i) => ({
+    ...m,
+    ...pa.milestones[i],
+    image: m.image ? Object.values(photos).find((p) => p.src === m.image!.src) : undefined,
+  }));
+});
+
+export const getMangoBenefits = cache(async () => ((await getLocale()) === "pa" ? pa.mangoBenefits : seed.mangoBenefits));
+export const getMangoOutro = cache(async () => ((await getLocale()) === "pa" ? pa.mangoOutro : seed.mangoOutro));
+export const getNewsClip = cache(async () => ((await getLocale()) === "pa" ? { ...seed.newsClip, ...pa.newsClip } : seed.newsClip));
+
+export { nonEmbeddableVideos } from "./seed";

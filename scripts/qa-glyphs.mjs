@@ -2,7 +2,7 @@
 // (overflow hidden/clip/auto/scroll, or clip-path), plus text truncated with an ellipsis or line-clamp.
 // Also finds outer box-shadows (button rings, 3D bevels and glows) sliced off by a clipping ancestor.
 // Usage: node scripts/qa-glyphs.mjs [route...]   (default: every URL in /sitemap.xml)
-// Env: QA_BASE (default http://localhost:4318), QA_VIEWPORTS (default 1440x900,1024x768,768x1024,390x844)
+// Env: QA_BASE (default http://localhost:4318), QA_LANG=pa (Punjabi pages), QA_VIEWPORTS (default 1440x900,1024x768,768x1024,390x844)
 import { chromium } from "playwright";
 
 const base = process.env.QA_BASE || "http://localhost:4318";
@@ -12,6 +12,8 @@ if (!routes.length) {
   const xml = await (await fetch(`${base}/sitemap.xml`)).text();
   routes = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
 }
+// QA_LANG=pa runs every check against the Punjabi version of each page
+if (process.env.QA_LANG === "pa") routes = [...new Set(routes.map((r) => (r.startsWith("/pa") ? r : r === "/" ? "/pa" : `/pa${r}`)))];
 
 const browser = await chromium.launch();
 let total = 0;

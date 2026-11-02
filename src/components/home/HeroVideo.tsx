@@ -3,6 +3,7 @@
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
+import { useI18n } from "@/i18n/I18nProvider";
 
 type Poster = { srcSet?: string; src: string };
 
@@ -18,6 +19,7 @@ type Poster = { srcSet?: string; src: string };
  *    away or the tab is hidden; a visible pause control satisfies WCAG 2.2.2.
  */
 export function HeroVideo({ desktopPoster, mobilePoster, alt }: { desktopPoster: Poster; mobilePoster: Poster; alt: string }) {
+  const { t } = useI18n();
   const video = useRef<HTMLVideoElement>(null);
   const wrap = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -124,7 +126,7 @@ export function HeroVideo({ desktopPoster, mobilePoster, alt }: { desktopPoster:
           type="button"
           onClick={toggle}
           className="absolute top-[5.75rem] right-5 z-10 grid size-10 md:top-auto md:bottom-5 place-items-center rounded-full btn-glass btn-glass-dark text-cream sm:right-8 lg:right-12"
-          aria-label={playing ? "Pause background video" : "Play background video"}
+          aria-label={playing ? t.home.heroPause : t.home.heroPlay}
         >
           {playing ? (
             <svg viewBox="0 0 24 24" className="size-4" fill="currentColor" aria-hidden>

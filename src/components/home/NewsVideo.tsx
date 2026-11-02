@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/i18n/I18nProvider";
 import { useInView, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useRef, useState } from "react";
@@ -24,6 +25,7 @@ export type NewsClip = {
 
 /** Inline news clip: loops when a licensed file exists, otherwise the official player loads in place. */
 export function NewsVideo({ clip }: { clip: NewsClip }) {
+  const { t } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "200px 0px" });
   const reduce = useReducedMotion();
@@ -56,7 +58,7 @@ export function NewsVideo({ clip }: { clip: NewsClip }) {
             />
             {!sound && (
               <button type="button" onClick={() => setSound(true)} className="absolute right-3 bottom-3 rounded-full bg-forest-deep/80 px-3 py-1.5 text-xs font-semibold text-cream backdrop-blur">
-                Tap for sound
+                {t.home.newsTapForSound}
               </button>
             )}
           </>
@@ -76,7 +78,7 @@ export function NewsVideo({ clip }: { clip: NewsClip }) {
         </p>
         <h3 className="font-display text-xl leading-snug">{clip.title}</h3>
         <a href={clip.pageUrl} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex w-fit items-center gap-1.5 text-sm text-cream/75 hover:text-turmeric">
-          Read the story on {clip.source} <Icon name="external" className="size-3.5" />
+          {t.home.newsReadOn(clip.source)} <Icon name="external" className="size-3.5" />
         </a>
       </div>
     </div>

@@ -18,35 +18,39 @@ import {
   getSettings,
   getStores,
   getVideos,
-  milestones,
-  newsClip,
+  getMilestones,
+  getNewsClip,
+  getPhotos,
   nonEmbeddableVideos,
-  photos,
 } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
+import { getLocale, getT } from "@/i18n/server";
 
-export const metadata: Metadata = pageMetadata({
-  title: "New Fruiticana Grocery Stores in BC and Alberta",
-  description:
-    "Fresh fruits, vegetables and spices at the best price. 25 Fruiticana grocery stores across BC and Alberta since 1994. See this week’s specials.",
-  path: "/",
-  absoluteTitle: true,
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const [t, lang] = await Promise.all([getT(), getLocale()]);
+  return pageMetadata({ title: t.home.metaTitle, description: t.home.metaDescription, path: "/", absoluteTitle: true, lang });
+}
 
-const dateFmt = new Intl.DateTimeFormat("en-CA", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 
 /**
  * Marks phrases for SplitHeading's accent style (*word*), keeping trailing punctuation
  * inside the accent: "the very best." -> "the *very* *best.*". The CMS text stays plain.
+ * Phrases are matched on whitespace boundaries: \b only knows Latin letters, so it would
+ * never match Gurmukhi.
  */
-function accentPhrases(text: string, phrases: string[]) {
-  return phrases.reduce(
-    (t, phrase) => t.replace(new RegExp(`\\b${phrase}([.,;!?]?)`, "i"), (m, punct: string) => m.slice(0, m.length - punct.length).split(" ").map((w, i, all) => `*${w}${i === all.length - 1 ? punct : ""}*`).join(" ")),
-    text,
-  );
+function accentPhrases(text: string, phrases: readonly string[]) {
+  const esc = (x: string) => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return phrases.reduce((t, phrase) => {
+    const re = new RegExp(`(^|\\s)(${esc(phrase)})([.,;!?\u0964]?)(?=\\s|$)`, "i");
+    return t.replace(re, (_m, pre: string, body: string, punct: string) =>
+      pre + body.split(" ").map((w, i, all) => `*${w}${i === all.length - 1 ? punct : ""}*`).join(" "),
+    );
+  }, text);
 }
 
 export default async function HomePage() {
+  const [t, lang, photos, milestones, newsClip] = await Promise.all([getT(), getLocale(), getPhotos(), getMilestones(), getNewsClip()]);
+  const dateFmt = new Intl.DateTimeFormat(lang === "pa" ? "pa-IN" : "en-CA", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
   const [settings, campaigns, flyers, stores, retail, videos, posts] = await Promise.all([
     getSettings(),
     getCampaigns(),
@@ -72,7 +76,7 @@ export default async function HomePage() {
         <div className="grid gap-6 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,1.45fr)] lg:gap-12 xl:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] xl:gap-20">
           <div className="flex flex-col gap-6">
             <Reveal>
-              <p className="eyebrow text-leaf">Mission statement</p>
+              <p className="eyebrow text-leaf">{t.home.missionEyebrow}</p>
             </Reveal>
             <Reveal y={40} className="relative hidden min-h-64 flex-1 lg:block">
               <ZoomSettle className="absolute inset-0 rounded-[var(--radius-card)]">
@@ -83,16 +87,20 @@ export default async function HomePage() {
           <div>
             <SplitHeading
               as="h2"
-              text={settings.mission.replace("the taste of home", "*the* *taste* *of* *home*")}
+              text={accentPhrases(settings.mission, [t.home.missionAccent])}
               className="font-display text-[clamp(1.55rem,min(0.9rem+1.9vw,4.5svh),2.75rem)] leading-[1.14] tracking-[-0.02em] text-forest"
               accentClassName="italic text-chili"
             />
             {/* Three facts and one way on: kept deliberately sparse */}
             <div className="mt-[clamp(1.75rem,5svh,3rem)] grid grid-cols-3 items-start gap-x-3 gap-y-6 border-t border-ink/10 pt-[clamp(1.25rem,4svh,2.25rem)] sm:flex sm:flex-wrap sm:items-end sm:gap-x-14">
               {[
-                { value: <Counter to={settings.founded} format={false} />, label: "Founded in Surrey" },
-                { value: <Counter to={retail.length} />, label: "Stores in BC & Alberta" },
-                { value: <Counter to={settings.warehouseSqFt / 1000} suffix="k" />, label: "Sq. ft warehouse" },
+                { value: <Counter to={settings.founded} format={false} />, label: t.home.statFounded },
+                { value: <Counter to={retail.length} />, label: t.home.statStores },
+                {
+                  // Punjabi says large round numbers in lakh: "1.5 ਲੱਖ" (150,000), compact and natural
+                  value: lang === "pa" ? <>{(settings.warehouseSqFt / 100000).toLocaleString("en-CA")}<span className="text-[0.5em]"> ਲੱਖ</span></> : <Counter to={settings.warehouseSqFt / 1000} suffix="k" />,
+                  label: t.home.statWarehouse,
+                },
               ].map((s, i) => (
                 <Reveal key={i} delay={i * 0.08}>
                   <p className="font-display text-[clamp(2.1rem,min(1.2rem+2.4vw,7svh),3.75rem)] leading-none tracking-tight whitespace-nowrap text-leaf">{s.value}</p>
@@ -101,7 +109,7 @@ export default async function HomePage() {
               ))}
               <Reveal delay={0.24} className="col-span-3 sm:ml-auto">
                 <ButtonLink href="/our-company" variant="ghost">
-                  Our company
+                  {t.home.ourCompany}
                 </ButtonLink>
               </Reveal>
             </div>
@@ -118,14 +126,14 @@ export default async function HomePage() {
               nonEmbeddable={[...nonEmbeddableVideos]}
               intro={
                 <div>
-                  <p className="eyebrow text-turmeric">Featuring Diljit Dosanjh</p>
+                  <p className="eyebrow text-turmeric">{t.home.videosEyebrow}</p>
                   <SplitHeading
-                    text="Kehnda ae zamaana, *Fruiticana* *hee* *jaana.*"
+                    text={t.home.videosTitle}
                     className="mt-4 font-display text-[clamp(2rem,min(1rem+3vw,6svh),3rem)] leading-[1.02] tracking-[-0.03em]"
                     accentClassName="italic text-turmeric"
                   />
                   {videos[0]?.caption && (
-                    <p className="show-when-roomy mt-4 text-[0.92rem] leading-relaxed text-cream/65 italic">“{videos[0].caption.replace(/^@diljitdosanjh says,\s*/i, "")}”</p>
+                    <p className="show-when-roomy mt-4 text-[0.92rem] leading-relaxed text-cream/65 italic">“{videos[0].caption.replace(/^@diljitdosanjh[^,]*,\s*/i, "")}”</p>
                   )}
                 </div>
               }
@@ -138,18 +146,18 @@ export default async function HomePage() {
       <section className="container-x py-[clamp(3rem,8svh,7rem)] lg:py-[clamp(3.5rem,10svh,7rem)]">
         <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
           <div>
-            <p className="eyebrow text-leaf">Our story</p>
+            <p className="eyebrow text-leaf">{t.home.storyEyebrow}</p>
             <SplitHeading
-              text="From one Surrey store to *Western* *Canada’s* favourite."
+              text={t.home.storyTitle}
               className="mt-4 max-w-3xl font-display text-[clamp(1.75rem,min(1rem+3vw,6.5svh),3.75rem)] leading-[1.04] tracking-[-0.03em] text-forest"
             />
           </div>
           <Reveal delay={0.1} className="lg:max-w-sm">
             <p className="text-ink-soft">
-              In the early 1990s, families in the Lower Mainland struggled to find okra, guava and sugarcane. In 1994, Fruiticana opened to fill that gap.
+              {t.home.storyBody}
             </p>
             <ButtonLink href="/our-company" variant="primary" className="mt-5">
-              Read our story
+              {t.home.readOurStory}
             </ButtonLink>
           </Reveal>
         </div>
@@ -173,8 +181,8 @@ export default async function HomePage() {
       {/* ---------------- Indican + Mangoes ---------------- */}
       <section className="container-x grid gap-4 pb-[clamp(3.5rem,10svh,7rem)] md:grid-cols-2 md:gap-5">
         {[
-          { href: "/indican", eyebrow: "Our own brand · since 1997", title: "Indican", body: "Aromatic, all-natural spices, lentils and juices, handpicked by our experts and available exclusively at Fruiticana.", image: photos.spiceAisle, tone: "bg-chili text-white" },
-          { href: "/mangoes", eyebrow: "Signature · March to summer", title: "Rajan Mangoes", body: "Harvested on farms built to Fruiticana’s standard for quality and care, and only at Fruiticana.", image: photos.mangoLassi, tone: "bg-mango text-forest-deep" },
+          { href: "/indican", eyebrow: t.home.indicanEyebrow, title: "Indican", body: t.home.indicanBody, image: photos.spiceAisle, tone: "bg-chili text-white" },
+          { href: "/mangoes", eyebrow: t.home.mangoEyebrow, title: t.common.rajanMangoes, body: t.home.mangoBody, image: photos.mangoLassi, tone: "bg-mango text-forest-deep" },
         ].map((card, i) => (
           <Reveal key={card.href} delay={i * 0.1}>
             <Link
@@ -188,7 +196,7 @@ export default async function HomePage() {
                 <h2 className="mt-3 font-display text-[clamp(2.25rem,min(1.5rem+2.6vw,8svh),4.25rem)] leading-none tracking-tight">{card.title}</h2>
                 <p className="mt-3 max-w-md text-[0.95rem] text-cream/85">{card.body}</p>
                 <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold sm:mt-5">
-                  Discover <Arrow />
+                  {t.home.discover} <Arrow />
                 </span>
               </div>
             </Link>
@@ -203,13 +211,13 @@ export default async function HomePage() {
         <div aria-hidden className="pointer-events-none absolute -right-32 -bottom-48 -z-10 size-[34rem] rounded-full bg-[radial-gradient(circle,rgb(226_35_26/0.14),transparent_65%)] blur-2xl" />
         <div className="container-x grid items-center gap-8 sm:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:gap-16 xl:gap-24">
           <figure className="relative">
-            <p className="eyebrow text-turmeric">President’s message</p>
+            <p className="eyebrow text-turmeric">{t.home.presidentEyebrow}</p>
             <Reveal y={24} delay={0.05}>
               <span aria-hidden className="mt-3 block h-[0.5em] font-display text-[clamp(4rem,12svh,7.5rem)] leading-[0.95] text-turmeric sm:mt-4">“</span>
             </Reveal>
             <SplitHeading
               as="blockquote"
-              text={accentPhrases(settings.presidentQuote, ["very best", "best price"])}
+              text={accentPhrases(settings.presidentQuote, t.home.presidentAccents)}
               className="mt-3 font-display text-[clamp(1.3rem,min(0.9rem+1.75vw,4.8svh),2.6rem)] leading-[1.2] tracking-[-0.015em] text-cream"
               accentClassName="italic text-turmeric"
             />
@@ -219,23 +227,23 @@ export default async function HomePage() {
                   <Image src={photos.president.src} alt={photos.president.alt} width={64} height={64} className="size-14 rounded-full object-cover ring-2 ring-turmeric ring-offset-4 ring-offset-forest-deep" />
                   <span>
                     <span className="block font-display text-xl text-cream">{settings.presidentName}</span>
-                    <span className="block text-sm text-cream/65">{settings.presidentTitle}, Fruiticana</span>
+                    <span className="block text-sm text-cream/65">{t.home.presidentTitle(settings.presidentTitle)}</span>
                   </span>
                 </span>
                 <Link href="/our-company" className="group/btn ml-auto inline-flex items-center gap-2 text-sm font-semibold text-turmeric">
-                  Read our story <Arrow />
+                  {t.home.readOurStory} <Arrow />
                 </Link>
               </figcaption>
             </Reveal>
           </figure>
 
           <div>
-            <p className="text-[0.75rem] font-semibold tracking-[0.18em] text-cream/60 uppercase">How we keep that promise</p>
+            <p className="text-[0.75rem] font-semibold tracking-[0.18em] text-cream/60 uppercase">{t.home.promiseTitle}</p>
             <ul className="mt-4 grid grid-cols-3 gap-2 sm:mt-5 sm:block sm:space-y-3">
               {[
-                { icon: "leaf" as const, title: "Fresh, every day", body: "Local farm produce on our shelves within 12-24 hours.", href: "/farm-to-table" },
-                { icon: "truck" as const, title: "Direct from the source", body: "We deal directly with growers and packers, and run our own facilities in India.", href: "/commitment-to-quality" },
-                { icon: "badge" as const, title: "Indican, since 1997", body: "Our own brand of premium spices, lentils and juices.", href: "/indican" },
+                { icon: "leaf" as const, title: t.home.promiseFresh, body: t.home.promiseFreshBody, href: "/farm-to-table" },
+                { icon: "truck" as const, title: t.home.promiseDirect, body: t.home.promiseDirectBody, href: "/commitment-to-quality" },
+                { icon: "badge" as const, title: t.home.promiseIndican, body: t.home.promiseIndicanBody, href: "/indican" },
               ].map((item, i) => (
                 <Reveal as="li" key={item.href} delay={0.1 + i * 0.08}>
                   <Link href={item.href} className="group/btn flex h-full flex-col items-center gap-2 rounded-2xl bg-cream/[0.05] p-3 text-center ring-1 ring-cream/10 transition-colors hover:bg-cream/[0.09] hover:ring-turmeric/40 sm:flex-row sm:gap-4 sm:p-4 sm:text-left">
@@ -254,21 +262,21 @@ export default async function HomePage() {
       </section>
 
       {/* ---------------- Community ---------------- */}
-      <section className="container-x py-[clamp(3rem,8svh,7rem)] lg:py-[clamp(3.5rem,10svh,7rem)]">
+      <section className="container-x py-[clamp(3rem,8svh,7rem)] lg:py-[clamp(3rem,9svh,7rem)]">
         <div className="flex items-end justify-between gap-6">
           <div>
-            <p className="eyebrow text-leaf">In the community</p>
+            <p className="eyebrow text-leaf">{t.home.communityEyebrow}</p>
             <SplitHeading
-              text="More than your *neighbourhood* supermarket."
+              text={t.home.communityTitle}
               className="mt-4 font-display text-[clamp(1.75rem,min(1rem+2.4vw,5.5svh),3.25rem)] leading-[1.04] tracking-[-0.03em] text-forest"
             />
           </div>
           <div className="hidden shrink-0 items-center gap-3 sm:flex">
             <ButtonLink href="/events" variant="ghost" arrow={false}>
-              Events
+              {t.nav.events}
             </ButtonLink>
             <ButtonLink href="/blog" variant="primary">
-              All stories
+              {t.home.allStories}
             </ButtonLink>
           </div>
         </div>
@@ -291,7 +299,7 @@ export default async function HomePage() {
                   </p>
                   <h3 className="mt-2 font-display text-[1.2rem] leading-snug text-ink xl:text-[1.35rem]">{post.title}</h3>
                   <span className="mt-auto inline-flex items-center gap-2 pt-4 text-sm font-semibold text-leaf">
-                    Read the story <Arrow />
+                    {t.home.readTheStory} <Arrow />
                   </span>
                 </div>
               </Link>
@@ -303,10 +311,10 @@ export default async function HomePage() {
         </div>
         <div className="mt-6 flex gap-3 sm:hidden">
           <ButtonLink href="/blog" variant="primary" size="fluid" magnetic={false}>
-            All stories
+            {t.home.allStories}
           </ButtonLink>
           <ButtonLink href="/events" variant="ghost" size="fluid" arrow={false} magnetic={false}>
-            Events
+            {t.nav.events}
           </ButtonLink>
         </div>
       </section>

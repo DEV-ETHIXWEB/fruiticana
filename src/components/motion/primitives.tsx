@@ -112,6 +112,9 @@ export function SplitHeading({
 }) {
   const reduce = useReducedMotion();
   const tokens = text.split(/(\s+)/);
+  // Long sentences (quotes, Punjabi copy) would take seconds to finish at a fixed per-word
+  // delay: cap the whole stagger at ~1.2s, keeping the 0.06s rhythm for short headings.
+  const step = Math.min(0.06, 1.2 / Math.max(1, tokens.filter((x) => x.trim()).length));
   let i = 0;
 
   const words = (render: (word: string, accent: boolean, index: number, key: number) => ReactNode) =>
@@ -132,7 +135,7 @@ export function SplitHeading({
     return (
       <Tag className={className}>
         {words((word, accent, index) => (
-          <span className={`split-word ${accent ? accentClassName : ""}`} style={{ animationDelay: `${delay + index * 0.06}s` }}>
+          <span className={`split-word ${accent ? accentClassName : ""}`} style={{ animationDelay: `${delay + index * step}s` }}>
             {word}
           </span>
         ))}
@@ -147,7 +150,7 @@ export function SplitHeading({
         initial={reduce ? false : "hidden"}
         whileInView="show"
         viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-        variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06, delayChildren: delay } } }}
+        variants={{ hidden: {}, show: { transition: { staggerChildren: step, delayChildren: delay } } }}
       >
         {words((word, accent) => (
           <motion.span

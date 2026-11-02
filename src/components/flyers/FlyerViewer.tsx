@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/i18n/I18nProvider";
 import { AnimatePresence, motion, useMotionValue, useSpring } from "motion/react";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -8,9 +9,9 @@ import { Icon } from "@/components/ui/Icon";
 import type { Flyer, FlyerRegion } from "@/lib/content/types";
 
 const STORAGE_KEY = "fruiticana:flyer-region";
-const dFmt = new Intl.DateTimeFormat("en-CA", { month: "short", day: "numeric", timeZone: "UTC" });
 
 export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
+  const { t, lang } = useI18n();
   const params = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -33,12 +34,15 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
   };
 
   const flyer = flyers.find((f) => f.region === region) ?? flyers[0];
-  const validity = flyer.validFrom && flyer.validTo ? `${dFmt.format(new Date(flyer.validFrom))} - ${dFmt.format(new Date(flyer.validTo))}` : null;
+  const dFmt = new Intl.DateTimeFormat(lang === "pa" ? "pa-IN" : "en-CA", { month: "short", day: "numeric", timeZone: "UTC" });
+  const from = flyer.validFrom && dFmt.format(new Date(flyer.validFrom));
+  const to = flyer.validTo && dFmt.format(new Date(flyer.validTo));
+  const validity = from && to ? (lang === "pa" ? `${from} ਤੋਂ ${to} ਤੱਕ` : `${from} - ${to}`) : null;
 
   return (
     <div className="min-w-0">
       <div className="min-w-0">
-        <div role="tablist" aria-label="Choose your region" className="scrollbar-none -mx-5 -my-4 flex min-w-0 gap-2 overflow-x-auto px-5 py-4 sm:-mx-2 sm:px-2">
+        <div role="tablist" aria-label={t.flyers.chooseRegion} className="scrollbar-none -mx-5 -my-4 flex min-w-0 gap-2 overflow-x-auto px-5 py-4 sm:-mx-2 sm:px-2">
           {flyers.map((f) => {
             const active = f.region === region;
             return (
@@ -62,15 +66,15 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
       <div id="flyer-panel" role="tabpanel" aria-labelledby={`tab-${region}`} className="mt-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="font-display text-2xl text-forest">{flyer.label} flyer</p>
-            <p className="text-sm text-muted">{validity ?? "This week’s specials"}</p>
+            <p className="font-display text-2xl text-forest">{t.flyers.flyerOf(flyer.label)}</p>
+            <p className="text-sm text-muted">{validity ?? t.stores.thisWeeksSpecials}</p>
           </div>
           <div className="flex gap-2">
             <button type="button" onClick={() => setZoomed(true)} className="inline-flex items-center btn-3d btn-forest gap-2 rounded-full bg-forest px-5 py-3 text-sm font-semibold text-cream hover:bg-forest-deep">
-              <Icon name="zoomIn" className="size-4" /> Zoom
+              <Icon name="zoomIn" className="size-4" /> {t.flyers.zoom}
             </button>
             <a href={flyer.image.src} download className="inline-flex items-center btn-glass gap-2 rounded-full px-5 py-3 text-sm font-semibold">
-              <Icon name="download" className="size-4" /> Save
+              <Icon name="download" className="size-4" /> {t.flyers.save}
             </a>
           </div>
         </div>
@@ -85,7 +89,7 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="group relative mx-auto block w-full max-w-[calc((100svh-21.5rem)*0.77)] cursor-zoom-in overflow-hidden rounded-[var(--radius-card)] bg-white p-2 shadow-[0_40px_90px_-40px_rgb(15_59_38/0.5)] ring-1 ring-ink/[0.06] sm:p-3"
-            aria-label={`Open the ${flyer.label} flyer full screen`}
+            aria-label={t.flyers.openFull(flyer.label)}
           >
             <Image
               src={flyer.image.src}
@@ -98,7 +102,7 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
               className="h-auto w-full rounded-[1.35rem]"
             />
             <span className="pointer-events-none absolute right-6 bottom-6 inline-flex items-center gap-2 rounded-full bg-forest/90 px-4 py-2.5 text-sm font-semibold text-cream opacity-0 backdrop-blur transition-opacity group-hover:opacity-100">
-              <Icon name="zoomIn" className="size-4" /> Tap to zoom
+              <Icon name="zoomIn" className="size-4" /> {t.flyers.tapToZoom}
             </span>
           </motion.button>
         </AnimatePresence>
@@ -111,6 +115,7 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
 
 /** Full-screen pan & zoom: wheel / pinch-style buttons / drag, keyboard accessible. */
 function Lightbox({ flyer, onClose }: { flyer: Flyer; onClose: () => void }) {
+  const { t } = useI18n();
   const [scale, setScale] = useState(1);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -149,7 +154,7 @@ function Lightbox({ flyer, onClose }: { flyer: Flyer; onClose: () => void }) {
     <motion.div
       role="dialog"
       aria-modal="true"
-      aria-label={`${flyer.label} flyer`}
+      aria-label={t.flyers.flyerOf(flyer.label)}
       className="fixed inset-0 z-[60] bg-forest-deep/95 backdrop-blur-md"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -170,17 +175,17 @@ function Lightbox({ flyer, onClose }: { flyer: Flyer; onClose: () => void }) {
       </div>
       <div className="absolute top-4 right-4 flex gap-2">
         <span className="hidden items-center rounded-full bg-cream/10 px-4 text-sm text-cream/80 sm:inline-flex">{Math.round(scale * 100)}%</span>
-        <button type="button" onClick={() => zoomTo(scale - 0.5)} className="grid size-12 place-items-center rounded-full bg-cream/10 text-cream hover:bg-cream/20" aria-label="Zoom out">
+        <button type="button" onClick={() => zoomTo(scale - 0.5)} className="grid size-12 place-items-center rounded-full bg-cream/10 text-cream hover:bg-cream/20" aria-label={t.flyers.zoomOut}>
           <Icon name="zoomOut" />
         </button>
-        <button type="button" onClick={() => zoomTo(scale + 0.5)} className="grid size-12 place-items-center rounded-full bg-cream/10 text-cream hover:bg-cream/20" aria-label="Zoom in">
+        <button type="button" onClick={() => zoomTo(scale + 0.5)} className="grid size-12 place-items-center rounded-full bg-cream/10 text-cream hover:bg-cream/20" aria-label={t.flyers.zoomIn}>
           <Icon name="zoomIn" />
         </button>
-        <button ref={closeRef} type="button" onClick={onClose} className="grid size-12 place-items-center rounded-full bg-cream text-forest" aria-label="Close flyer">
+        <button ref={closeRef} type="button" onClick={onClose} className="grid size-12 place-items-center rounded-full bg-cream text-forest" aria-label={t.flyers.close}>
           <Icon name="close" strokeWidth={2} />
         </button>
       </div>
-      <p className="absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full bg-cream/10 px-4 py-2 text-xs text-cream/70">Scroll or double-tap to zoom · drag to pan · Esc to close</p>
+      <p className="absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full bg-cream/10 px-4 py-2 text-xs text-cream/70">{t.flyers.hint}</p>
     </motion.div>
   );
 }

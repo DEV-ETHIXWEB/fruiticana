@@ -312,4 +312,15 @@ html.lenis, html.lenis body { height: auto; }
 :lang(pa) .italic,
 :lang(pa) em,
 :lang(pa) i { font-style: normal; }
+/* Letter-spacing breaks the shirorekha (the continuous line along the top of Gurmukhi
+   words) into separate letters, so tracked labels and tightened headings use normal spacing
+   in Punjabi. Elements marked lang="en" (the logo lockup, the "English" switch) keep theirs. */
+html:lang(pa) [class*="tracking-"]:not(:lang(en)),
+html:lang(pa) .eyebrow:not(:lang(en)) { letter-spacing: normal !important; }
+/* Gurmukhi letters sit smaller than Latin at the same font size: the very small labels
+   (eyebrows, field tags, footer headings, meta lines) get a touch more size in Punjabi. */
+html:lang(pa) .eyebrow:not(:lang(en)) { font-size: 0.86rem; }
+html:lang(pa) .text-xs:not(:lang(en)),
+html:lang(pa) [class*="text-[0.75rem]"]:not(:lang(en)),
+html:lang(pa) [class*="text-[0.78rem]"]:not(:lang(en)) { font-size: 0.84rem; }
 :lang(pa) body { line-height: 1.65; }

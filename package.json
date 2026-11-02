@@ -10,6 +10,8 @@
     "typecheck": "tsc --noEmit",
     "seed": "tsx --env-file-if-exists=.env.local scripts/seed-sanity.ts",
     "qa": "node scripts/qa-shot.mjs",
+    "i18n:review": "tsx scripts/i18n-review-sheet.mts",
+    "og:pa": "tsx scripts/build-og-pa.mts",
     "postinstall": "node -e \"require('fs').mkdirSync('public/vendor',{recursive:true});require('fs').copyFileSync('node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs','public/vendor/maplibre-gl-worker.mjs')\""
   },
   "dependencies": {

@@ -12,20 +12,20 @@ import "../globals.css";
 export const dynamicParams = false;
 export const generateStaticParams = () => locales.map((lang) => ({ lang }));
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: "New Fruiticana Grocery Stores in BC and Alberta",
-    template: "%s | Fruiticana",
-  },
-  description:
-    "Fresh fruits, vegetables and spices of the highest quality at the best price. 25 Fruiticana grocery stores across BC and Alberta since 1994.",
-  applicationName: "Fruiticana",
-  keywords: ["Fruiticana", "South Asian grocery", "Indian grocery Surrey", "Indian grocery Calgary", "Indican spices", "Rajan mangoes", "weekly specials", "fresh produce BC"],
-  authors: [{ name: "Fruiticana" }],
-  formatDetection: { telephone: true, address: true },
-  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
-};
+export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Promise<Metadata> {
+  const { lang } = await params;
+  const t = getDictionary(isLocale(lang) ? lang : "en");
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: { default: t.home.metaTitle, template: "%s | Fruiticana" },
+    description: t.site.defaultDescription,
+    applicationName: "Fruiticana",
+    keywords: [...t.site.keywords],
+    authors: [{ name: "Fruiticana" }],
+    formatDetection: { telephone: true, address: true },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#0f3b26",
@@ -38,7 +38,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
   return (
     <html lang={htmlLang[lang]} className={fontVariables}>
       <body>
-        <I18nProvider lang={lang} dict={getDictionary(lang)}>
+        <I18nProvider lang={lang}>
           <SiteShell>{children}</SiteShell>
         </I18nProvider>
       </body>

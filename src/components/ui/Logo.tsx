@@ -15,7 +15,7 @@ import Image from "next/image";
 export function Logo({ tone = "color", preload = false, className = "" }: { tone?: "color" | "light"; preload?: boolean; className?: string }) {
   const light = tone === "light";
   return (
-    <span className={`relative inline-block aspect-[482/118] select-none [container-type:inline-size] ${className}`}>
+    <span lang="en" data-qa-i18n-skip className={`relative inline-block aspect-[482/118] select-none [container-type:inline-size] ${className}`}>
       <span className="absolute inset-y-0 left-0 w-[81.54%]">
         <Image src={light ? "/brand/wordmark-light.svg" : "/brand/wordmark.svg"} alt="" fill unoptimized preload={preload} draggable={false} className="object-contain object-left" />
       </span>

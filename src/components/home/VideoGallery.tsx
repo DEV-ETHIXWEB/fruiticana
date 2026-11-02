@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/i18n/I18nProvider";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useRef, useState, type ReactNode } from "react";
@@ -33,6 +34,7 @@ const embedUrl = (id: string, mode: Mode) => {
  * owners block embedding open on YouTube instead of showing a broken frame.
  */
 export function VideoGallery({ videos, nonEmbeddable, intro }: { videos: Video[]; nonEmbeddable: string[]; intro?: ReactNode }) {
+  const { t } = useI18n();
   // Lead with the embeddable commercial that has the sharpest poster (YouTube only
   // publishes a 480px thumbnail for some uploads).
   const lead = videos.reduce((best, v, i) => (!nonEmbeddable.includes(v.youtubeId) && (best < 0 || v.poster.width > videos[best].poster.width) ? i : best), -1);
@@ -83,23 +85,23 @@ export function VideoGallery({ videos, nonEmbeddable, intro }: { videos: Video[]
             {external ? (
               <a href={watchUrl} target="_blank" rel="noopener noreferrer" className="group absolute inset-0 grid place-items-center">
                 <PlayDisc icon="external" />
-                <span className="sr-only">Watch {v.title} on YouTube</span>
+                <span className="sr-only">{t.home.videoWatch(v.title)}</span>
               </a>
             ) : (
               <button type="button" onClick={() => setMode("sound")} className="group absolute inset-0 grid place-items-center">
                 {!showFrame && <PlayDisc icon="play" />}
-                <span className="sr-only">Play {v.title} with sound</span>
+                <span className="sr-only">{t.home.videoPlayWithSound(v.title)}</span>
               </button>
             )}
             <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden items-end justify-between gap-4 p-8 xl:flex">
               <div>
                 <p className="flex items-center gap-2 text-[0.75rem] font-semibold tracking-[0.2em] text-turmeric uppercase">
                   {showFrame && <span className="size-1.5 animate-pulse-dot rounded-full bg-chili text-chili" />}
-                  {external ? "Watch on YouTube" : showFrame ? "Playing on loop · muted" : "Now showing"}
+                  {external ? t.home.videoWatchOnYoutube : showFrame ? t.home.videoPlaying : t.home.videoNowShowing}
                 </p>
                 <p className="mt-2 max-w-2xl font-display text-2xl leading-tight text-cream sm:text-3xl">{v.title}</p>
               </div>
-              {!external && <span className="hidden shrink-0 rounded-full bg-cream/15 px-4 py-2 text-xs font-semibold text-cream backdrop-blur sm:inline">Tap for sound</span>}
+              {!external && <span className="hidden shrink-0 rounded-full bg-cream/15 px-4 py-2 text-xs font-semibold text-cream backdrop-blur sm:inline">{t.home.videoTapForSound}</span>}
             </div>
           </div>
         )}
@@ -109,7 +111,7 @@ export function VideoGallery({ videos, nonEmbeddable, intro }: { videos: Video[]
 
       <ul
         className="scrollbar-none -mx-5 -my-1 flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 py-1 sm:mx-0 sm:my-0 sm:py-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 lg:col-start-2 lg:row-start-2 lg:grid-cols-1 lg:content-start"
-        aria-label="More commercials"
+        aria-label={t.home.videoMore}
       >
         {videos.map((item, i) => (
           <li key={item.youtubeId} className="w-[16.5rem] shrink-0 snap-start sm:w-auto">

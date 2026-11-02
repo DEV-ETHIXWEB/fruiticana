@@ -2,32 +2,42 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.fruiti
 
 export const absoluteUrl = (path = "/") => `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 
+/** Site navigation. Labels and blurbs live in the dictionaries (`nav` / `navBlurb`), keyed by id. */
 export const nav = [
   {
-    label: "Our Company",
+    id: "ourCompany",
     href: "/our-company",
     children: [
-      { label: "Our Story", href: "/our-company", blurb: "From one Surrey store in 1994 to 25 across BC & Alberta." },
-      { label: "Commitment to Quality", href: "/commitment-to-quality", blurb: "Direct from growers, packers and our own facilities in India." },
-      { label: "Farm to Table", href: "/farm-to-table", blurb: "Local farm produce on our shelves within 12-24 hours." },
-      { label: "Employment", href: "/employment", blurb: "Join a team where people connect with “home”." },
+      { id: "ourStory", href: "/our-company" },
+      { id: "commitment", href: "/commitment-to-quality" },
+      { id: "farmToTable", href: "/farm-to-table" },
+      { id: "employment", href: "/employment" },
     ],
   },
-  { label: "Indican", href: "/indican" },
+  { id: "indican", href: "/indican" },
   {
-    label: "In The Community",
+    id: "community",
     href: "/blog",
     children: [
-      { label: "Community Stories", href: "/blog", blurb: "Philanthropy, sponsorships and contests." },
-      { label: "Events", href: "/events", blurb: "What’s happening in and around our stores." },
-      { label: "Mangoes", href: "/mangoes", blurb: "Rajan mangoes, our signature, exclusive to Fruiticana." },
-      { label: "Forced and Child Labour Report 2024\u201125", href: "/forced-and-child-labour-report-2024-25", blurb: "Our supply-chain transparency report." },
+      { id: "stories", href: "/blog" },
+      { id: "events", href: "/events" },
+      { id: "mangoes", href: "/mangoes" },
+      { id: "report", href: "/forced-and-child-labour-report-2024-25" },
     ],
   },
-  { label: "Weekly Specials", href: "/flyers" },
-  { label: "Store Locator", href: "/storefinder" },
-  { label: "Contact", href: "/contact" },
+  { id: "weeklySpecials", href: "/flyers" },
+  { id: "storeLocator", href: "/storefinder" },
+  { id: "contact", href: "/contact" },
 ] as const;
+
+type NavDict = { nav: Record<string, string>; navBlurb: Record<string, string> };
+/** The navigation with labels (and child blurbs) in the given dictionary's language. */
+export const localizedNav = (t: NavDict) =>
+  nav.map((item) => ({
+    ...item,
+    label: t.nav[item.id],
+    children: "children" in item ? item.children.map((c) => ({ ...c, label: t.nav[c.id], blurb: t.navBlurb[c.id] })) : undefined,
+  }));
 
 export const regionLabels = {
   "greater-vancouver": "Greater Vancouver",

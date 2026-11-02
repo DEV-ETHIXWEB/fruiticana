@@ -5,32 +5,35 @@ import { Logo } from "@/components/ui/Logo";
 import type { SiteSettings, Store } from "@/lib/content/types";
 import { citySlug } from "@/lib/site";
 import { LanguageSwitcher } from "@/i18n/LanguageSwitcher";
+import { getT } from "@/i18n/server";
 import { BackToTop } from "./BackToTop";
 
-/* Same menu as the legacy footer, in the same order. */
+/* Same menu as the legacy footer, in the same order. Labels come from the dictionary. */
 const menu = [
-  { label: "Home", href: "/" },
-  { label: "Our Company", href: "/our-company" },
-  { label: "In the Community", href: "/blog" },
-  { label: "Indican", href: "/indican" },
-  { label: "Store Locator", href: "/storefinder" },
-  { label: "Weekly Specials", href: "/flyers" },
-  { label: "Careers", href: "/employment" },
-  { label: "Contact", href: "/contact" },
-];
+  { key: "home", href: "/" },
+  { key: "ourCompany", href: "/our-company" },
+  { key: "community", href: "/blog" },
+  { key: "indican", href: "/indican" },
+  { key: "storeLocator", href: "/storefinder" },
+  { key: "weeklySpecials", href: "/flyers" },
+  { key: "careers", href: "/employment" },
+  { key: "contact", href: "/contact" },
+] as const;
 
 const explore = [
-  { label: "Commitment to Quality", href: "/commitment-to-quality" },
-  { label: "Farm to Table", href: "/farm-to-table" },
-  { label: "Rajan Mangoes", href: "/mangoes" },
-  { label: "Events", href: "/events" },
-  { label: "Forced and Child Labour Report 2024-25", href: "/forced-and-child-labour-report-2024-25" },
-];
+  { key: "commitment", href: "/commitment-to-quality" },
+  { key: "farmToTable", href: "/farm-to-table" },
+  { key: "rajanMangoes", href: "/mangoes" },
+  { key: "events", href: "/events" },
+  { key: "report", href: "/forced-and-child-labour-report-2024-25" },
+] as const;
 
 const heading = "text-[0.75rem] font-semibold tracking-[0.2em] text-cream/65 uppercase";
 const link = "text-[0.9rem] text-cream/85 transition-colors hover:text-turmeric";
 
-export function Footer({ settings, stores }: { settings: SiteSettings; stores: Store[] }) {
+export async function Footer({ settings, stores }: { settings: SiteSettings; stores: Store[] }) {
+  const t = await getT();
+  const label = (key: string) => (key in t.common ? t.common[key as keyof typeof t.common] : t.nav[key as keyof typeof t.nav]);
   const tel = `tel:+1${settings.phone.replace(/\D/g, "")}`;
   const retail = stores.filter((s) => !s.isHeadOffice);
   const cities = Object.entries(
@@ -44,21 +47,21 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
         {/* Brand */}
         <div className="col-span-2 md:col-span-3 md:flex md:items-end md:justify-between md:gap-8 xl:col-span-3 xl:block">
           <div>
-          <Link href="/" aria-label="Fruiticana home" className="inline-flex">
+          <Link href="/" aria-label={t.common.homeLink} className="inline-flex">
             <Logo tone="light" className="w-[220px] sm:w-[244px]" />
           </Link>
           <p className="mt-4 max-w-[17rem] text-[0.9rem] leading-relaxed text-cream/70">
-            Fresh fruits, vegetables and spices at the best price, since {settings.founded}.
+            {t.footer.tagline(settings.founded)}
           </p>
           </div>
-          <ul className="mt-5 flex shrink-0 gap-2 md:mt-0 xl:mt-5" aria-label="Fruiticana on social media">
+          <ul className="mt-5 flex shrink-0 gap-2 md:mt-0 xl:mt-5" aria-label={t.footer.socialList}>
             {settings.socials.map((s) => (
               <li key={s.href}>
                 <a
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`Fruiticana on ${s.label}`}
+                  aria-label={t.footer.social(s.label)}
                   className="grid size-10 place-items-center rounded-full ring-1 ring-cream/25 transition-[background-color,color,box-shadow] hover:bg-turmeric hover:text-forest hover:ring-turmeric"
                 >
                   <Icon name={socialIcon(s.label)} className="size-4" />
@@ -68,26 +71,26 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
           </ul>
         </div>
 
-        <nav aria-label="Footer" className="xl:col-span-2">
-          <h2 className={heading}>Menu</h2>
+        <nav aria-label={t.footer.menu} className="xl:col-span-2">
+          <h2 className={heading}>{t.footer.menu}</h2>
           <ul className="mt-4 space-y-2">
             {menu.map((m) => (
               <li key={m.href}>
                 <Link href={m.href} className={link}>
-                  {m.label}
+                  {label(m.key)}
                 </Link>
               </li>
             ))}
           </ul>
         </nav>
 
-        <nav aria-label="Explore" className="xl:col-span-2">
-          <h2 className={heading}>Explore</h2>
+        <nav aria-label={t.footer.explore} className="xl:col-span-2">
+          <h2 className={heading}>{t.footer.explore}</h2>
           <ul className="mt-4 space-y-2">
             {explore.map((m) => (
               <li key={m.href}>
                 <Link href={m.href} className={link}>
-                  {m.label}
+                  {label(m.key)}
                 </Link>
               </li>
             ))}
@@ -95,7 +98,7 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
         </nav>
 
         <div className="col-span-2 md:col-span-1 xl:col-span-2">
-          <h2 className={heading}>Head office</h2>
+          <h2 className={heading}>{t.common.headOffice}</h2>
           <address className="mt-4 text-[0.9rem] leading-relaxed text-cream/85 not-italic">
             {settings.headOffice.street}
             <br />
@@ -113,8 +116,8 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
 
         <div className="col-span-2 md:col-span-3 md:grid md:grid-cols-[1fr_minmax(0,26rem)] md:items-center md:gap-8 md:border-t md:border-cream/10 md:pt-8 xl:col-span-3 xl:block xl:border-0 xl:pt-0">
           <div>
-            <h2 className={heading}>Weekly specials by email</h2>
-            <p className="mt-4 mb-4 text-[0.9rem] text-cream/70 md:mb-0 xl:mb-4">Sign up and receive Weekly Specials and Event Information.</p>
+            <h2 className={heading}>{t.footer.newsletterTitle}</h2>
+            <p className="mt-4 mb-4 text-[0.9rem] text-cream/70 md:mb-0 xl:mb-4">{t.footer.newsletterBody}</p>
           </div>
           <NewsletterForm tone="dark" compact />
         </div>
@@ -124,10 +127,10 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
       <div className="relative z-10 border-t border-cream/10">
         <div className="container-x flex flex-col gap-4 py-5 lg:flex-row lg:items-center lg:gap-6">
           <Link href="/storefinder" className="group inline-flex shrink-0 items-center gap-2 text-[0.9rem] font-semibold text-turmeric">
-            <Icon name="pin" className="size-4" strokeWidth={2} /> {retail.length} stores in BC &amp; Alberta
+            <Icon name="pin" className="size-4" strokeWidth={2} /> {t.footer.storesCount(retail.length)}
             <Icon name="chevron" className="size-3.5 transition-transform group-hover:translate-x-0.5" strokeWidth={2} />
           </Link>
-          <ul className="hidden flex-wrap gap-1.5 sm:flex" aria-label="Stores by city">
+          <ul className="hidden flex-wrap gap-1.5 sm:flex" aria-label={t.footer.storesByCity}>
             {cities.map(([city, n]) => (
               <li key={city}>
                 <Link
@@ -145,15 +148,15 @@ export function Footer({ settings, stores }: { settings: SiteSettings; stores: S
       <div className="relative z-10 border-t border-cream/10">
         <div className="container-x flex flex-col gap-3 py-5 text-[0.78rem] text-cream/65 sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} Fruiticana. All Rights Reserved. <span className="ml-1 font-display text-cream/80 italic">Fruiticana hee jaana!</span>
+            {t.footer.rights(new Date().getFullYear())} <span className="ml-1 font-display text-cream/80 italic">{t.footer.slogan}</span>
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <LanguageSwitcher variant="text" tone="dark" className="text-cream" />
             <Link href="/site-map" className="hover:text-cream">
-              Site Map
+              {t.footer.siteMap}
             </Link>
             <Link href="/forced-and-child-labour-report-2024-25" className="hover:text-cream">
-              Supply-chain report
+              {t.footer.supplyChain}
             </Link>
             <BackToTop />
           </div>

@@ -1,23 +1,25 @@
 import { ContentPage } from "@/components/page/ContentPage";
+import { getLocale, getT } from "@/i18n/server";
 import { getPage } from "@/lib/content";
 import { metaFromPage } from "@/lib/seo";
 
 const PATH = "/commitment-to-quality";
 export async function generateMetadata() {
-  return metaFromPage(await getPage("commitment-to-quality"), PATH);
+  return metaFromPage(await getPage("commitment-to-quality"), PATH, await getLocale());
 }
 
 export default async function Page() {
+  const t = await getT();
   const page = await getPage("commitment-to-quality");
   return (
     <ContentPage
       page={page}
       path={PATH}
-      parent={{ name: "Our Company", path: "/our-company" }}
+      parent={{ name: t.nav.ourCompany, path: "/our-company" }}
       facts={[
-        { icon: "leaf", title: "Direct sourcing", body: "We deal directly with growers, packers and manufacturers wherever we can." },
-        { icon: "badge", title: "Indican, since 1997", body: "Our own brand of premium spices, lentils and juices from India." },
-        { icon: "truck", title: "Our own facilities", body: "Fruiticana runs its own procuring and packing facilities in India." },
+        { icon: "leaf", title: t.pages.qualityDirect, body: t.pages.qualityDirectBody },
+        { icon: "badge", title: t.home.promiseIndican, body: t.pages.qualityIndicanBody },
+        { icon: "truck", title: t.pages.qualityFacilities, body: t.pages.qualityFacilitiesBody },
       ]}
     />
   );

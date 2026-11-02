@@ -5,9 +5,11 @@ import { NearestStore } from "@/components/stores/NearestStore";
 import { Arrow } from "@/components/ui/Button";
 import { Icon3D } from "@/components/ui/Icon3D";
 import type { Flyer, Store } from "@/lib/content/types";
+import { getT } from "@/i18n/server";
 
 /** The two signature boxes from the legacy homepage, green “Weekly Specials”, yellow “Find a location”. */
-export function QuickActions({ flyers, stores }: { flyers: Flyer[]; stores: Store[] }) {
+export async function QuickActions({ flyers, stores }: { flyers: Flyer[]; stores: Store[] }) {
+  const t = await getT();
   const lead = flyers[0];
   const retail = stores.filter((s) => !s.isHeadOffice);
   return (
@@ -19,8 +21,8 @@ export function QuickActions({ flyers, stores }: { flyers: Flyer[]; stores: Stor
           <div aria-hidden className="pointer-events-none absolute right-[5%] bottom-[4%] -z-10 pr-[0.06em] font-display text-[24cqw] leading-[0.8] text-white/[0.09] italic sm:hidden lg:block lg:text-[21cqw] xl:text-[17cqw]">99¢</div>
           <div className="relative z-10 max-w-[19rem] sm:max-w-[56%] lg:max-w-[19rem] xl:max-w-[56%]">
             <Icon3D name="flyer" className="hidden size-16 -ml-1 sm:block" />
-            <h2 className="font-display text-[clamp(2.1rem,1.5rem+1.6vw,2.6rem)] leading-[1] tracking-tight sm:mt-6">Weekly Specials</h2>
-            <p className="mt-3 text-white/80">Fresh deals every week. Pick your region and browse this week’s flyer.</p>
+            <h2 className="font-display text-[clamp(2.1rem,1.5rem+1.6vw,2.6rem)] leading-[1] tracking-tight sm:mt-6">{t.common.weeklySpecials}</h2>
+            <p className="mt-3 text-white/80">{t.home.specialsBody}</p>
           </div>
           <ul className="relative z-10 mt-auto flex flex-wrap gap-2 pt-6 sm:max-w-[60%] sm:pt-8 lg:max-w-none xl:max-w-[60%]">
             {flyers.map((f) => (
@@ -34,7 +36,7 @@ export function QuickActions({ flyers, stores }: { flyers: Flyer[]; stores: Stor
           {lead && (
             <Link
               href={`/flyers?region=${lead.region}`}
-              aria-label={`Open the ${lead.label} flyer`}
+              aria-label={t.home.openFlyer(lead.label)}
               className="absolute top-8 right-7 hidden w-[clamp(10rem,30%,14rem)] rotate-[6deg] overflow-hidden rounded-xl shadow-[0_30px_60px_-15px_rgb(0_0_0/0.45)] ring-4 ring-white transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover/card:-translate-y-2 group-hover/card:rotate-[3deg] sm:block lg:hidden xl:block"
             >
               <Image src={lead.image.src} alt="" width={lead.image.width} height={lead.image.height} sizes="15rem" className="h-auto w-full" />
@@ -48,15 +50,15 @@ export function QuickActions({ flyers, stores }: { flyers: Flyer[]; stores: Stor
           <div className="flex items-start justify-between gap-6">
             <div className="max-w-[19rem]">
               <Icon3D name="pin" className="hidden size-16 -ml-1 sm:block" />
-              <h2 className="font-display text-[clamp(2.1rem,1.5rem+1.6vw,2.6rem)] leading-[1] tracking-tight sm:mt-6">Find a location near you</h2>
-              <p className="mt-3 text-forest/75">{retail.length} stores across BC and Alberta. There’s sure to be a Fruiticana near you.</p>
+              <h2 className="font-display text-[clamp(2.1rem,1.5rem+1.6vw,2.6rem)] leading-[1] tracking-tight sm:mt-6">{t.home.findTitle}</h2>
+              <p className="mt-3 text-forest/75">{t.home.findBody(retail.length)}</p>
             </div>
           </div>
           <div aria-hidden className="pointer-events-none absolute right-[5%] bottom-[4%] -z-10 pr-[0.06em] font-display text-[30cqw] leading-[0.8] text-forest/[0.09] italic lg:text-[26cqw]">{retail.length}</div>
           <div className="mt-auto space-y-4 pt-6 sm:pt-8">
             <NearestStore stores={retail} tone="dark" />
             <Link href="/storefinder" className="group/btn inline-flex items-center gap-2 text-sm font-semibold underline decoration-forest/30 underline-offset-4 hover:decoration-forest">
-              Browse all locations <Arrow />
+              {t.home.browseAll} <Arrow />
             </Link>
           </div>
         </div>

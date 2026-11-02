@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { Page, Post, SiteSettings, Store } from "./content/types";
 import { openingHoursSpec } from "./hours";
 import { absoluteUrl, SITE_URL } from "./site";
+import { htmlLang, localizePath, ogLocale, punjabiLive, type Locale } from "@/i18n/config";
 
 export function pageMetadata({
   title,
@@ -9,37 +10,49 @@ export function pageMetadata({
   path,
   image,
   absoluteTitle,
+  lang = "en",
 }: {
   title: string;
   description: string;
+  /** The page's path without a language prefix, e.g. "/flyers". */
   path: string;
   /** Share image. Omit for the brand card; `false` when the route has its own opengraph-image file. */
   image?: string | false;
   /** Use the title verbatim (legacy titles already contain the brand). */
   absoluteTitle?: boolean;
+  lang?: Locale;
 }): Metadata {
+  const url = localizePath(path, lang);
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,
-    alternates: { canonical: path },
+    alternates: {
+      canonical: url,
+      // hreflang: every page exists in both languages (advertised only once Punjabi is live)
+      ...(punjabiLive && {
+        languages: { [htmlLang.en]: localizePath(path, "en"), [htmlLang.pa]: localizePath(path, "pa"), "x-default": localizePath(path, "en") },
+      }),
+    },
     openGraph: {
       title,
       description,
-      url: path,
+      url,
       siteName: "Fruiticana",
-      locale: "en_CA",
+      locale: ogLocale[lang],
+      ...(punjabiLive && { alternateLocale: [ogLocale[lang === "en" ? "pa" : "en"]] }),
       type: "website",
       // Every page shares with an image: its own hero photo, else the brand card.
       ...(image === false
         ? {}
-        : { images: [image ? { url: image } : { url: "/opengraph-image", width: 1200, height: 630, alt: "Fruiticana: the taste of home, since 1994" }] }),
+        : { images: [image ? { url: image } : { url: localizePath("/opengraph-image", lang), width: 1200, height: 630, alt: "Fruiticana" }] }),
     },
     twitter: { card: "summary_large_image", title, description },
   };
 }
 
-export const metaFromPage = (page: Page, path: string): Metadata =>
+export const metaFromPage = (page: Page, path: string, lang: Locale = "en"): Metadata =>
   pageMetadata({
+    lang,
     title: page.seoTitle ?? page.title,
     description: page.seoDescription ?? page.intro ?? "",
     path,
@@ -126,11 +139,11 @@ export function storeLd(s: Store) {
   };
 }
 
-export function breadcrumbLd(items: { name: string; path: string }[]) {
+export function breadcrumbLd(items: { name: string; path: string }[], lang: Locale = "en") {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: items.map((it, i) => ({ "@type": "ListItem", position: i + 1, name: it.name, item: absoluteUrl(it.path) })),
+    itemListElement: items.map((it, i) => ({ "@type": "ListItem", position: i + 1, name: it.name, item: absoluteUrl(localizePath(it.path, lang)) })),
   };
 }
 

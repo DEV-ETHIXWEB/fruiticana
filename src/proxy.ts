@@ -20,15 +20,14 @@ export function proxy(request: NextRequest) {
   }
 
   if (pathname === "/en" || pathname.startsWith("/en/")) {
-    const url = request.nextUrl.clone();
-    url.pathname = pathname.slice(3) || "/";
-    return NextResponse.redirect(url, 308);
+    // Share images Next generates for English pages are addressed by their internal /en path
+    // (og:image); serve them directly instead of bouncing social-media scrapers through a redirect.
+    if (/\/(opengraph-image|twitter-image)(\/|$)/.test(pathname)) return NextResponse.next();
+    return NextResponse.redirect(new URL(`${pathname.slice(3) || "/"}${search}`, request.url), 308);
   }
 
   if (punjabiLive && pathname === "/" && request.cookies.get(LANG_COOKIE)?.value === "pa") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/pa";
-    return NextResponse.redirect(url, 307);
+    return NextResponse.redirect(new URL(`/pa${search}`, request.url), 307);
   }
 
   const url = request.nextUrl.clone();

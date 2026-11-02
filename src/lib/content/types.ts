@@ -39,6 +39,8 @@ export type Flyer = {
   image: Img;
   validFrom?: string;
   validTo?: string;
+  /** Punjabi text from the CMS (blank fields fall back, see content/localize.ts) */
+  pa?: { label?: string; imageAlt?: string };
 };
 
 export type CampaignBanner = {
@@ -46,6 +48,7 @@ export type CampaignBanner = {
   image: Img;
   href?: string;
   label: string;
+  pa?: { label?: string; imageAlt?: string };
 };
 
 export type Video = {
@@ -53,6 +56,7 @@ export type Video = {
   title: string;
   caption?: string;
   poster: Img;
+  pa?: { title?: string; caption?: string; posterAlt?: string };
 };
 
 export type Post = {
@@ -65,6 +69,7 @@ export type Post = {
   body: PortableTextBlock[];
   seoTitle?: string;
   seoDescription?: string;
+  pa?: { title?: string; category?: string; excerpt?: string; imageAlt?: string; body?: PortableTextBlock[]; seoTitle?: string; seoDescription?: string };
 };
 
 export type Event = {
@@ -74,6 +79,7 @@ export type Event = {
   end?: string;
   location?: string;
   description?: string;
+  pa?: { title?: string; location?: string; description?: string };
 };
 
 export type Page = {
@@ -85,6 +91,7 @@ export type Page = {
   body: PortableTextBlock[];
   seoTitle?: string;
   seoDescription?: string;
+  pa?: { title?: string; eyebrow?: string; intro?: string; heroAlt?: string; body?: PortableTextBlock[]; seoTitle?: string; seoDescription?: string };
 };
 
 export type SiteSettings = {
@@ -103,4 +110,5 @@ export type SiteSettings = {
   socials: { label: string; href: string }[];
   warehouseSqFt: number;
   announcement?: { text: string; href?: string };
+  pa?: { tagline?: string; mission?: string; companySummary?: string; presidentQuote?: string; presidentName?: string; announcementText?: string };
 };

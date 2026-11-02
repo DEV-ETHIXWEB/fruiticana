@@ -1,10 +1,14 @@
 import Image from "next/image";
-import type { Metadata } from "next";
 import { ButtonLink } from "@/components/ui/Button";
+import { getT } from "@/i18n/server";
 
-export const metadata: Metadata = { title: "Page not found", robots: { index: false } };
+export async function generateMetadata() {
+  const t = await getT();
+  return { title: t.notFound.metaTitle, robots: { index: false } };
+}
 
-export default function NotFound() {
+export default async function NotFound() {
+  const t = await getT();
   return (
     <section className="container-x grid min-h-[80vh] place-items-center pt-28 pb-20 text-center">
       <div>
@@ -12,12 +16,12 @@ export default function NotFound() {
         <p className="mt-8 font-display text-[clamp(5rem,3rem+10vw,12rem)] leading-none tracking-tight text-forest">
           4<span className="text-chili italic">0</span>4
         </p>
-        <h1 className="mt-4 font-display text-title text-ink">This aisle doesn’t exist.</h1>
-        <p className="mx-auto mt-4 max-w-md text-ink-soft">The page you’re looking for may have moved when we refreshed our website. Try one of these instead:</p>
+        <h1 className="mt-4 font-display text-title text-ink">{t.notFound.title}</h1>
+        <p className="mx-auto mt-4 max-w-md text-ink-soft">{t.notFound.body}</p>
         <div className="mt-10 flex flex-wrap justify-center gap-3">
-          <ButtonLink href="/" variant="primary">Home</ButtonLink>
-          <ButtonLink href="/flyers" variant="chili">Weekly Specials</ButtonLink>
-          <ButtonLink href="/storefinder" variant="ghost">Store Locator</ButtonLink>
+          <ButtonLink href="/" variant="primary">{t.common.home}</ButtonLink>
+          <ButtonLink href="/flyers" variant="chili">{t.common.weeklySpecials}</ButtonLink>
+          <ButtonLink href="/storefinder" variant="ghost">{t.common.storeLocator}</ButtonLink>
         </div>
       </div>
     </section>

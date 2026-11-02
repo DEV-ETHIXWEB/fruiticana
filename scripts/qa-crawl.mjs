@@ -1,12 +1,14 @@
 // Crawls every sitemap page (plus the 404 page) at desktop and phone size and reports console errors,
 // failed requests (4xx/5xx), images that did not load, and internal links that do not resolve.
-// Usage: node scripts/qa-crawl.mjs   Env: QA_BASE (default http://localhost:4318)
+// Usage: node scripts/qa-crawl.mjs   Env: QA_BASE (default http://localhost:4318), QA_LANG=pa (Punjabi pages)
 import { chromium } from "playwright";
 
 const base = process.env.QA_BASE || "http://localhost:4318";
 const xml = await (await fetch(`${base}/sitemap.xml`)).text();
-const routes = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
-routes.push("/this-page-does-not-exist");
+let routes = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
+// QA_LANG=pa crawls the Punjabi version of every page
+if (process.env.QA_LANG === "pa") routes = [...new Set(routes.map((r) => (r.startsWith("/pa") ? r : r === "/" ? "/pa" : `/pa${r}`)))];
+routes.push(process.env.QA_LANG === "pa" ? "/pa/this-page-does-not-exist" : "/this-page-does-not-exist");
 
 const browser = await chromium.launch();
 const links = new Set();
@@ -18,7 +20,7 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
   page.on("pageerror", (e) => problems.push(`${w} ${route} PAGEERROR ${e.message.slice(0, 160)}`));
   page.on("response", (r) => {
     const u = r.url();
-    if (r.status() >= 400 && u.startsWith(base) && !(route === "/this-page-does-not-exist" && r.status() === 404 && u.endsWith(route)))
+    if (r.status() >= 400 && u.startsWith(base) && !(route.endsWith("/this-page-does-not-exist") && r.status() === 404 && u.endsWith(route)))
       problems.push(`${w} ${route} HTTP ${r.status()} ${u.replace(base, "")}`);
   });
   page.on("requestfailed", (r) => {

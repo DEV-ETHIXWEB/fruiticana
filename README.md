@@ -71,6 +71,9 @@ Weekly flyer swap: Studio → Weekly flyers → replace the image for the region
 - Favicons and app icons are generated from the vector mark `scripts/brand/mark.svg`: `node scripts/brand/build-icons.mjs` writes `src/app/icon.svg`, `favicon.ico`, `icon.png`, `apple-icon.png` and the PWA icons.
 - `node scripts/qa-glyphs.mjs` checks every sitemap page at four viewports for text cut by a clipping parent (descenders, italic overhangs) or truncated with an ellipsis / line-clamp.
 - Languages: English and Punjabi (Gurmukhi). English keeps every existing URL; Punjabi mirrors each page under `/pa`. `src/proxy.ts` rewrites English requests to the `en` tree, so URLs never change. Interface text lives in `src/i18n/dictionaries/en.ts` and `pa.ts`, and `pa.ts` is typed against `en.ts`, so a missing Punjabi string fails the build. Use `Link` from `@/i18n/Link` (it keeps visitors in their language). The Punjabi version is released by setting `NEXT_PUBLIC_PUNJABI_LIVE=1`; until then the switcher is hidden and `/pa` returns 404.
+- Punjabi release checklist: (1) a native speaker signs off `docs/punjabi-review.csv` (regenerate with `npm run i18n:review`; every English line beside its Punjabi line); (2) apply any corrections in `pa.ts` / `seed/pa.ts` following `src/i18n/GLOSSARY.md`; (3) `npm run build && npm run og:pa` to redraw the Punjabi share images; (4) `node scripts/qa-i18n.mjs` (leftover English on /pa pages) and `QA_LANG=pa node scripts/qa-glyphs.mjs`; (5) set `NEXT_PUBLIC_PUNJABI_LIVE=1` on Vercel and redeploy. The sitemap then lists both languages with hreflang alternates.
+- Punjabi content in the CMS: every page, post, banner, flyer, commercial, event and the site settings have a "Punjabi (ਪੰਜਾਬੀ)" tab (`npm run seed` fills it from the bundled translation). Each Punjabi field shows, in order: the CMS Punjabi text, the bundled translation while the English is unchanged, then the English. So if an editor changes the English and not the Punjabi, Punjabi visitors see the new English rather than an outdated translation (`src/lib/content/localize.ts`).
+- Punjabi share images: next/og cannot shape Gurmukhi, so `scripts/build-og-pa.mts` draws the Punjabi Open Graph cards (home and every store) in Chromium with the site's fonts into `public/og/pa/`. A store added later falls back to its English card until the script is re-run.
 - Feature icons are a custom 3D set (`<Icon3D name="..." />`, `public/icons3d/*.webp`), modelled in three.js in the brand palette. Edit the models in `scripts/icons/studio.html`, then run `node scripts/icons/build.mjs` (renders, trims and writes 256px WebP). Small UI glyphs (arrows, close, search) and social logos stay as line icons in `Icon.tsx`.
 - House style: no em or en dashes in copy, code or comments.
 
@@ -78,7 +81,8 @@ Weekly flyer swap: Studio → Weekly flyers → replace the image for the region
 
 ```
 src/app/[lang]/        pages, one tree per language (en at the old URLs, pa under /pa)
-src/i18n/              languages: config, dictionaries (en/pa), provider, Link, switcher
+src/i18n/              languages: config, dictionaries (en/pa), provider, Link, switcher, GLOSSARY.md
+docs/                  punjabi-review.csv (bilingual sign-off sheet, generated)
 src/proxy.ts           language routing (rewrites English, serves /pa, 308s /en)
 src/app/api/           geocode, revalidate
 src/app/studio/        embedded Sanity Studio

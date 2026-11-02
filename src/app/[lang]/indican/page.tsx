@@ -1,30 +1,32 @@
 import Image from "next/image";
+import { getLocale, getT } from "@/i18n/server";
 import { Reveal, SplitHeading, ZoomSettle } from "@/components/motion/primitives";
 import { PageHero } from "@/components/page/PageHero";
-import { RelatedLinks, relatedExcept } from "@/components/page/RelatedLinks";
+import { RelatedLinks } from "@/components/page/RelatedLinks";
 import { RichText } from "@/components/page/RichText";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon3D } from "@/components/ui/Icon3D";
-import { getPage, photos } from "@/lib/content";
+import { getPage, getPhotos } from "@/lib/content";
 import { metaFromPage } from "@/lib/seo";
 
 const PATH = "/indican";
 export async function generateMetadata() {
-  return metaFromPage(await getPage("indican"), PATH);
+  return metaFromPage(await getPage("indican"), PATH, await getLocale());
 }
 
-const range = [
-  { icon: "chili" as const, title: "Spices", body: "Aromatic, all-natural and exotic, handpicked by our experts." },
-  { icon: "bowl" as const, title: "Lentils & dals", body: "The staples of every kitchen, packed to international standards." },
-  { icon: "bottle" as const, title: "Rice, sugar & juices", body: "Kheer rice, brown cane sugar, mango juice and more." },
-];
 
 export default async function IndicanPage() {
+  const [t, photos] = await Promise.all([getT(), getPhotos()]);
+  const range = [
+    { icon: "chili" as const, title: t.pages.rangeSpices, body: t.pages.rangeSpicesBody },
+    { icon: "bowl" as const, title: t.pages.rangeLentils, body: t.pages.rangeLentilsBody },
+    { icon: "bottle" as const, title: t.pages.rangeRice, body: t.pages.rangeRiceBody },
+  ];
   const page = await getPage("indican");
   const [lead, ...rest] = page.body;
   return (
     <>
-      <PageHero eyebrow={page.eyebrow} title="*Indican*" intro={page.intro} image={page.heroImage} crumbs={[{ name: "Indican", path: PATH }]} />
+      <PageHero eyebrow={page.eyebrow} title={t.pages.indicanTitle} intro={page.intro} image={page.heroImage} crumbs={[{ name: t.nav.indican, path: PATH }]} />
 
       <section className="container-x grid gap-14 py-20 lg:grid-cols-[1fr_1fr] lg:gap-24 lg:py-28">
         <div>
@@ -40,16 +42,16 @@ export default async function IndicanPage() {
         <Reveal delay={0.05}>
           <RichText value={rest} />
           <div className="mt-10 flex flex-wrap gap-3">
-            <ButtonLink href="/storefinder" variant="chili">Find Indican near you</ButtonLink>
-            <ButtonLink href="/commitment-to-quality" variant="ghost">Our quality promise</ButtonLink>
+            <ButtonLink href="/storefinder" variant="chili">{t.pages.findIndican}</ButtonLink>
+            <ButtonLink href="/commitment-to-quality" variant="ghost">{t.pages.qualityPromise}</ButtonLink>
           </div>
         </Reveal>
       </section>
 
       <section className="grain relative overflow-hidden bg-chili py-24 text-white lg:py-32">
         <div className="container-x relative z-10">
-          <p className="eyebrow text-turmeric">The range</p>
-          <SplitHeading text="Available *exclusively* at Fruiticana." className="mt-5 max-w-3xl font-display text-headline tracking-[-0.03em]" accentClassName="italic text-turmeric" />
+          <p className="eyebrow text-turmeric">{t.pages.theRange}</p>
+          <SplitHeading text={t.pages.rangeTitle} className="mt-5 max-w-3xl font-display text-headline tracking-[-0.03em]" accentClassName="italic text-turmeric" />
           <div className="mt-14 grid gap-5 md:grid-cols-3">
             {range.map((r, i) => (
               <Reveal key={r.title} delay={i * 0.08}>
@@ -65,7 +67,7 @@ export default async function IndicanPage() {
         </div>
       </section>
 
-      <RelatedLinks items={relatedExcept(PATH)} />
+      <RelatedLinks exclude={PATH} />
     </>
   );
 }

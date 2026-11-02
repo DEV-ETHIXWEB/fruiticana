@@ -1,8 +1,10 @@
 "use client";
 
 import { Icon } from "@/components/ui/Icon";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export function BackToTop() {
+  const { t } = useI18n();
   return (
     <button
       type="button"
@@ -13,7 +15,7 @@ export function BackToTop() {
       }}
       className="group inline-flex items-center gap-1.5 hover:text-cream"
     >
-      Back to top
+      {t.footer.backToTop}
       <Icon name="chevron" className="size-3.5 -rotate-90 transition-transform group-hover:-translate-y-0.5" strokeWidth={2} />
     </button>
   );

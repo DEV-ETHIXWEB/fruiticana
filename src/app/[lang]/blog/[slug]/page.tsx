@@ -4,13 +4,16 @@ import Link from "@/i18n/Link";
 import { notFound } from "next/navigation";
 import { Reveal, SplitHeading } from "@/components/motion/primitives";
 import { Breadcrumbs } from "@/components/page/Breadcrumbs";
-import { PostCard, dateFmt } from "@/components/page/PostCard";
+import { PostCard } from "@/components/page/PostCard";
+import { formatDate } from "@/i18n/format";
+import { getLocale, getT } from "@/i18n/server";
 import { RichText } from "@/components/page/RichText";
 import { Icon } from "@/components/ui/Icon";
 import { ProductShot } from "@/components/ui/ProductShot";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { getPost, getPosts } from "@/lib/content";
 import { articleLd, pageMetadata } from "@/lib/seo";
+import { localizePath } from "@/i18n/config";
 import { absoluteUrl } from "@/lib/site";
 
 export async function generateStaticParams() {
@@ -18,26 +21,26 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/blog/[slug]">): Promise<Metadata> {
-  const post = await getPost((await params).slug);
+  const [post, lang] = await Promise.all([getPost((await params).slug), getLocale()]);
   if (!post) return {};
-  const meta = pageMetadata({ title: post.seoTitle || post.title, description: post.seoDescription || post.excerpt, path: `/blog/${post.slug}`, image: post.image?.src });
+  const meta = pageMetadata({ title: post.seoTitle || post.title, description: post.seoDescription || post.excerpt, path: `/blog/${post.slug}`, image: post.image?.src, lang });
   return { ...meta, openGraph: { ...meta.openGraph, type: "article", publishedTime: post.date } };
 }
 
 export default async function PostPage({ params }: PageProps<"/[lang]/blog/[slug]">) {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const [post, t, lang] = await Promise.all([getPost(slug), getT(), getLocale()]);
   if (!post) notFound();
   const others = (await getPosts()).filter((p) => p.slug !== slug).slice(0, 2);
-  const url = absoluteUrl(`/blog/${post.slug}`);
+  const url = absoluteUrl(localizePath(`/blog/${post.slug}`, lang));
 
   return (
     <article>
       <JsonLd data={articleLd(post)} />
       <header className="container-x max-w-5xl pt-32 lg:pt-40">
-        <Breadcrumbs items={[{ name: "In The Community", path: "/blog" }, { name: post.title, path: `/blog/${post.slug}` }]} />
+        <Breadcrumbs items={[{ name: t.nav.community, path: "/blog" }, { name: post.title, path: `/blog/${post.slug}` }]} />
         <p className="mt-10 text-sm text-muted">
-          <time dateTime={post.date}>{dateFmt.format(new Date(post.date))}</time> · <span className="text-leaf">{post.category}</span>
+          <time dateTime={post.date}>{formatDate(post.date, lang)}</time> · <span className="text-leaf">{post.category}</span>
         </p>
         <SplitHeading as="h1" immediate text={post.title} className="mt-4 font-display text-[clamp(2.25rem,1.3rem+3vw,4.25rem)] leading-[1.02] tracking-[-0.03em] text-forest" />
       </header>
@@ -57,13 +60,13 @@ export default async function PostPage({ params }: PageProps<"/[lang]/blog/[slug
           <RichText value={post.body} className="dropcap" />
         </Reveal>
         <aside className="flex gap-3 lg:flex-col lg:pt-2">
-          <p className="hidden text-[0.75rem] font-semibold tracking-[0.18em] text-muted uppercase lg:block">Share</p>
+          <p className="hidden text-[0.75rem] font-semibold tracking-[0.18em] text-muted uppercase lg:block">{t.pages.share}</p>
           <a
             className="grid size-11 place-items-center rounded-full ring-1 ring-ink/15 transition hover:bg-forest hover:text-cream"
             href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(url)}`}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Share on X"
+            aria-label={t.pages.shareX}
           >
             <Icon name="x" className="size-4" />
           </a>
@@ -72,7 +75,7 @@ export default async function PostPage({ params }: PageProps<"/[lang]/blog/[slug
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Share on Facebook"
+            aria-label={t.pages.shareFacebook}
           >
             <Icon name="facebook" className="size-4" />
           </a>
@@ -81,8 +84,8 @@ export default async function PostPage({ params }: PageProps<"/[lang]/blog/[slug
       {others.length > 0 && (
         <section className="container-x max-w-5xl pb-24">
           <div className="flex items-baseline justify-between border-t border-ink/10 pt-10">
-            <h2 className="font-display text-title text-forest">More from the community</h2>
-            <Link href="/blog" className="text-sm font-semibold text-leaf">All stories</Link>
+            <h2 className="font-display text-title text-forest">{t.pages.moreFromCommunity}</h2>
+            <Link href="/blog" className="text-sm font-semibold text-leaf">{t.home.allStories}</Link>
           </div>
           <div className={`mt-8 grid gap-5 ${others.length > 1 ? "md:grid-cols-2" : ""}`}>
             {others.map((p) => (

@@ -1,20 +1,31 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
+import { getDictionary } from "@/i18n/dictionaries";
+import { isLocale } from "@/i18n/config";
+import { punjabiCard } from "@/lib/og";
 import { getStore, getStores } from "@/lib/content";
 import { formatHours } from "@/lib/hours";
 
 /* Per-store social card: name, address and hours, so a shared store link previews like a listing. */
-export const alt = "Fruiticana store location, address and hours";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+const size = { width: 1200, height: 630 };
+
+/* Alt text in the page's language */
+export function generateImageMetadata({ params }: { params: { lang: string } }) {
+  const lang = isLocale(params.lang) ? params.lang : "en";
+  return [{ id: "card", alt: getDictionary(lang).stores.ogAlt, size, contentType: "image/png" }];
+}
 
 export async function generateStaticParams() {
   return (await getStores()).map((s) => ({ slug: s.slug }));
 }
 
-export default async function StoreOgImage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function StoreOgImage({ params }: { params: Promise<{ lang: string; slug: string }> }) {
+  const { lang, slug } = await params;
+  if (lang === "pa") {
+    const card = await punjabiCard(`store-${slug}.png`);
+    if (card) return card;
+  }
   const store = await getStore(slug);
   const logo = await readFile(join(process.cwd(), "public/brand/logo.png"));
   const logoSrc = `data:image/png;base64,${logo.toString("base64")}`;

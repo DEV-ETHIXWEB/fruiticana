@@ -45,6 +45,7 @@ export function LanguageSwitcher({ variant = "pill", tone = "light", className =
     <a
       href={href}
       hrefLang={target === "pa" ? "pa-CA" : "en-CA"}
+      data-qa-i18n-skip
       aria-label={t.language.switchToLabel}
       onClick={(e) => {
         remember();

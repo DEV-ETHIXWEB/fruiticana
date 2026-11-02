@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/i18n/I18nProvider";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "@/i18n/Link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -19,6 +20,7 @@ const directions = (s: Store) =>
   `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`Fruiticana ${s.street}, ${s.locality}, ${s.province}`)}`;
 
 export function StoreLocator({ stores }: { stores: Store[] }) {
+  const { t, lang } = useI18n();
   const [query, setQuery] = useState("");
   const [city, setCity] = useState<string>("All");
   const [origin, setOrigin] = useState<Origin>(null);
@@ -73,6 +75,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
       const ml = await loadMapLibre();
       if (cancelled || !mapEl.current) return;
       const m = new ml.Map({
+        locale: { "NavigationControl.ZoomIn": t.stores.mapZoomIn, "NavigationControl.ZoomOut": t.stores.mapZoomOut, "AttributionControl.ToggleAttribution": t.stores.mapAttribution },
         container: mapEl.current,
         style: MAP_STYLE,
         center: [-122.85, 49.15],
@@ -105,7 +108,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
       pins.clear();
       setMapReady(false);
     };
-  }, [stores, mapWanted]);
+  }, [stores, mapWanted, t]);
 
   // Reflect filters on the map: hide filtered-out pins and frame the rest.
   useEffect(() => {
@@ -155,23 +158,23 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
 
   /* --------------------------- actions ----------------------------- */
   const locate = useCallback(() => {
-    if (!("geolocation" in navigator)) return setNotice("Location isn’t available in this browser.");
+    if (!("geolocation" in navigator)) return setNotice(t.stores.geoUnavailable);
     setBusy(true);
     setNotice(null);
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        setOrigin({ lat: coords.latitude, lng: coords.longitude, label: "your location" });
+        setOrigin({ lat: coords.latitude, lng: coords.longitude, label: t.stores.yourLocation });
         setSelected(null);
         setCity("All");
         setBusy(false);
       },
       () => {
         setBusy(false);
-        setNotice("We couldn’t get your location. Try entering your postal code.");
+        setNotice(t.stores.geoFailed);
       },
       { timeout: 10_000, maximumAge: 300_000 },
     );
-  }, []);
+  }, [t]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -187,7 +190,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
       setSelected(null);
       setCity("All");
     } catch {
-      setNotice("We couldn’t find that postal code. Check it, or use your location.");
+      setNotice(t.stores.postalNotFound);
     } finally {
       setBusy(false);
     }
@@ -206,7 +209,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
       <div className="border-b border-ink/[0.07] p-4 sm:p-5">
         <form onSubmit={submit} className="flex flex-col gap-3 md:flex-row" role="search">
           <label htmlFor="store-q" className="sr-only">
-            Search by postal code, city or street
+            {t.stores.searchLabel}
           </label>
           <div className="flex flex-1 items-center gap-3 rounded-full bg-cream px-5 ring-1 ring-ink/10 focus-within:ring-2 focus-within:ring-leaf">
             <Icon name="search" className="size-5 shrink-0 text-muted" />
@@ -217,29 +220,29 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
                 setQuery(e.target.value);
                 setSelected(null);
               }}
-              placeholder="Postal code, city or street"
+              placeholder={t.stores.searchPlaceholder}
               className="min-w-0 flex-1 bg-transparent py-3.5 text-[0.95rem] outline-none placeholder:text-muted"
               autoComplete="postal-code"
             />
             {(query || origin) && (
               <button type="button" onClick={clear} className="text-sm font-medium text-muted hover:text-ink">
-                Clear
+                {t.stores.clear}
               </button>
             )}
           </div>
           <div className="flex gap-2">
             {POSTAL_RE.test(query.trim()) && (
               <button type="submit" disabled={busy} className="btn-3d btn-chili rounded-full bg-chili px-5 py-3 text-sm font-semibold text-white hover:bg-chili-deep">
-                Find nearby
+                {t.stores.findNearby}
               </button>
             )}
             <button type="button" onClick={locate} disabled={busy} className="inline-flex flex-1 items-center justify-center btn-3d btn-forest gap-2 rounded-full bg-forest px-5 py-3 text-sm font-semibold text-cream hover:bg-forest-deep md:flex-none">
               {busy ? <span className="size-4 animate-spin rounded-full border-2 border-cream/30 border-t-cream" /> : <Icon name="locate" className="size-4" strokeWidth={2} />}
-              Near me
+              {t.stores.nearMe}
             </button>
           </div>
         </form>
-        <div className="scrollbar-none -mx-4 mt-2 -mb-3 flex gap-2 overflow-x-auto px-4 pt-2 pb-3 sm:-mx-5 sm:px-5" role="group" aria-label="Filter by city">
+        <div className="scrollbar-none -mx-4 mt-2 -mb-3 flex gap-2 overflow-x-auto px-4 pt-2 pb-3 sm:-mx-5 sm:px-5" role="group" aria-label={t.stores.filterByCity}>
           {cities.map((c) => (
             <button
               key={c}
@@ -251,7 +254,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
               aria-pressed={city === c}
               className={`shrink-0 rounded-full px-4 py-2 text-[0.82rem] font-medium transition-colors ${city === c ? "btn-3d btn-leaf bg-leaf text-white" : "bg-cream text-ink/75 hover:text-ink"}`}
             >
-              {c}
+              {c === "All" ? t.stores.all : c}
               {c !== "All" && <span className={`ml-1.5 ${city === c ? "text-white/90" : "text-muted"}`}>{stores.filter((s) => s.city === c).length}</span>}
             </button>
           ))}
@@ -259,7 +262,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
         <AnimatePresence>
           {(notice || origin) && (
             <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="mt-3 px-1 text-sm text-ink-soft" aria-live="polite">
-              {notice ?? `Sorted by distance from ${origin!.label}.`}
+              {notice ?? t.stores.sortedFrom(origin!.label)}
             </motion.p>
           )}
         </AnimatePresence>
@@ -269,13 +272,13 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
       <div className="grid grid-cols-2 border-b border-ink/[0.07] lg:hidden">
         {(["list", "map"] as const).map((v) => (
           <button key={v} type="button" onClick={() => (v === "map" ? showMap() : setView(v))} aria-pressed={view === v} className={`py-3 text-sm font-semibold capitalize ${view === v ? "bg-cream text-forest" : "text-muted"}`}>
-            {v === "list" ? `List · ${results.length}` : "Map"}
+            {v === "list" ? t.stores.listTab(results.length) : t.stores.mapTab}
           </button>
         ))}
       </div>
 
       <div className="grid lg:h-[clamp(26rem,calc(100svh-24rem),44rem)] lg:grid-cols-[26rem_1fr]">
-        <ul className={`overflow-y-auto overscroll-contain lg:block ${view === "list" ? "block max-h-[70vh] lg:max-h-none" : "hidden"}`} data-lenis-prevent aria-label={`${results.length} stores`}>
+        <ul className={`overflow-y-auto overscroll-contain lg:block ${view === "list" ? "block max-h-[70vh] lg:max-h-none" : "hidden"}`} data-lenis-prevent aria-label={t.stores.storeCount(results.length)}>
           {results.length === 0 && <li className="p-8 text-center text-ink-soft">No stores match “{query}”. Try a city like Surrey or Calgary.</li>}
           {results.map(({ s, km }) => (
             <li
@@ -298,14 +301,14 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
                   className="min-w-0 flex-1 text-left"
                 >
                   <span className="flex items-baseline justify-between gap-3">
-                    <span className="font-display text-xl leading-tight text-ink">{s.isHeadOffice ? "Head Office" : s.name}</span>
+                    <span className="font-display text-xl leading-tight text-ink">{s.isHeadOffice ? t.common.headOffice : s.name}</span>
                     {km != null && <span className="shrink-0 text-xs font-semibold text-leaf">{formatKm(km)}</span>}
                   </span>
                   <span className="mt-1 block text-sm text-ink-soft">
                     {s.street}, {s.locality}, {s.province} {s.postalCode}
                   </span>
                   <OpenBadge store={s} className="text-ink-soft" />
-                  <span className="sr-only">, show on the map</span>
+                  <span className="sr-only">{t.stores.showOnMap}</span>
                 </button>
               </div>
               <div className="-mt-2 flex flex-wrap gap-x-5 gap-y-2 px-5 pb-5 text-[0.82rem] font-semibold">
@@ -313,13 +316,13 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
                   <Icon name="phone" className="size-3.5" /> {s.phone}
                 </a>
                 <a href={directions(s)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-forest hover:text-leaf">
-                  <Icon name="directions" className="size-3.5" /> Directions
+                  <Icon name="directions" className="size-3.5" /> {t.stores.directions}
                 </a>
                 <Link href={`/storefinder/${s.slug}`} className="inline-flex items-center gap-1.5 text-chili-deep hover:text-chili">
-                  Store details <Icon name="chevron" className="size-3.5" strokeWidth={2} />
+                  {t.stores.storeDetails} <Icon name="chevron" className="size-3.5" strokeWidth={2} />
                 </Link>
                 <span className="inline-flex items-center gap-1.5 font-normal text-muted">
-                  <Icon name="clock" className="size-3.5" /> {formatHours(s)}
+                  <Icon name="clock" className="size-3.5" /> {formatHours(s, lang)}
                 </span>
               </div>
             </li>
@@ -328,7 +331,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
         <div className={`relative min-h-[60vh] bg-paper lg:block lg:min-h-0 ${view === "map" ? "block" : "hidden"}`}>
           {/* MapLibre forces position:relative on its container, so size it from an absolute wrapper */}
           <div className="absolute inset-0">
-            <div ref={mapEl} className="h-full w-full" aria-label="Map of Fruiticana stores" role="region" />
+            <div ref={mapEl} className="h-full w-full" aria-label={t.stores.mapLabel} role="region" />
           </div>
         </div>
       </div>

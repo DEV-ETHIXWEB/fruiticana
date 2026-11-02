@@ -2,7 +2,7 @@ import { Reveal } from "@/components/motion/primitives";
 import { Icon3D, type Icon3DName } from "@/components/ui/Icon3D";
 import type { Page } from "@/lib/content/types";
 import { PageHero } from "./PageHero";
-import { RelatedLinks, relatedExcept } from "./RelatedLinks";
+import { RelatedLinks } from "./RelatedLinks";
 import { RichText } from "./RichText";
 
 export type Fact = { icon: Icon3DName; title: string; body: string };
@@ -47,7 +47,7 @@ export function ContentPage({
         </aside>
       </section>
       {after}
-      <RelatedLinks items={relatedExcept(path)} />
+      <RelatedLinks exclude={path} />
     </>
   );
 }

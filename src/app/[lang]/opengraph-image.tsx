@@ -1,12 +1,17 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
+import { punjabiCard } from "@/lib/og";
 
 export const alt = "Fruiticana: the taste of home, since 1994. 25 grocery stores across BC & Alberta.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default async function OgImage() {
+export default async function OgImage({ params }: { params: Promise<{ lang: string }> }) {
+  if ((await params).lang === "pa") {
+    const card = await punjabiCard("home.png");
+    if (card) return card;
+  }
   const [logo, photo] = await Promise.all([
     readFile(join(process.cwd(), "public/brand/logo.png")),
     readFile(join(process.cwd(), "public/images/photos/store-produce-floor.jpg")),

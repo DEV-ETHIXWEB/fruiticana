@@ -5,19 +5,18 @@ import { PageHero } from "@/components/page/PageHero";
 import { StoreLocator } from "@/components/stores/StoreLocator";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { getRetailStores, getStores } from "@/lib/content";
+import { getLocale, getT } from "@/i18n/server";
 import { pageMetadata, storeListLd } from "@/lib/seo";
 import { citySlug } from "@/lib/site";
 
 const PATH = "/storefinder";
-export const metadata: Metadata = pageMetadata({
-  title: "Fruiticana Store Locator",
-  description:
-    "Find your nearest Fruiticana: 25 grocery stores in Surrey, Abbotsford, Richmond, Vancouver, Kelowna, Calgary, Chestermere and Edmonton. Hours and directions.",
-  path: PATH,
-  absoluteTitle: true,
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const [t, lang] = await Promise.all([getT(), getLocale()]);
+  return pageMetadata({ title: t.stores.finderMetaTitle, description: t.stores.finderMetaDescription, path: PATH, absoluteTitle: true, lang });
+}
 
 export default async function StoreFinderPage() {
+  const t = await getT();
   const [stores, retail] = await Promise.all([getStores(), getRetailStores()]);
   const byCity = Object.entries(
     retail.reduce<Record<string, typeof retail>>((acc, s) => {
@@ -30,10 +29,10 @@ export default async function StoreFinderPage() {
     <>
       <JsonLd data={storeListLd(retail)} />
       <PageHero
-        eyebrow="Store Locator"
-        title="There’s a Fruiticana *near* *you.*"
-        intro={`${retail.length} stores across British Columbia and Alberta. Search by postal code, browse by city, or let us find the closest one.`}
-        crumbs={[{ name: "Store Locator", path: PATH }]}
+        eyebrow={t.common.storeLocator}
+        title={t.stores.finderTitle}
+        intro={t.stores.finderIntro(retail.length)}
+        crumbs={[{ name: t.common.storeLocator, path: PATH }]}
       />
       <section className="container-x py-10 lg:py-10">
         <StoreLocator stores={stores} />
@@ -41,7 +40,7 @@ export default async function StoreFinderPage() {
 
       {/* Crawlable directory: every store linked by city */}
       <section className="container-x pb-24 lg:pb-32">
-        <h2 className="font-display text-title text-forest">All locations</h2>
+        <h2 className="font-display text-title text-forest">{t.stores.allLocations}</h2>
         <div className="mt-10 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           {byCity.map(([city, list], i) => (
             <Reveal key={city} delay={(i % 4) * 0.05} id={citySlug(city)} className="scroll-mt-28">

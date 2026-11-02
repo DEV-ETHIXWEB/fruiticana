@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/i18n/I18nProvider";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import Link from "@/i18n/Link";
@@ -10,6 +11,7 @@ import type { CampaignBanner } from "@/lib/content/types";
 const DURATION = 6500;
 
 export function CampaignRail({ items }: { items: CampaignBanner[] }) {
+  const { t } = useI18n();
   const [index, setIndex] = useState(0);
   const [dir, setDir] = useState(1);
   const [paused, setPaused] = useState(false);
@@ -58,17 +60,17 @@ export function CampaignRail({ items }: { items: CampaignBanner[] }) {
   const current = items[index];
 
   return (
-    <section aria-roledescription="carousel" aria-label="Current campaigns" className="container-x py-[clamp(3rem,8svh,5rem)]">
+    <section aria-roledescription="carousel" aria-label={t.home.campaignsLabel} className="container-x py-[clamp(3rem,8svh,5rem)]">
       <div className="mb-6 flex items-end justify-between gap-6">
         <div>
-          <p className="eyebrow text-chili-deep">In store now</p>
-          <h2 className="mt-3 font-display text-title text-forest">What’s fresh at Fruiticana</h2>
+          <p className="eyebrow text-chili-deep">{t.home.campaignsEyebrow}</p>
+          <h2 className="mt-3 font-display text-title text-forest">{t.home.campaignsTitle}</h2>
         </div>
         <div className="flex gap-2">
-          <button type="button" onClick={() => go(index - 1, -1)} className="btn-glass grid size-12 place-items-center rounded-full text-forest" aria-label="Previous banner">
+          <button type="button" onClick={() => go(index - 1, -1)} className="btn-glass grid size-12 place-items-center rounded-full text-forest" aria-label={t.home.campaignsPrev}>
             <Icon name="chevron" className="size-5 rotate-180" strokeWidth={2} />
           </button>
-          <button type="button" onClick={() => go(index + 1, 1)} className="btn-glass grid size-12 place-items-center rounded-full text-forest" aria-label="Next banner">
+          <button type="button" onClick={() => go(index + 1, 1)} className="btn-glass grid size-12 place-items-center rounded-full text-forest" aria-label={t.home.campaignsNext}>
             <Icon name="chevron" className="size-5" strokeWidth={2} />
           </button>
         </div>
@@ -105,7 +107,7 @@ export function CampaignRail({ items }: { items: CampaignBanner[] }) {
               }}
               role="group"
               aria-roledescription="slide"
-              aria-label={`${index + 1} of ${items.length}: ${current.label}`}
+              aria-label={t.home.campaignsPosition(index + 1, items.length, current.label)}
             >
               {current.href ? (
                 <Link href={current.href} draggable={false} className="relative block size-full">

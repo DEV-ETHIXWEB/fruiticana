@@ -1,23 +1,25 @@
 import Image from "next/image";
+import { getLocale, getT } from "@/i18n/server";
 import { Reveal, SplitHeading, Stagger, ZoomSettle } from "@/components/motion/primitives";
 import { MotionItem } from "@/components/motion/MotionItem";
 import { PageHero } from "@/components/page/PageHero";
-import { RelatedLinks, relatedExcept } from "@/components/page/RelatedLinks";
+import { RelatedLinks } from "@/components/page/RelatedLinks";
 import { RichText } from "@/components/page/RichText";
 import { ButtonLink } from "@/components/ui/Button";
-import { getPage, mangoBenefits, mangoOutro, photos } from "@/lib/content";
+import { getMangoBenefits, getMangoOutro, getPage, getPhotos } from "@/lib/content";
 import { metaFromPage } from "@/lib/seo";
 
 const PATH = "/mangoes";
 export async function generateMetadata() {
-  return metaFromPage(await getPage("mangoes"), PATH);
+  return metaFromPage(await getPage("mangoes"), PATH, await getLocale());
 }
 
 export default async function MangoesPage() {
+  const [t, photos, mangoBenefits, mangoOutro] = await Promise.all([getT(), getPhotos(), getMangoBenefits(), getMangoOutro()]);
   const page = await getPage("mangoes");
   return (
     <>
-      <PageHero eyebrow={page.eyebrow} title="Fruiticana’s *Signature* Mangoes" intro={page.intro} crumbs={[{ name: "In The Community", path: "/blog" }, { name: "Mangoes", path: PATH }]} />
+      <PageHero eyebrow={page.eyebrow} title={t.pages.mangoesTitle} intro={page.intro} crumbs={[{ name: t.nav.community, path: "/blog" }, { name: t.nav.mangoes, path: PATH }]} />
 
       <section className="container-x grid gap-10 pt-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:pt-20">
         <Reveal y={50}>
@@ -27,7 +29,7 @@ export default async function MangoesPage() {
         </Reveal>
         <div className="lg:pt-10">
           <Reveal>
-            <span className="inline-block rounded-full bg-mango px-3.5 py-1.5 text-xs font-semibold tracking-[0.16em] text-forest-deep uppercase">Rajan · exclusive to Fruiticana</span>
+            <span className="inline-block rounded-full bg-mango px-3.5 py-1.5 text-xs font-semibold tracking-[0.16em] text-forest-deep uppercase">{t.pages.mangoesBadge}</span>
             <RichText value={page.body} className="dropcap mt-8" />
           </Reveal>
           <div className="mt-10 grid grid-cols-2 gap-4">
@@ -45,11 +47,11 @@ export default async function MangoesPage() {
       <section className="container-x py-[clamp(3.5rem,9svh,6rem)]">
         <div className="grid gap-5 lg:grid-cols-[1fr_1fr] lg:items-end lg:gap-16">
           <div>
-            <p className="eyebrow text-saffron">Good for you</p>
-            <SplitHeading text="5 health benefits of eating *mangoes*" className="mt-4 font-display text-[clamp(2rem,min(1rem+3vw,6.5svh),3.75rem)] leading-[1.02] tracking-[-0.03em] text-forest" accentClassName="italic text-saffron" />
+            <p className="eyebrow text-saffron">{t.pages.goodForYou}</p>
+            <SplitHeading text={t.pages.benefitsTitle} className="mt-4 font-display text-[clamp(2rem,min(1rem+3vw,6.5svh),3.75rem)] leading-[1.02] tracking-[-0.03em] text-forest" accentClassName="italic text-saffron" />
           </div>
           <p className="text-ink-soft lg:text-lg">
-            Nothing beats a fresh, sweet and juicy mango as the weather starts to get warmer. But the great taste is only part of the reason why you should eat them. Here’s why you should pick some up at your nearest Fruiticana.
+            {t.pages.benefitsIntro}
           </p>
         </div>
         <Stagger
@@ -71,11 +73,11 @@ export default async function MangoesPage() {
       <section className="container-x pb-[clamp(3.5rem,9svh,6rem)]">
         <Reveal className="grid gap-6 rounded-[var(--radius-card)] bg-paper p-7 md:grid-cols-[1fr_auto] md:items-center sm:p-10">
           <RichText value={mangoOutro} />
-          <ButtonLink href="/storefinder" variant="primary">Find your nearest store</ButtonLink>
+          <ButtonLink href="/storefinder" variant="primary">{t.pages.findNearest}</ButtonLink>
         </Reveal>
       </section>
 
-      <RelatedLinks items={relatedExcept(PATH)} />
+      <RelatedLinks exclude={PATH} />
     </>
   );
 }

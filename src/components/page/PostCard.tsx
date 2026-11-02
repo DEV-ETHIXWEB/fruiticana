@@ -1,12 +1,14 @@
 import Image from "next/image";
+import { formatDate } from "@/i18n/format";
+import { getLocale, getT } from "@/i18n/server";
 import Link from "@/i18n/Link";
 import { Arrow } from "@/components/ui/Button";
 import { isSmallImage, ProductShot } from "@/components/ui/ProductShot";
 import type { Post } from "@/lib/content/types";
 
-export const dateFmt = new Intl.DateTimeFormat("en-CA", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 
-export function PostCard({ post, large = false, eager = false }: { post: Post; large?: boolean; eager?: boolean }) {
+export async function PostCard({ post, large = false, eager = false }: { post: Post; large?: boolean; eager?: boolean }) {
+  const [t, lang] = await Promise.all([getT(), getLocale()]);
   return (
     <Link
       href={`/blog/${post.slug}`}
@@ -30,12 +32,12 @@ export function PostCard({ post, large = false, eager = false }: { post: Post; l
       )}
       <div className={`flex flex-col ${large ? "p-8 sm:p-12" : "p-7"}`}>
         <p className="text-xs text-muted">
-          <time dateTime={post.date}>{dateFmt.format(new Date(post.date))}</time> · {post.category}
+          <time dateTime={post.date}>{formatDate(post.date, lang)}</time> · {post.category}
         </p>
         <h3 className={`mt-3 font-display leading-tight text-ink ${large ? "text-[clamp(1.8rem,1.2rem+1.6vw,2.75rem)]" : "text-2xl"}`}>{post.title}</h3>
         <p className="mt-4 text-ink-soft">{post.excerpt}</p>
         <span className="mt-auto inline-flex items-center gap-2 pt-8 text-sm font-semibold text-leaf">
-          Read the story <Arrow />
+          {t.home.readTheStory} <Arrow />
         </span>
       </div>
     </Link>

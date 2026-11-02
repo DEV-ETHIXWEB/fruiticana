@@ -4,6 +4,8 @@ import { headers } from "next/headers";
 import { createClient } from "next-sanity";
 import { z } from "zod";
 import { apiVersion, dataset, isSanityConfigured, projectId } from "@/sanity/env";
+import { isLocale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 
 export type FormState = { status: "idle" | "success" | "error"; message?: string; fieldErrors?: Record<string, string> };
 
@@ -102,50 +104,69 @@ const flatten = (err: z.ZodError) =>
 
 /* ---------------------------------------------------------------- */
 
-const newsletterSchema = z.object({
-  email: z.email({ message: "Please enter a valid email address." }),
-  region: z.string().optional(),
-});
+/** Messages in the visitor's language: each form posts a hidden "lang" field. */
+const formLang = (form: FormData) => {
+  const lang = String(form.get("lang") ?? "");
+  return isLocale(lang) ? lang : "en";
+};
+
+const newsletterSchema = (t: ReturnType<typeof getDictionary>["forms"]) =>
+  z.object({
+    email: z.email({ message: t.invalidEmail }),
+    region: z.string().optional(),
+  });
 
 export async function subscribe(_: FormState, form: FormData): Promise<FormState> {
-  const parsed = newsletterSchema.safeParse({ email: String(form.get("email") ?? "").trim(), region: form.get("region") || undefined });
-  if (!parsed.success) return { status: "error", fieldErrors: flatten(parsed.error), message: "Please enter a valid email address." };
-  if (await isSpam(form)) return { status: "success", message: "You’re on the list." };
+  const lang = formLang(form);
+  const t = getDictionary(lang).forms;
+  const parsed = newsletterSchema(t).safeParse({ email: String(form.get("email") ?? "").trim(), region: form.get("region") || undefined });
+  if (!parsed.success) return { status: "error", fieldErrors: flatten(parsed.error), message: t.invalidEmail };
+  if (await isSpam(form)) return { status: "success", message: t.onTheList };
   try {
-    await deliver("newsletter", "Newsletter sign-up", { email: parsed.data.email, region: parsed.data.region });
-    return { status: "success", message: "You’re on the list. Weekly specials will land in your inbox." };
+    await deliver("newsletter", "Newsletter sign-up", { email: parsed.data.email, region: parsed.data.region, language: lang === "pa" ? "Punjabi" : undefined });
+    return { status: "success", message: t.subscribed };
   } catch (e) {
     console.error("[forms] newsletter", e);
-    return { status: "error", message: "We couldn’t sign you up just now. Please try again in a moment." };
+    return { status: "error", message: t.subscribeFailed };
   }
 }
 
-const contactSchema = z.object({
-  name: z.string().trim().min(2, "Please tell us your name.").max(120),
-  email: z.email({ message: "Please enter a valid email address." }),
-  phone: z
-    .string()
-    .trim()
-    .max(30)
-    .regex(/^[\d\s()+.-]*$/, "Numbers only, please.")
-    .optional()
-    .or(z.literal("")),
-  store: z.string().max(120).optional(),
-  topic: z.enum(["General", "Store feedback", "Product request", "Careers", "Media & partnerships"]),
-  message: z.string().trim().min(10, "A little more detail helps us help you.").max(4000),
-});
+/** Topic values stay in English: they head the email head office receives. Labels are translated in the form. */
+const contactSchema = (t: ReturnType<typeof getDictionary>["forms"]) =>
+  z.object({
+    name: z.string().trim().min(2, t.nameRequired).max(120),
+    email: z.email({ message: t.invalidEmail }),
+    phone: z
+      .string()
+      .trim()
+      .max(30)
+      .regex(/^[\d\s()+.-]*$/, t.phoneDigits)
+      .optional()
+      .or(z.literal("")),
+    store: z.string().max(120).optional(),
+    topic: z.enum(["General", "Store feedback", "Product request", "Careers", "Media & partnerships"]),
+    message: z.string().trim().min(10, t.messageTooShort).max(4000),
+  });
 
 export async function sendContact(_: FormState, form: FormData): Promise<FormState> {
+  const lang = formLang(form);
+  const t = getDictionary(lang).forms;
   const raw = Object.fromEntries(["name", "email", "phone", "store", "topic", "message"].map((k) => [k, String(form.get(k) ?? "")]));
-  const parsed = contactSchema.safeParse(raw);
-  if (!parsed.success) return { status: "error", fieldErrors: flatten(parsed.error), message: "Please check the highlighted fields." };
-  if (await isSpam(form)) return { status: "success", message: "Thanks, your message is on its way." };
+  const parsed = contactSchema(t).safeParse(raw);
+  if (!parsed.success) return { status: "error", fieldErrors: flatten(parsed.error), message: t.checkFields };
+  if (await isSpam(form)) return { status: "success", message: t.onItsWay };
   try {
     const d = parsed.data;
-    await deliver("contact", `[${d.topic}] Website message from ${d.name}`, { ...d, phone: d.phone || undefined, store: d.store || undefined });
-    return { status: "success", message: "Thank you. Your message is with our head office team. We’ll be in touch soon." };
+    await deliver("contact", `[${d.topic}] Website message from ${d.name}`, {
+      ...d,
+      phone: d.phone || undefined,
+      store: d.store || undefined,
+      // tells head office to reply in Punjabi
+      language: lang === "pa" ? "Punjabi" : undefined,
+    });
+    return { status: "success", message: t.contactSent };
   } catch (e) {
     console.error("[forms] contact", e);
-    return { status: "error", message: "Something went wrong sending your message. Please email info@fruiticana.com or call 604-502-0005." };
+    return { status: "error", message: t.contactFailed };
   }
 }

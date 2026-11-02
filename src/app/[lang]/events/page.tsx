@@ -7,23 +7,24 @@ import { Icon3D } from "@/components/ui/Icon3D";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { getEvents } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
+import { getLocale, getT } from "@/i18n/server";
 
 const PATH = "/events";
-export const metadata: Metadata = pageMetadata({
-  title: "Events",
-  description: "Calendar of Fruiticana community events, in-store celebrations and contests across BC and Alberta.",
-  path: PATH,
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const [t, lang] = await Promise.all([getT(), getLocale()]);
+  return pageMetadata({ title: t.pages.eventsMetaTitle, description: t.pages.eventsMetaDescription, path: PATH, lang });
+}
 
-const day = new Intl.DateTimeFormat("en-CA", { day: "2-digit", timeZone: "America/Vancouver" });
-const mon = new Intl.DateTimeFormat("en-CA", { month: "short", timeZone: "America/Vancouver" });
-const full = new Intl.DateTimeFormat("en-CA", { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/Vancouver" });
 
 export default async function EventsPage() {
-  const events = await getEvents();
+  const [events, t, lang] = await Promise.all([getEvents(), getT(), getLocale()]);
+  const loc = lang === "pa" ? "pa-IN" : "en-CA";
+  const day = new Intl.DateTimeFormat(loc, { day: "2-digit", timeZone: "America/Vancouver" });
+  const mon = new Intl.DateTimeFormat(loc, { month: "short", timeZone: "America/Vancouver" });
+  const full = new Intl.DateTimeFormat(loc, { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/Vancouver" });
   return (
     <>
-      <PageHero eyebrow="In The Community" title="Calendar of *Events*" intro="Festivals, in-store celebrations and community gatherings: here’s what’s coming up at Fruiticana." crumbs={[{ name: "In The Community", path: "/blog" }, { name: "Events", path: PATH }]} />
+      <PageHero eyebrow={t.nav.community} title={t.pages.eventsTitle} intro={t.pages.eventsIntro} crumbs={[{ name: t.nav.community, path: "/blog" }, { name: t.nav.events, path: PATH }]} />
       <section className="container-x py-16 lg:py-24">
         {events.length ? (
           <>
@@ -64,14 +65,14 @@ export default async function EventsPage() {
             <div className="grid grid-cols-[minmax(0,1fr)] gap-10 overflow-hidden rounded-[var(--radius-card)] bg-turmeric p-6 text-forest max-sm:p-5 sm:p-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center max-sm:gap-7">
               <div>
                 <Icon3D name="calendar" className="size-20 -ml-1" />
-                <h2 className="mt-6 font-display text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-tight">There are no events right now.</h2>
-                <p className="mt-4 max-w-md text-forest/75">New dates are announced in our newsletter first. Sign up and we’ll let you know about the next celebration at your store.</p>
+                <h2 className="mt-6 font-display text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-tight">{t.pages.noEvents}</h2>
+                <p className="mt-4 max-w-md text-forest/75">{t.pages.noEventsBody}</p>
                 <ButtonLink href="/blog" variant="primary" className="mt-8">
-                  Community stories
+                  {t.nav.stories}
                 </ButtonLink>
               </div>
               <div className="rounded-2xl bg-forest p-6 sm:p-8">
-                <p className="mb-4 font-display text-xl text-cream">Get event news</p>
+                <p className="mb-4 font-display text-xl text-cream">{t.pages.getEventNews}</p>
                 <NewsletterForm tone="dark" stacked />
               </div>
             </div>

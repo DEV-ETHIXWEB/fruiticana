@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/i18n/I18nProvider";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "@/i18n/Link";
 import { useEffect, useState } from "react";
@@ -13,6 +14,7 @@ type State = { kind: "idle" } | { kind: "locating" } | { kind: "found"; store: S
 
 /** One-tap "closest Fruiticana to me", with open/closed status in that store's time zone. */
 export function NearestStore({ stores, tone = "dark" }: { stores: Store[]; tone?: "dark" | "light" }) {
+  const { t } = useI18n();
   const [state, setState] = useState<State>({ kind: "idle" });
   const [, force] = useState(0);
 
@@ -24,7 +26,7 @@ export function NearestStore({ stores, tone = "dark" }: { stores: Store[]; tone?
   }, [state.kind]);
 
   const locate = () => {
-    if (!("geolocation" in navigator)) return setState({ kind: "error", message: "Location isn’t available in this browser." });
+    if (!("geolocation" in navigator)) return setState({ kind: "error", message: t.stores.geoUnavailable });
     setState({ kind: "locating" });
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
@@ -32,7 +34,7 @@ export function NearestStore({ stores, tone = "dark" }: { stores: Store[]; tone?
         const ranked = stores.map((s) => ({ s, km: distanceKm(me, s) })).sort((a, b) => a.km - b.km);
         setState({ kind: "found", store: ranked[0].s, km: ranked[0].km });
       },
-      (err) => setState({ kind: "error", message: err.code === 1 ? "Location permission was declined. Browse all stores instead." : "We couldn’t get your location. Try the store locator." }),
+      (err) => setState({ kind: "error", message: err.code === 1 ? t.stores.permissionDenied : t.stores.nearestFailed }),
       { enableHighAccuracy: false, timeout: 10_000, maximumAge: 300_000 },
     );
   };
@@ -50,7 +52,7 @@ export function NearestStore({ stores, tone = "dark" }: { stores: Store[]; tone?
             >
               <Icon3D name="pin" className="size-11" />
               <span className="min-w-0 flex-1">
-                <span className="block text-[0.75rem] font-semibold tracking-[0.18em] uppercase opacity-60">Closest to you · {formatKm(state.km)}</span>
+                <span className="block text-[0.75rem] font-semibold tracking-[0.18em] uppercase opacity-60">{t.stores.closest(formatKm(state.km))}</span>
                 <span className="block truncate font-display text-xl">Fruiticana {state.store.name}</span>
                 <OpenBadge store={state.store} />
               </span>
@@ -66,7 +68,7 @@ export function NearestStore({ stores, tone = "dark" }: { stores: Store[]; tone?
               className={`inline-flex items-center gap-2.5 rounded-full px-5 py-3.5 text-sm font-semibold ${dark ? "btn-3d btn-forest bg-forest text-cream hover:bg-forest-deep" : "btn-3d btn-cream bg-white text-forest hover:bg-cream"}`}
             >
               {state.kind === "locating" ? <span className="size-4 animate-spin rounded-full border-2 border-current/30 border-t-current" /> : <Icon name="locate" className="size-4" strokeWidth={2} />}
-              {state.kind === "locating" ? "Finding the closest store…" : "Use my location"}
+              {state.kind === "locating" ? t.stores.locating : t.stores.useMyLocation}
             </button>
             {state.kind === "error" && <p className="text-sm opacity-75">{state.message}</p>}
           </motion.div>
@@ -77,13 +79,14 @@ export function NearestStore({ stores, tone = "dark" }: { stores: Store[]; tone?
 }
 
 export function OpenBadge({ store, className = "" }: { store: Pick<Store, "opens" | "closes" | "province">; className?: string }) {
+  const { lang } = useI18n();
   const [state, setState] = useState<ReturnType<typeof openState> | null>(null);
   useEffect(() => {
-    const update = () => setState(openState(store));
+    const update = () => setState(openState(store, new Date(), lang));
     update();
     const t = setInterval(update, 60_000);
     return () => clearInterval(t);
-  }, [store]);
+  }, [store, lang]);
   // Rendered client-side only: server time ≠ shopper's "now".
   if (!state) return <span className={`mt-1 block h-4 ${className}`} />;
   return (

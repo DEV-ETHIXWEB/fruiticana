@@ -17,9 +17,9 @@ const imageWithAlt = (name: string, title: string, required = false) =>
     validation: required ? (r) => r.required() : undefined,
   });
 
-const richText = defineField({
-  name: "body",
-  title: "Body",
+const richTextField = (name: string, title: string) => defineField({
+  name,
+  title,
   type: "array",
   of: [
     defineArrayMember({
@@ -39,6 +39,28 @@ const richText = defineField({
     defineArrayMember({ type: "image", options: { hotspot: true }, fields: [{ name: "alt", type: "string", title: "Alt text" }] }),
   ],
 });
+const richText = richTextField("body", "Body");
+
+
+/*
+ * Punjabi (ਪੰਜਾਬੀ) version of a document's text, on its own tab. Every field is optional:
+ * a blank field shows the bundled Punjabi translation while the English is unchanged, and
+ * the English text once the English has been edited (so readers never get an outdated
+ * translation). Store names, addresses and phone numbers are not translated.
+ */
+const punjabiGroup = { name: "punjabi", title: "Punjabi (ਪੰਜਾਬੀ)" };
+const punjabi = (fields: ReturnType<typeof defineField>[]) =>
+  defineField({
+    name: "pa",
+    title: "Punjabi (ਪੰਜਾਬੀ)",
+    description: "Leave a field blank to use the bundled translation, or English if the English has changed. See src/i18n/GLOSSARY.md for wording conventions.",
+    type: "object",
+    group: "punjabi",
+    options: { collapsible: false },
+    fields,
+  });
+const paString = (name: string, title: string) => defineField({ name, title, type: "string" });
+const paText = (name: string, title: string, rows = 3) => defineField({ name, title, type: "text", rows });
 
 const seo = [
   defineField({ name: "seoTitle", title: "SEO title", type: "string", group: "seo", validation: (r) => r.max(65).warning("Google truncates titles past ~60 characters") }),
@@ -49,6 +71,7 @@ export const siteSettings = defineType({
   name: "siteSettings",
   title: "Site settings",
   type: "document",
+  groups: [punjabiGroup],
   fields: [
     defineField({ name: "tagline", type: "string", initialValue: "Fruiticana Hee Jaana!" }),
     defineField({ name: "phone", type: "string" }),
@@ -70,6 +93,14 @@ export const siteSettings = defineType({
       type: "array",
       of: [defineArrayMember({ type: "object", fields: [defineField({ name: "label", type: "string" }), defineField({ name: "href", type: "url" })] })],
     }),
+    punjabi([
+      paString("tagline", "Tagline"),
+      paText("mission", "Mission statement"),
+      paText("companySummary", "Company summary"),
+      paText("presidentQuote", "President’s message"),
+      paString("presidentName", "President’s name (in Gurmukhi)"),
+      paString("announcementText", "Announcement bar text"),
+    ]),
   ],
   preview: { prepare: () => ({ title: "Site settings" }) },
 });
@@ -101,12 +132,14 @@ export const flyer = defineType({
   name: "flyer",
   title: "Weekly flyer",
   type: "document",
+  groups: [punjabiGroup],
   fields: [
     defineField({ name: "region", type: "string", options: { list: regionOptions, layout: "radio" }, validation: (r) => r.required() }),
     defineField({ name: "label", type: "string", validation: (r) => r.required() }),
     imageWithAlt("image", "Flyer image", true),
     defineField({ name: "validFrom", type: "date" }),
     defineField({ name: "validTo", type: "date" }),
+    punjabi([paString("label", "Label"), paString("imageAlt", "Flyer image description (alt text)")]),
   ],
   preview: { select: { title: "label", subtitle: "validFrom", media: "image" } },
 });
@@ -115,12 +148,14 @@ export const campaign = defineType({
   name: "campaign",
   title: "Campaign banner",
   type: "document",
+  groups: [punjabiGroup],
   fields: [
     defineField({ name: "label", type: "string", validation: (r) => r.required() }),
     imageWithAlt("image", "Banner image (≈1800×520)", true),
     defineField({ name: "href", title: "Link", type: "string" }),
     defineField({ name: "order", type: "number", initialValue: 10 }),
     defineField({ name: "active", type: "boolean", initialValue: true }),
+    punjabi([paString("label", "Label"), paString("imageAlt", "Banner image description (alt text)")]),
   ],
   orderings: [{ title: "Order", name: "order", by: [{ field: "order", direction: "asc" }] }],
   preview: { select: { title: "label", media: "image", active: "active" }, prepare: ({ title, media, active }) => ({ title, media, subtitle: active ? "Live" : "Hidden" }) },
@@ -130,12 +165,14 @@ export const video = defineType({
   name: "video",
   title: "Commercial",
   type: "document",
+  groups: [punjabiGroup],
   fields: [
     defineField({ name: "title", type: "string", validation: (r) => r.required() }),
     defineField({ name: "youtubeId", title: "YouTube ID", type: "string", validation: (r) => r.required().regex(/^[\w-]{11}$/) }),
     defineField({ name: "caption", type: "text", rows: 2 }),
     imageWithAlt("poster", "Poster image"),
     defineField({ name: "order", type: "number", initialValue: 10 }),
+    punjabi([paString("title", "Title"), paText("caption", "Caption", 2), paString("posterAlt", "Poster description (alt text)")]),
   ],
 });
 
@@ -143,7 +180,7 @@ export const post = defineType({
   name: "post",
   title: "Community post",
   type: "document",
-  groups: [{ name: "content", default: true }, { name: "seo", title: "SEO" }],
+  groups: [{ name: "content", title: "English", default: true }, punjabiGroup, { name: "seo", title: "SEO" }],
   fields: [
     defineField({ name: "title", type: "string", group: "content", validation: (r) => r.required() }),
     defineField({ name: "slug", type: "slug", group: "content", options: { source: "title" }, validation: (r) => r.required() }),
@@ -153,6 +190,15 @@ export const post = defineType({
     { ...imageWithAlt("image", "Cover image"), group: "content" },
     { ...richText, group: "content" },
     ...seo,
+    punjabi([
+      paString("title", "Title"),
+      paString("category", "Category"),
+      paText("excerpt", "Excerpt"),
+      paString("imageAlt", "Cover image description (alt text)"),
+      richTextField("body", "Body"),
+      paString("seoTitle", "SEO title"),
+      paText("seoDescription", "SEO description"),
+    ]),
   ],
   orderings: [{ title: "Newest", name: "date", by: [{ field: "date", direction: "desc" }] }],
 });
@@ -161,12 +207,14 @@ export const event = defineType({
   name: "event",
   title: "Event",
   type: "document",
+  groups: [punjabiGroup],
   fields: [
     defineField({ name: "title", type: "string", validation: (r) => r.required() }),
     defineField({ name: "start", type: "datetime", validation: (r) => r.required() }),
     defineField({ name: "end", type: "datetime" }),
     defineField({ name: "location", type: "string" }),
     defineField({ name: "description", type: "text", rows: 4 }),
+    punjabi([paString("title", "Title"), paString("location", "Location"), paText("description", "Description", 4)]),
   ],
   orderings: [{ title: "Upcoming", name: "start", by: [{ field: "start", direction: "asc" }] }],
 });
@@ -175,7 +223,7 @@ export const page = defineType({
   name: "page",
   title: "Page",
   type: "document",
-  groups: [{ name: "content", default: true }, { name: "seo", title: "SEO" }],
+  groups: [{ name: "content", title: "English", default: true }, punjabiGroup, { name: "seo", title: "SEO" }],
   fields: [
     defineField({ name: "title", type: "string", group: "content", validation: (r) => r.required() }),
     defineField({
@@ -190,6 +238,15 @@ export const page = defineType({
     { ...imageWithAlt("heroImage", "Hero image"), group: "content" },
     { ...richText, group: "content" },
     ...seo,
+    punjabi([
+      paString("title", "Title"),
+      paString("eyebrow", "Eyebrow"),
+      paText("intro", "Intro"),
+      paString("heroAlt", "Hero image description (alt text)"),
+      richTextField("body", "Body"),
+      paString("seoTitle", "SEO title"),
+      paText("seoDescription", "SEO description"),
+    ]),
   ],
   preview: { select: { title: "title", subtitle: "slug.current" } },
 });

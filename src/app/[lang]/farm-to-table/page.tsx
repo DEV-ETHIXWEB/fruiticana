@@ -1,23 +1,25 @@
 import { ContentPage } from "@/components/page/ContentPage";
+import { getLocale, getT } from "@/i18n/server";
 import { getPage } from "@/lib/content";
 import { metaFromPage } from "@/lib/seo";
 
 const PATH = "/farm-to-table";
 export async function generateMetadata() {
-  return metaFromPage(await getPage("farm-to-table"), PATH);
+  return metaFromPage(await getPage("farm-to-table"), PATH, await getLocale());
 }
 
 export default async function Page() {
+  const t = await getT();
   const page = await getPage("farm-to-table");
   return (
     <ContentPage
       page={page}
       path={PATH}
-      parent={{ name: "Our Company", path: "/our-company" }}
+      parent={{ name: t.nav.ourCompany, path: "/our-company" }}
       facts={[
-        { icon: "clock", title: "12-24 hours", body: "From local farm to every Fruiticana location." },
-        { icon: "leaf", title: "Seasonal, daily", body: "Fresh seasonal produce from local farms, every day." },
-        { icon: "truck", title: "Imported fast", body: "Produce from outside Canada is delivered to stores as quickly as possible." },
+        { icon: "clock", title: t.pages.farmHours, body: t.pages.farmHoursBody },
+        { icon: "leaf", title: t.pages.farmSeasonal, body: t.pages.farmSeasonalBody },
+        { icon: "truck", title: t.pages.farmImported, body: t.pages.farmImportedBody },
       ]}
     />
   );
