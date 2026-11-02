@@ -192,7 +192,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
             exit={{ clipPath: "circle(0% at calc(100% - 3rem) 2.75rem)", transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] } }}
             transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
           >
-            <nav aria-label="Mobile" className="container-x relative z-10 flex-1 pb-10">
+            <nav aria-label={t.header.mobileNav} className="container-x relative z-10 flex-1 pb-10">
               <ul className="divide-y divide-cream/10 border-y border-cream/10">
                 {items.map((item, i) => (
                   <motion.li key={item.label} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.05, duration: 0.6, ease: EASE }}>

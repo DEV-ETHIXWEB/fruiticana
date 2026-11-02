@@ -279,7 +279,7 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
 
       <div className="grid lg:h-[clamp(26rem,calc(100svh-24rem),44rem)] lg:grid-cols-[26rem_1fr]">
         <ul className={`overflow-y-auto overscroll-contain lg:block ${view === "list" ? "block max-h-[70vh] lg:max-h-none" : "hidden"}`} data-lenis-prevent aria-label={t.stores.storeCount(results.length)}>
-          {results.length === 0 && <li className="p-8 text-center text-ink-soft">No stores match “{query}”. Try a city like Surrey or Calgary.</li>}
+          {results.length === 0 && <li className="p-8 text-center text-ink-soft">{t.stores.noResults(query)}</li>}
           {results.map(({ s, km }) => (
             <li
               key={s.slug}

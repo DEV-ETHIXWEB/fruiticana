@@ -5,6 +5,7 @@
  */
 export const en = {
   language: {
+    rail: "Language",
     switchTo: "ਪੰਜਾਬੀ",
     switchToLabel: "ਪੰਜਾਬੀ ਵਿੱਚ ਪੜ੍ਹੋ (Read in Punjabi)",
     suggest: "This site is also available in Punjabi.",
@@ -55,6 +56,7 @@ export const en = {
   },
 
   header: {
+    mobileNav: "Mobile menu",
     primaryNav: "Primary",
     openMenu: "Open menu",
     closeMenu: "Close menu",
@@ -232,6 +234,8 @@ export const en = {
     away: (distance: string) => `${distance} away`,
     viewStore: "View store",
     ogAlt: "Fruiticana store location, address and hours",
+    noResults: (query: string) => `No stores match “${query}”. Try a city like Surrey or Calgary.`,
+    listName: "Fruiticana grocery stores in BC and Alberta",
   },
 
   flyers: {

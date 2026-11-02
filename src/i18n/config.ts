@@ -6,12 +6,11 @@ export const locales = ["en", "pa"] as const;
 
 
 /**
- * Release switch for the Punjabi version (env NEXT_PUBLIC_PUNJABI_LIVE=1). While off, the
- * language button is hidden, /pa returns 404 and no Punjabi URL is advertised to search
- * engines, so main stays deployable while translation and review are in progress. Turn it
- * on in the hosting environment once the Punjabi text is signed off.
+ * Release switch for the Punjabi version: on by default. Setting NEXT_PUBLIC_PUNJABI_LIVE=0
+ * in the hosting environment hides every language button, makes /pa return 404 and stops
+ * advertising Punjabi URLs to search engines (an emergency off switch).
  */
-export const punjabiLive = process.env.NEXT_PUBLIC_PUNJABI_LIVE === "1";
+export const punjabiLive = process.env.NEXT_PUBLIC_PUNJABI_LIVE !== "0";
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
 

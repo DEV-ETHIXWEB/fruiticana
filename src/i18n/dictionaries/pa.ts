@@ -9,6 +9,7 @@ import type { Widen } from "./types";
  */
 export const pa: Widen<typeof en> = {
   language: {
+    rail: "ਭਾਸ਼ਾ",
     switchTo: "English",
     switchToLabel: "Read in English (ਅੰਗਰੇਜ਼ੀ ਵਿੱਚ ਪੜ੍ਹੋ)",
     suggest: "ਇਹ ਸਾਈਟ ਪੰਜਾਬੀ ਵਿੱਚ ਵੀ ਉਪਲਬਧ ਹੈ।",
@@ -58,6 +59,7 @@ export const pa: Widen<typeof en> = {
   },
 
   header: {
+    mobileNav: "ਮੋਬਾਈਲ ਮੀਨੂ",
     primaryNav: "ਮੁੱਖ ਮੀਨੂ",
     openMenu: "ਮੀਨੂ ਖੋਲ੍ਹੋ",
     closeMenu: "ਮੀਨੂ ਬੰਦ ਕਰੋ",
@@ -235,6 +237,8 @@ export const pa: Widen<typeof en> = {
     away: (distance: string) => `${distance} ਦੂਰ`,
     viewStore: "ਸਟੋਰ ਦੇਖੋ",
     ogAlt: "Fruiticana ਸਟੋਰ ਦੀ ਥਾਂ, ਪਤਾ ਅਤੇ ਸਮਾਂ",
+    noResults: (query: string) => `“${query}” ਨਾਲ ਕੋਈ ਸਟੋਰ ਨਹੀਂ ਮਿਲਿਆ। ਸਰੀ ਜਾਂ ਕੈਲਗਰੀ ਵਰਗੇ ਸ਼ਹਿਰ ਦਾ ਨਾਮ ਲਿਖ ਕੇ ਦੇਖੋ।`,
+    listName: "ਬੀ.ਸੀ. ਅਤੇ ਅਲਬਰਟਾ ਵਿੱਚ Fruiticana ਗਰੋਸਰੀ ਸਟੋਰ",
   },
 
   flyers: {

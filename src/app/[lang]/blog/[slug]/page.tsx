@@ -36,7 +36,7 @@ export default async function PostPage({ params }: PageProps<"/[lang]/blog/[slug
 
   return (
     <article>
-      <JsonLd data={articleLd(post)} />
+      <JsonLd data={articleLd(post, lang)} />
       <header className="container-x max-w-5xl pt-32 lg:pt-40">
         <Breadcrumbs items={[{ name: t.nav.community, path: "/blog" }, { name: post.title, path: `/blog/${post.slug}` }]} />
         <p className="mt-10 text-sm text-muted">

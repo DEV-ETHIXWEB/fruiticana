@@ -102,17 +102,19 @@ export function organizationLd(s: SiteSettings) {
   };
 }
 
-export const websiteLd = () => ({
+export const websiteLd = (lang: Locale = "en") => ({
   "@context": "https://schema.org",
   "@type": "WebSite",
   "@id": `${SITE_URL}/#website`,
   url: SITE_URL,
   name: "Fruiticana",
   publisher: { "@id": ORG_ID },
-  inLanguage: "en-CA",
+  inLanguage: punjabiLive ? [htmlLang.en, htmlLang.pa] : htmlLang[lang],
 });
 
-export function storeLd(s: Store) {
+/* Stores and the organisation keep one @id in both languages (one business, two page versions);
+   `url` points at the page in the reader's language. */
+export function storeLd(s: Store, lang: Locale = "en") {
   const address = [s.street, s.locality, s.province, s.postalCode].filter(Boolean).join(", ");
   return {
     "@context": "https://schema.org",
@@ -120,7 +122,7 @@ export function storeLd(s: Store) {
     "@type": s.isHeadOffice ? "LocalBusiness" : "GroceryStore",
     "@id": absoluteUrl(`/storefinder/${s.slug}#store`),
     name: s.isHeadOffice ? "Fruiticana Head Office" : `Fruiticana ${s.name}`,
-    url: absoluteUrl(`/storefinder/${s.slug}`),
+    url: absoluteUrl(localizePath(`/storefinder/${s.slug}`, lang)),
     image: absoluteUrl("/images/photos/store-produce-floor.jpg"),
     telephone: `+1-${s.phone.replace(/[^\d]/g, "").replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3")}`,
     ...(s.isHeadOffice ? {} : { priceRange: "$", currenciesAccepted: "CAD" }),
@@ -147,7 +149,7 @@ export function breadcrumbLd(items: { name: string; path: string }[], lang: Loca
   };
 }
 
-export function articleLd(p: Post) {
+export function articleLd(p: Post, lang: Locale = "en") {
   return {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -158,16 +160,17 @@ export function articleLd(p: Post) {
     image: p.image ? [p.image.src.startsWith("http") ? p.image.src : absoluteUrl(p.image.src)] : undefined,
     author: { "@id": ORG_ID },
     publisher: { "@id": ORG_ID },
-    mainEntityOfPage: absoluteUrl(`/blog/${p.slug}`),
+    mainEntityOfPage: absoluteUrl(localizePath(`/blog/${p.slug}`, lang)),
+    inLanguage: htmlLang[lang],
   };
 }
 
-export function storeListLd(stores: Store[]) {
+export function storeListLd(stores: Store[], name: string, lang: Locale = "en") {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "Fruiticana grocery stores in BC and Alberta",
+    name,
     numberOfItems: stores.length,
-    itemListElement: stores.map((s, i) => ({ "@type": "ListItem", position: i + 1, url: absoluteUrl(`/storefinder/${s.slug}`), name: `Fruiticana ${s.name}` })),
+    itemListElement: stores.map((s, i) => ({ "@type": "ListItem", position: i + 1, url: absoluteUrl(localizePath(`/storefinder/${s.slug}`, lang)), name: `Fruiticana ${s.name}` })),
   };
 }

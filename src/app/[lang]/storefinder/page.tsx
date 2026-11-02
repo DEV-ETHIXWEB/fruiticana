@@ -27,7 +27,7 @@ export default async function StoreFinderPage() {
 
   return (
     <>
-      <JsonLd data={storeListLd(retail)} />
+      <JsonLd data={storeListLd(retail, t.stores.listName, await getLocale())} />
       <PageHero
         eyebrow={t.common.storeLocator}
         title={t.stores.finderTitle}

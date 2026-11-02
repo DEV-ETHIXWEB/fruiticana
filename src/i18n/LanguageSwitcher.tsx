@@ -9,18 +9,26 @@ import { useI18n } from "./I18nProvider";
  * JavaScript and is crawlable), labelled in the target language's own script, and it
  * remembers the choice so the homepage opens in that language next time.
  */
+/** href + click handler for "this page in `target`": remembers the choice, keeps any ?query. */
+export function useLanguageLink(target: Locale) {
+  const { path } = stripLocale(usePathname() || "/");
+  const href = localizePath(path, target);
+  const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    document.cookie = `${LANG_COOKIE}=${target}; path=/; max-age=31536000; samesite=lax`;
+    const to = href + window.location.search;
+    if (to !== href) {
+      e.preventDefault();
+      window.location.assign(to);
+    }
+  };
+  return { href, onClick };
+}
+
 export function LanguageSwitcher({ variant = "pill", tone = "light", className = "" }: { variant?: "pill" | "menu" | "text"; tone?: "light" | "dark"; className?: string }) {
   const { lang, t } = useI18n();
   const target: Locale = lang === "en" ? "pa" : "en";
-  const { path } = stripLocale(usePathname() || "/");
-  const href = localizePath(path, target);
+  const { href, onClick } = useLanguageLink(target);
   if (!punjabiLive) return null;
-
-  const remember = () => {
-    document.cookie = `${LANG_COOKIE}=${target}; path=/; max-age=31536000; samesite=lax`;
-  };
-  // keep any ?query (e.g. the selected flyer region) when switching
-  const withQuery = () => (typeof window === "undefined" ? href : href + window.location.search);
 
   const label = (
     <>
@@ -47,14 +55,7 @@ export function LanguageSwitcher({ variant = "pill", tone = "light", className =
       hrefLang={target === "pa" ? "pa-CA" : "en-CA"}
       data-qa-i18n-skip
       aria-label={t.language.switchToLabel}
-      onClick={(e) => {
-        remember();
-        const to = withQuery();
-        if (to !== href) {
-          e.preventDefault();
-          window.location.assign(to);
-        }
-      }}
+      onClick={onClick}
       className={`${styles} ${className}`}
     >
       {label}

@@ -63,7 +63,7 @@ export default async function StorePage({ params }: PageProps<"/[lang]/storefind
 
   return (
     <>
-      <JsonLd data={storeLd(store)} />
+      <JsonLd data={storeLd(store, lang)} />
       <section className="relative overflow-hidden pt-28 pb-8 lg:pt-36">
         <div aria-hidden className="pointer-events-none absolute -top-48 right-[-12%] size-[40rem] rounded-full bg-[radial-gradient(circle,rgb(246_210_28/0.28),transparent_65%)] blur-2xl" />
         <div className="container-x relative">
