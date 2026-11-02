@@ -118,7 +118,7 @@ export function HeroVideo({ desktopPoster, mobilePoster, alt }: { desktopPoster:
       </motion.div>
 
       {/* Brand-tinted shade (not flat black): strongest behind the text, clear where the produce is */}
-      <div aria-hidden className="absolute inset-0 bg-[linear-gradient(to_top,rgb(10_40_25/0.92)_0%,rgb(10_40_25/0.55)_45%,rgb(10_40_25/0.25)_75%,rgb(10_40_25/0.45)_100%)] md:bg-[linear-gradient(to_right,rgb(10_40_25/0.9)_0%,rgb(10_40_25/0.7)_42%,rgb(10_40_25/0.22)_74%,rgb(10_40_25/0.05)_100%)]" />
+      <div aria-hidden className="absolute inset-0 bg-[linear-gradient(to_top,rgb(10_40_25/0.96)_0%,rgb(10_40_25/0.78)_30%,rgb(10_40_25/0.1)_50%,rgb(10_40_25/0.08)_58%,rgb(10_40_25/0.5)_76%,rgb(10_40_25/0.72)_100%)] md:bg-[linear-gradient(to_right,rgb(10_40_25/0.9)_0%,rgb(10_40_25/0.7)_42%,rgb(10_40_25/0.22)_74%,rgb(10_40_25/0.05)_100%)]" />
       <div aria-hidden className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[rgb(10_40_25/0.55)] to-transparent" />
 
       {showControl && (

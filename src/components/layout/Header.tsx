@@ -89,7 +89,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
               <Logo
                 tone={onDark ? "light" : "color"}
                 preload
-                className={`transition-[width] duration-500 ${scrolled ? "w-[min(172px,44vw)] lg:w-[190px]" : "w-[min(196px,44vw)] lg:w-[244px] xl:max-2xl:w-[210px]"}`}
+                className={`transition-[width] duration-500 ${scrolled ? "w-[min(172px,44vw)] max-[380px]:w-[39vw] lg:w-[190px]" : "w-[min(196px,44vw)] max-[380px]:w-[39vw] lg:w-[244px] xl:max-2xl:w-[210px]"}`}
               />
             </Link>
 

@@ -16,35 +16,39 @@ export async function Hero({ storeCount }: { storeCount: number }) {
 
   return (
     <section className="relative flex h-[100svh] max-h-[68rem] min-h-[36rem] flex-col">
-      <div className="relative isolate flex flex-1 items-end overflow-hidden text-cream md:items-center">
+      <div className="relative isolate flex flex-1 items-stretch overflow-hidden text-cream md:items-center">
         <HeroVideo desktopPoster={{ src: desktop.src, srcSet: desktop.srcSet }} mobilePoster={{ src: mobile.src, srcSet: mobile.srcSet }} alt={t.home.heroPosterAlt} />
 
-        <div className="container-x relative pt-28 pb-10 md:pb-[clamp(2rem,6svh,4rem)] lg:pt-32">
-          <div className="max-w-[44rem]">
-            <h1 className="eyebrow enter-rise text-turmeric">{t.home.heroEyebrow(storeCount)}</h1>
+        {/* Phones: headline at the top, the produce film clear through the middle, story and
+            buttons at the bottom (a full, balanced first screen). Tablet and up: one block. */}
+        <div className="container-x relative flex w-full flex-col justify-between gap-6 pt-[6.75rem] pb-7 md:block md:pt-28 md:pb-[clamp(2rem,6svh,4rem)] lg:pt-32">
+          <div className="md:max-w-[44rem]">
+            <h1 className="eyebrow enter-rise text-turmeric max-md:pr-12">{t.home.heroEyebrow(storeCount)}</h1>
 
             <SplitHeading
               as="p"
               immediate
               delay={0.15}
               text={t.home.heroTitle}
-              className="mt-[clamp(1rem,2.5svh,1.5rem)] font-display text-[clamp(2.75rem,min(7.4vw,11svh),8rem)] leading-[0.94] tracking-[-0.035em] text-cream [text-shadow:0_2px_30px_rgb(10_40_25/0.35)]"
+              className="mt-[clamp(1rem,2.5svh,1.5rem)] font-display text-[clamp(2.75rem,min(7.4vw,11svh),8rem)] leading-[0.94] max-md:mt-4 max-md:text-[clamp(2.75rem,min(13.6vw,8.5svh),4.5rem)] max-md:leading-[0.98] text-balance tracking-[-0.035em] text-cream [text-shadow:0_2px_30px_rgb(10_40_25/0.35)]"
               accentClassName="brush-underline italic font-normal text-turmeric [font-variation-settings:'SOFT'_100]"
             />
+          </div>
 
+          <div className="md:max-w-[44rem]">
             <p
-              className="enter-rise mt-[clamp(1.5rem,4svh,2.5rem)] max-w-xl text-base leading-relaxed text-cream/90 sm:text-lg"
+              className="enter-rise mt-[clamp(1.5rem,4svh,2.5rem)] max-w-xl text-base leading-relaxed text-cream/90 max-md:mt-0 max-md:text-[0.98rem] max-md:leading-[1.6] sm:text-lg"
               style={{ animationDelay: "0.55s" }}
             >
               {t.home.heroLead}
             </p>
 
-            <div className="enter-rise mt-[clamp(1.25rem,3.5svh,2.25rem)] flex flex-wrap items-center gap-2 sm:gap-3" style={{ animationDelay: "0.7s" }}>
-              <ButtonLink href="/flyers" variant="chili" size="fluid">
+            <div className="enter-rise mt-[clamp(1.25rem,3.5svh,2.25rem)] grid gap-2.5 max-md:mt-5 sm:flex sm:flex-wrap sm:items-center sm:gap-3" style={{ animationDelay: "0.7s" }}>
+              <ButtonLink href="/flyers" variant="chili" size="fluid" className="max-sm:w-full max-sm:justify-center max-sm:py-3.5 max-sm:text-[0.98rem]">
                 <span className="sm:hidden">{t.home.heroCtaSpecialsShort}</span>
                 <span className="hidden sm:inline">{t.home.heroCtaSpecials}</span>
               </ButtonLink>
-              <ButtonLink href="/storefinder" variant="outline-light" size="fluid" className="backdrop-blur-sm">
+              <ButtonLink href="/storefinder" variant="outline-light" size="fluid" className="backdrop-blur-sm max-sm:w-full max-sm:justify-center max-sm:py-3.5 max-sm:text-[0.98rem]">
                 <span className="sm:hidden">{t.home.heroCtaStoreShort}</span>
                 <span className="hidden sm:inline">{t.home.heroCtaStore}</span>
               </ButtonLink>

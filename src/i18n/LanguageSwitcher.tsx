@@ -52,7 +52,7 @@ export function LanguageSwitcher({ variant = "pill", tone = "light", className =
       </span>
       {/* In the header at 1280-1535px (full nav + both CTAs) only the badge shows; the
           aria-label still names the language. Everywhere else the full label is visible. */}
-      <span lang={target === "pa" ? "pa" : "en"} className={variant === "pill" ? "max-[359px]:sr-only xl:max-2xl:sr-only" : ""}>
+      <span lang={target === "pa" ? "pa" : "en"} className={variant === "pill" ? "max-[339px]:sr-only xl:max-2xl:sr-only" : ""}>
         {t.language.switchTo}
       </span>
     </>
