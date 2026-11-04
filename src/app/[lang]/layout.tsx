@@ -6,6 +6,7 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import { SITE_URL } from "@/lib/site";
 import { SiteShell } from "./SiteShell";
+import { TrackClicks } from "@/components/analytics/TrackClicks";
 import "../globals.css";
 
 /** Both languages are pre-rendered; any other first segment is a 404. */
@@ -40,6 +41,14 @@ export const viewport: Viewport = {
  */
 const restoreSpot = `(function(){try{var k=${JSON.stringify(SWITCH_KEY)},s=sessionStorage.getItem(k);if(!s)return;sessionStorage.removeItem(k);var d=JSON.parse(s);if(d.to!==location.pathname+location.search||!d.spot)return;var p=d.spot,done=false,go=function(){if(done)return;var m=document.querySelector("main"),h=document.documentElement,el=m&&m.children[p.i],y;if(el){var b=el.getBoundingClientRect();y=b.top+scrollY+p.frac*b.height-80}else y=p.ratio*(h.scrollHeight-innerHeight);scrollTo({top:Math.max(0,y),behavior:"instant"});if(document.readyState!=="loading")done=true};addEventListener("pagereveal",go);document.addEventListener("DOMContentLoaded",go)}catch(e){}})();`;
 
+/*
+ * Vercel Web Analytics: cookieless, aggregate visit counts (described in the privacy policy).
+ * Only on Vercel builds; enable it once under the project's Analytics tab. The queue lets
+ * track() calls made before the script loads still count.
+ */
+const analyticsOn = process.env.VERCEL === "1";
+const analyticsQueue = "window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};";
+
 /* Prerender the other language as soon as the reader shows intent (hover / press on a
    language link), so the switch is instant. Chromium only; elsewhere it is a normal link. */
 const speculation = JSON.stringify({ prerender: [{ where: { selector_matches: "a[hreflang]" }, eagerness: "moderate" }] });
@@ -55,6 +64,13 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
         </I18nProvider>
         {/* last in the body: an inline script waits for the stylesheet, and here that holds
             up nothing (at the top it would delay discovering the hero image) */}
+        <TrackClicks />
+        {analyticsOn && (
+          <>
+            <script dangerouslySetInnerHTML={{ __html: analyticsQueue }} />
+            <script defer src="/_vercel/insights/script.js" />
+          </>
+        )}
         {punjabiLive && (
           <>
             <script dangerouslySetInnerHTML={{ __html: restoreSpot }} />

@@ -2,12 +2,15 @@
 
 import { useI18n } from "@/i18n/I18nProvider";
 import { AnimatePresence, motion } from "motion/react";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import Link from "@/i18n/Link";
+import { track } from "@/lib/track";
+import { keepValues } from "./useKeepValues";
 import { sendContact, type FormState } from "@/app/actions";
 import { Button } from "@/components/ui/Button";
 import { Icon3D } from "@/components/ui/Icon3D";
 
-const topics = ["General", "Store feedback", "Product request", "Careers", "Media & partnerships"] as const;
+const topics = ["General", "Store feedback", "Product request", "Party & bulk orders", "Careers", "Media & partnerships"] as const;
 
 function Field({ label, name, error, required, children }: { label: string; name: string; error?: string; required?: boolean; children: React.ReactNode }) {
   const { t } = useI18n();
@@ -36,7 +39,11 @@ export function ContactForm({ stores }: { stores: string[] }) {
   const [state, action, pending] = useActionState<FormState, FormData>(sendContact, { status: "idle" });
   const { t, lang } = useI18n();
   const [startedAt] = useState(() => Date.now());
+  const [topic, setTopic] = useState<(typeof topics)[number]>(topics[0]);
   const e = state.fieldErrors ?? {};
+  useEffect(() => {
+    if (state.status === "success") track("Contact sent", { topic });
+  }, [state.status, topic]);
 
   if (state.status === "success") {
     return (
@@ -49,7 +56,7 @@ export function ContactForm({ stores }: { stores: string[] }) {
   }
 
   return (
-    <form action={action} noValidate className="space-y-4">
+    <form action={action} onSubmit={keepValues(action)} noValidate className="space-y-4">
       <input type="hidden" name="_t" value={startedAt} />
       <input type="hidden" name="lang" value={lang} />
       <div aria-hidden className="absolute -left-[9999px]">
@@ -80,7 +87,7 @@ export function ContactForm({ stores }: { stores: string[] }) {
         <div className="mt-2 flex flex-wrap gap-2">
           {topics.map((tp, i) => (
             <label key={tp} className="cursor-pointer">
-              <input type="radio" name="topic" value={tp} defaultChecked={i === 0} className="peer sr-only" />
+              <input type="radio" name="topic" value={tp} defaultChecked={i === 0} onChange={() => setTopic(tp)} className="peer sr-only" />
               <span className="inline-block rounded-full bg-cream px-4 py-2 text-sm text-ink-soft ring-1 ring-ink/10 transition peer-checked:bg-forest peer-checked:text-cream peer-checked:ring-forest peer-focus-visible:ring-2 peer-focus-visible:ring-chili">
                 {t.forms.topics[tp]}
               </span>
@@ -88,17 +95,47 @@ export function ContactForm({ stores }: { stores: string[] }) {
           ))}
         </div>
       </fieldset>
+      {topic === "Party & bulk orders" && (
+        <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="space-y-3 rounded-2xl bg-paper p-4">
+          <p className="text-sm text-ink-soft">{t.forms.partyHint}</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label={t.forms.eventDate} name="eventDate" error={e.eventDate}>
+              <input id="eventDate" name="eventDate" type="date" min={new Date().toISOString().slice(0, 10)} aria-invalid={Boolean(e.eventDate)} className={input} />
+            </Field>
+            <Field label={t.forms.guests} name="guests" error={e.guests}>
+              <input id="guests" name="guests" type="number" inputMode="numeric" min={1} max={99999} aria-invalid={Boolean(e.guests)} aria-describedby={e.guests ? "guests-error" : undefined} className={input} />
+            </Field>
+          </div>
+        </motion.div>
+      )}
       <Field label={t.forms.message} name="message" error={e.message} required>
         <textarea id="message" name="message" rows={3} required aria-invalid={Boolean(e.message)} aria-describedby={e.message ? "message-error" : undefined} className={`${input} resize-y`} />
       </Field>
       <div className="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
-        <p aria-live="polite" className={`text-sm ${state.status === "error" ? "text-chili-deep" : "text-muted"}`}>
-          {state.status === "error" ? state.message : t.forms.replyNote}
-        </p>
+        <div className="space-y-1">
+          <p aria-live="polite" className={`text-sm ${state.status === "error" ? "text-chili-deep" : "text-muted"}`}>
+            {state.status === "error" ? state.message : t.forms.replyNote}
+          </p>
+          <ConsentNote />
+        </div>
         <Button type="submit" variant="chili" disabled={pending} arrow className="shrink-0">
           {pending ? t.forms.sending : t.forms.send}
         </Button>
       </div>
     </form>
+  );
+}
+
+/** "By sending, you agree to our privacy policy." in the visitor's language. */
+export function ConsentNote() {
+  const { t } = useI18n();
+  return (
+    <p className="text-xs text-muted">
+      {t.forms.consentBefore}
+      <Link href="/privacy" className="underline underline-offset-2 hover:text-leaf">
+        {t.forms.consentLink}
+      </Link>
+      {t.forms.consentAfter}
+    </p>
   );
 }

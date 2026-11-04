@@ -110,5 +110,22 @@ export type SiteSettings = {
   socials: { label: string; href: string }[];
   warehouseSqFt: number;
   announcement?: { text: string; href?: string };
+  /** WhatsApp channel for weekly deals; shown in the footer and on the flyers page once set */
+  whatsappUrl?: string;
+  /** Delivery services Fruiticana sells through (Instacart, Uber Eats...); shown on the flyers page once set */
+  deliveryLinks?: { label: string; href: string }[];
   pa?: { tagline?: string; mission?: string; companySummary?: string; presidentQuote?: string; presidentName?: string; announcementText?: string };
+};
+
+export type EmploymentType = "full-time" | "part-time" | "seasonal";
+
+/** An open position, managed in the CMS (Studio, "Job opening"). */
+export type Job = {
+  id: string;
+  title: string;
+  store?: string;
+  type: EmploymentType;
+  description: string;
+  posted: string;
+  pa?: { title?: string; description?: string };
 };

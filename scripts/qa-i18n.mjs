@@ -18,6 +18,8 @@ const allow = new Set(
     "Now", "Open", "Fresh", "Fruit", "Vegetables",
     // social handle in the Diljit Dosanjh quote
     "diljitdosanjh",
+    // services named in the privacy policy and the delivery / WhatsApp links (proper names)
+    "Vercel", "Web", "Analytics", "Mailchimp", "Resend", "Sanity", "OpenFreeMap", "OpenStreetMap", "WhatsApp", "Word", "MB",
     // units and abbreviations used with numbers
     "km", "m", "h", "k", "com",
   ].map((w) => w.toLowerCase()),

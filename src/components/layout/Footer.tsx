@@ -119,7 +119,20 @@ export async function Footer({ settings, stores }: { settings: SiteSettings; sto
             <h2 className={heading}>{t.footer.newsletterTitle}</h2>
             <p className="mt-4 mb-4 text-[0.9rem] text-cream/70 md:mb-0 xl:mb-4">{t.footer.newsletterBody}</p>
           </div>
-          <NewsletterForm tone="dark" compact />
+          <div>
+            <NewsletterForm tone="dark" compact />
+            {settings.whatsappUrl && (
+              <a
+                href={settings.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-track="WhatsApp channel"
+                className="mt-1 inline-flex items-center gap-2 px-5 text-[0.85rem] font-semibold text-turmeric hover:text-cream"
+              >
+                <Icon name="whatsapp" className="size-4" /> {t.footer.whatsapp}
+              </a>
+            )}
+          </div>
         </div>
       </div>
 
@@ -152,6 +165,9 @@ export async function Footer({ settings, stores }: { settings: SiteSettings; sto
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <LanguageSwitcher variant="text" tone="dark" className="text-cream" />
+            <Link href="/privacy" className="hover:text-cream">
+              {t.footer.privacy}
+            </Link>
             <Link href="/site-map" className="hover:text-cream">
               {t.footer.siteMap}
             </Link>

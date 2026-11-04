@@ -53,6 +53,8 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
                 aria-selected={active}
                 aria-controls="flyer-panel"
                 onClick={() => choose(f.region)}
+                data-track="Flyer region"
+                data-track-region={f.region}
                 className={`relative shrink-0 rounded-full px-5 py-3 text-sm font-semibold transition-colors ${active ? "text-white" : "btn-glass text-ink/70 hover:text-ink"}`}
               >
                 {active && <motion.span layoutId="flyer-tab" className="btn-3d btn-leaf absolute inset-0 rounded-full bg-leaf" transition={{ type: "spring", stiffness: 380, damping: 32 }} />}
@@ -70,10 +72,10 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
             <p className="text-sm text-muted">{validity ?? t.stores.thisWeeksSpecials}</p>
           </div>
           <div className="flex gap-2">
-            <button type="button" onClick={() => setZoomed(true)} className="inline-flex items-center btn-3d btn-forest gap-2 rounded-full bg-forest px-5 py-3 text-sm font-semibold text-cream hover:bg-forest-deep">
+            <button type="button" onClick={() => setZoomed(true)} data-track="Flyer zoom" data-track-region={flyer.region} className="inline-flex items-center btn-3d btn-forest gap-2 rounded-full bg-forest px-5 py-3 text-sm font-semibold text-cream hover:bg-forest-deep">
               <Icon name="zoomIn" className="size-4" /> {t.flyers.zoom}
             </button>
-            <a href={flyer.image.src} download className="inline-flex items-center btn-glass gap-2 rounded-full px-5 py-3 text-sm font-semibold">
+            <a href={flyer.image.src} download data-track="Flyer save" data-track-region={flyer.region} className="inline-flex items-center btn-glass gap-2 rounded-full px-5 py-3 text-sm font-semibold">
               <Icon name="download" className="size-4" /> {t.flyers.save}
             </a>
           </div>

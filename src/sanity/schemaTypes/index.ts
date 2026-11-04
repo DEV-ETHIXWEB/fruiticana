@@ -88,6 +88,14 @@ export const siteSettings = defineType({
       type: "object",
       fields: [defineField({ name: "text", type: "string" }), defineField({ name: "href", title: "Link", type: "string" })],
     }),
+    defineField({ name: "whatsappUrl", title: "WhatsApp channel link", description: "Weekly deals channel, e.g. https://whatsapp.com/channel/... Shown in the footer and on the flyers page once filled in.", type: "url" }),
+    defineField({
+      name: "deliveryLinks",
+      title: "Delivery services",
+      description: "Where customers can order Fruiticana online (Instacart, Uber Eats, DoorDash...). Shown on the flyers page once filled in.",
+      type: "array",
+      of: [defineArrayMember({ type: "object", fields: [defineField({ name: "label", title: "Service name", type: "string", validation: (r) => r.required() }), defineField({ name: "href", title: "Link to Fruiticana on the service", type: "url", validation: (r) => r.required() })] })],
+    }),
     defineField({
       name: "socials",
       type: "array",
@@ -251,17 +259,42 @@ export const page = defineType({
   preview: { select: { title: "title", subtitle: "slug.current" } },
 });
 
+export const job = defineType({
+  name: "job",
+  title: "Job opening",
+  type: "document",
+  groups: [punjabiGroup],
+  fields: [
+    defineField({ name: "title", title: "Position", type: "string", validation: (r) => r.required() }),
+    defineField({ name: "store", title: "Store", description: "Leave blank for head office or several stores.", type: "string" }),
+    defineField({
+      name: "type",
+      title: "Type",
+      type: "string",
+      options: { list: [{ title: "Full-time", value: "full-time" }, { title: "Part-time", value: "part-time" }, { title: "Seasonal", value: "seasonal" }], layout: "radio" },
+      initialValue: "part-time",
+      validation: (r) => r.required(),
+    }),
+    defineField({ name: "description", title: "What the job involves", type: "text", rows: 5, validation: (r) => r.required() }),
+    defineField({ name: "posted", title: "Posted on", type: "date", initialValue: () => new Date().toISOString().slice(0, 10), validation: (r) => r.required() }),
+    defineField({ name: "active", title: "Show on the website", type: "boolean", initialValue: true }),
+    punjabi([paString("title", "Position"), paText("description", "What the job involves", 5)]),
+  ],
+  orderings: [{ title: "Newest", name: "posted", by: [{ field: "posted", direction: "desc" }] }],
+  preview: { select: { title: "title", subtitle: "store", active: "active" }, prepare: ({ title, subtitle, active }) => ({ title, subtitle: `${subtitle || "Any store"}${active === false ? " · hidden" : ""}` }) },
+});
+
 export const submission = defineType({
   name: "submission",
   title: "Form submission",
   type: "document",
   readOnly: true,
   fields: [
-    ...["kind", "subject", "name", "email", "phone", "store", "topic", "region", "submittedAt"].map((name) => defineField({ name, type: "string" as const })),
+    ...["kind", "subject", "name", "email", "phone", "store", "topic", "region", "eventDate", "guests", "position", "interest", "language", "resumeUrl", "submittedAt"].map((name) => defineField({ name, type: "string" as const })),
     defineField({ name: "message", type: "text" }),
   ],
   orderings: [{ title: "Newest", name: "submittedAt", by: [{ field: "submittedAt", direction: "desc" }] }],
   preview: { select: { title: "subject", subtitle: "email" } },
 });
 
-export const schemaTypes = [siteSettings, store, flyer, campaign, video, post, event, page, submission];
+export const schemaTypes = [siteSettings, store, flyer, campaign, video, post, event, page, job, submission];

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import type { Page, Post, SiteSettings, Store } from "./content/types";
+import type { Job, Page, Post, SiteSettings, Store } from "./content/types";
 import { openingHoursSpec } from "./hours";
 import { absoluteUrl, SITE_URL } from "./site";
 import { htmlLang, localizePath, ogLocale, punjabiLive, type Locale } from "@/i18n/config";
@@ -172,5 +172,32 @@ export function storeListLd(stores: Store[], name: string, lang: Locale = "en") 
     name,
     numberOfItems: stores.length,
     itemListElement: stores.map((s, i) => ({ "@type": "ListItem", position: i + 1, url: absoluteUrl(localizePath(`/storefinder/${s.slug}`, lang)), name: `Fruiticana ${s.name}` })),
+  };
+}
+
+/** Google for Jobs: one JobPosting per open position, with the store's address when it names one. */
+export function jobPostingLd(job: Job, place: { street: string; locality: string; province: string; postalCode?: string }, lang: Locale = "en") {
+  const type = { "full-time": "FULL_TIME", "part-time": "PART_TIME", seasonal: "TEMPORARY" } as const;
+  return {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    title: job.title,
+    description: job.description,
+    datePosted: job.posted,
+    employmentType: type[job.type],
+    directApply: true,
+    url: absoluteUrl(localizePath(`/employment#job-${job.id}`, lang)),
+    hiringOrganization: { "@type": "Organization", "@id": ORG_ID, name: "Fruiticana", sameAs: SITE_URL, logo: absoluteUrl("/brand/logo.png") },
+    jobLocation: {
+      "@type": "Place",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: place.street,
+        addressLocality: place.locality,
+        addressRegion: place.province,
+        ...(place.postalCode ? { postalCode: place.postalCode } : {}),
+        addressCountry: "CA",
+      },
+    },
   };
 }

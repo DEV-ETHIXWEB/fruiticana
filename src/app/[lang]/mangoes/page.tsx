@@ -6,6 +6,7 @@ import { PageHero } from "@/components/page/PageHero";
 import { RelatedLinks } from "@/components/page/RelatedLinks";
 import { RichText } from "@/components/page/RichText";
 import { ButtonLink } from "@/components/ui/Button";
+import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { getMangoBenefits, getMangoOutro, getPage, getPhotos } from "@/lib/content";
 import { metaFromPage } from "@/lib/seo";
 
@@ -74,6 +75,15 @@ export default async function MangoesPage() {
         <Reveal className="grid gap-6 rounded-[var(--radius-card)] bg-paper p-7 md:grid-cols-[1fr_auto] md:items-center sm:p-10">
           <RichText value={mangoOutro} />
           <ButtonLink href="/storefinder" variant="primary">{t.pages.findNearest}</ButtonLink>
+        </Reveal>
+        {/* Season alert: a sign-up to hear the day the new season's Rajan mangoes reach the stores */}
+        <Reveal id="mango-alert" delay={0.06} className="mt-4 grid scroll-mt-28 gap-6 rounded-[var(--radius-card)] bg-mango p-7 text-forest sm:p-10 md:grid-cols-[1fr_minmax(0,24rem)] md:items-center">
+          <div>
+            <p className="eyebrow text-forest/80">{t.pages.mangoAlertEyebrow}</p>
+            <h2 className="mt-3 font-display text-title text-forest">{t.pages.mangoAlertTitle}</h2>
+            <p className="mt-3 max-w-md text-forest/80">{t.pages.mangoAlertBody}</p>
+          </div>
+          <NewsletterForm tone="light" interest="rajan-mango-alert" button={t.pages.mangoAlertButton} note={t.pages.mangoAlertNote} noteClass="text-forest" />
         </Reveal>
       </section>
 

@@ -7,7 +7,7 @@ import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { Reveal } from "@/components/motion/primitives";
 import { PageHero } from "@/components/page/PageHero";
 import { Icon } from "@/components/ui/Icon";
-import { getFlyers, getRetailStores } from "@/lib/content";
+import { getFlyers, getRetailStores, getSettings } from "@/lib/content";
 import { getLocale, getT } from "@/i18n/server";
 import { pageMetadata } from "@/lib/seo";
 
@@ -18,7 +18,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function FlyersPage() {
-  const [flyers, stores, t] = await Promise.all([getFlyers(), getRetailStores(), getT()]);
+  const [flyers, stores, t, settings] = await Promise.all([getFlyers(), getRetailStores(), getT(), getSettings()]);
+  const delivery = settings.deliveryLinks?.filter((d) => d.label && d.href) ?? [];
   const countBy = (r: string) => stores.filter((s) => s.flyerRegion === r).length;
   // Stores whose region has no flyer online right now: told to ask in store, never shown another region’s prices.
   const unlisted = stores.filter((s) => !flyers.some((f) => f.region === s.flyerRegion));
@@ -65,6 +66,47 @@ export default async function FlyersPage() {
               </Link>
             </div>
           </Reveal>
+          {(delivery.length > 0 || settings.whatsappUrl) && (
+            <Reveal delay={0.04}>
+              <div className="rounded-[var(--radius-card)] bg-white p-6 ring-1 ring-ink/[0.06]">
+                <p className="font-display text-2xl text-forest">{t.flyers.shopFromHome}</p>
+                {delivery.length > 0 && <p className="mt-2 text-sm text-ink-soft">{t.flyers.shopFromHomeBody}</p>}
+                <ul className="mt-4 space-y-2">
+                  {delivery.map((d) => (
+                    <li key={d.href}>
+                      <a
+                        href={d.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-track="Delivery service"
+                        data-track-service={d.label}
+                        className="flex items-center justify-between gap-3 rounded-2xl bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-leaf hover:text-white"
+                      >
+                        <span>{t.flyers.orderOn(d.label)}</span>
+                        <Icon name="external" className="size-4 shrink-0" />
+                      </a>
+                    </li>
+                  ))}
+                  {settings.whatsappUrl && (
+                    <li>
+                      <a
+                        href={settings.whatsappUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-track="WhatsApp channel"
+                        className="flex items-center justify-between gap-3 rounded-2xl bg-leaf/10 px-4 py-3 text-sm font-semibold text-forest transition-colors hover:bg-leaf hover:text-white"
+                      >
+                        <span className="inline-flex items-center gap-2">
+                          <Icon name="whatsapp" className="size-4" /> {t.footer.whatsapp}
+                        </span>
+                        <Icon name="external" className="size-4 shrink-0" />
+                      </a>
+                    </li>
+                  )}
+                </ul>
+              </div>
+            </Reveal>
+          )}
           <Reveal delay={0.08}>
             <div className="grain relative overflow-hidden rounded-[var(--radius-card)] bg-forest p-6 text-cream">
               <div className="relative z-10">

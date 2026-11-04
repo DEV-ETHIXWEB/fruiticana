@@ -29,6 +29,7 @@ const paths = {
   x: <path d="M4 4l16 16M20 4 4 20" />,
   youtube: <><rect x="2.5" y="5.5" width="19" height="13" rx="4" /><path d="m10 9 5 3-5 3V9Z" fill="currentColor" /></>,
   check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
+  whatsapp: <><path d="M4.5 19.5 5.7 16A8 8 0 1 1 8 18.3l-3.5 1.2Z" /><path d="M9.2 8.8c-.4 2.6 2.3 5.6 5.4 5.8l1-1.3-1.8-1-.8.7a3.6 3.6 0 0 1-1.9-1.9l.7-.8-1-1.8-1.6.3Z" /></>,
 } as const;
 
 export type IconName = keyof typeof paths;

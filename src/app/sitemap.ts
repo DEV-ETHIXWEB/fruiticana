@@ -18,6 +18,7 @@ const staticRoutes: { path: string; priority: number; freq: MetadataRoute.Sitema
   { path: "/forced-and-child-labour-report-2024-25", priority: 0.3, freq: "yearly" },
   { path: "/contact", priority: 0.6, freq: "yearly" },
   { path: "/site-map", priority: 0.2, freq: "yearly" },
+  { path: "/privacy", priority: 0.2, freq: "yearly" },
 ];
 
 type Entry = MetadataRoute.Sitemap[number];

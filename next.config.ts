@@ -53,6 +53,8 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   poweredByHeader: false,
   experimental: {
+    // job applications carry a résumé (max 3 MB, checked in actions.ts); Vercel caps bodies at 4.5 MB
+    serverActions: { bodySizeLimit: "4mb" },
     // The persistent build cache was observed shipping stale CSS after design-token
     // (@theme) edits in globals.css. Production builds always compile fresh.
     turbopackFileSystemCacheForBuild: false,

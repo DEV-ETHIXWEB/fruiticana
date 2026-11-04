@@ -6,7 +6,7 @@ import * as seed from "./seed";
 import { getLocale } from "@/i18n/server";
 import { localizeCampaigns, localizeEvents, localizeFlyers, localizePage, localizePosts, localizeSettings, localizeVideos } from "./localize";
 import { pa } from "./seed/pa";
-import type { CampaignBanner, Event, Flyer, FlyerRegion, Img, Page, Post, SiteSettings, Store, Video } from "./types";
+import type { CampaignBanner, Event, Flyer, FlyerRegion, Img, Job, Page, Post, SiteSettings, Store, Video } from "./types";
 
 /*
  * Single content API for the whole site.
@@ -136,6 +136,16 @@ const loadPage = cache(async (slug: string): Promise<Page> => {
   } as Page;
 });
 
+/** Open positions (CMS only; none means the careers page shows the general application). */
+const loadJobs = cache(async (): Promise<Job[]> => {
+  const data = await sanityFetch<Job[]>(
+    groq`*[_type == "job" && active != false && defined(title)] | order(posted desc){ "id": _id, title, store, type, description, posted, pa }`,
+    {},
+    ["job"],
+  );
+  return data ?? [];
+});
+
 /* ---------------- Public getters: content in the page's language ---------------- */
 
 export const getSettings = cache(async () => localizeSettings(await loadSettings(), await getLocale()));
@@ -145,6 +155,11 @@ export const getVideos = cache(async () => localizeVideos(await loadVideos(), aw
 export const getPosts = cache(async () => localizePosts(await loadPosts(), await getLocale()));
 export const getPage = cache(async (slug: string) => localizePage(await loadPage(slug), await getLocale()));
 export const getEvents = cache(async () => localizeEvents(await loadEvents(), await getLocale()));
+export const getJobs = cache(async () => {
+  const lang = await getLocale();
+  const jobs = await loadJobs();
+  return lang === "pa" ? jobs.map((j) => ({ ...j, title: j.pa?.title?.trim() || j.title, description: j.pa?.description?.trim() || j.description })) : jobs;
+});
 
 /** Photos with descriptions (alt text) in the page's language. */
 export const getPhotos = cache(async () => {
