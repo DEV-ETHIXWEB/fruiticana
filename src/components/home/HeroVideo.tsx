@@ -15,6 +15,8 @@ type Poster = { srcSet?: string; src: string };
  *  - 1080p, 48fps (motion-interpolated from AI-upscaled 24fps frames), 10-bit
  *    so the warm gradients never band. The browser picks AV1 where supported,
  *    HEVC on Safari, H.264 otherwise; a vertical crop for phones.
+ *  - Starts downloading only after the page has loaded and gone idle, so on a slow phone
+ *    connection the 1 MB film never competes with the poster (the LCP) for bandwidth.
  *  - Never plays for reduced-motion or Save-Data users; pauses when scrolled
  *    away or the tab is hidden; a visible pause control satisfies WCAG 2.2.2.
  */
@@ -52,16 +54,30 @@ export function HeroVideo({ desktopPoster, mobilePoster, alt }: { desktopPoster:
       return;
     }
     let visible = true;
-    const io = new IntersectionObserver(([e]) => {
-      visible = e.isIntersecting;
-      if (visible && !document.hidden) tryPlay();
-      else v.pause();
-    });
-    io.observe(v);
+    let io: IntersectionObserver | null = null;
     const onVis = () => (document.hidden || !visible ? v.pause() : tryPlay());
-    document.addEventListener("visibilitychange", onVis);
+    const start = () => {
+      io = new IntersectionObserver(([e]) => {
+        visible = e.isIntersecting;
+        if (visible && !document.hidden) tryPlay();
+        else v.pause();
+      });
+      io.observe(v);
+      document.addEventListener("visibilitychange", onVis);
+    };
+    // wait for the page's own resources, then an idle moment, before fetching the film
+    let idle = 0;
+    const schedule = () => {
+      const w = window as Window & typeof globalThis;
+      idle = typeof w.requestIdleCallback === "function" ? w.requestIdleCallback(start, { timeout: 1500 }) : w.setTimeout(start, 300);
+    };
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
     return () => {
-      io.disconnect();
+      window.removeEventListener("load", schedule);
+      if (typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(idle);
+      window.clearTimeout(idle);
+      io?.disconnect();
       document.removeEventListener("visibilitychange", onVis);
     };
   }, [reduce, tryPlay]);
@@ -101,7 +117,7 @@ export function HeroVideo({ desktopPoster, mobilePoster, alt }: { desktopPoster:
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="none"
           aria-hidden
           tabIndex={-1}
           onPlaying={() => setPlaying(true)}

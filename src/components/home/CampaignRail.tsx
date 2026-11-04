@@ -111,7 +111,7 @@ export function CampaignRail({ items }: { items: CampaignBanner[] }) {
             >
               {current.href ? (
                 <Link href={current.href} draggable={false} className="relative block size-full">
-                  <Image src={current.image.src} alt={current.image.alt} fill sizes="(min-width: 1408px) 1344px, 100vw" className="object-contain" draggable={false} preload={index === 0} quality={90} />
+                  <Image src={current.image.src} alt={current.image.alt} fill sizes="(min-width: 1408px) 1344px, 100vw" className="object-contain" draggable={false} quality={90} />
                 </Link>
               ) : (
                 <Image src={current.image.src} alt={current.image.alt} fill sizes="100vw" className="object-contain" draggable={false} />

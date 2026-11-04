@@ -13,6 +13,9 @@ import { LANG_COOKIE, punjabiLive } from "@/i18n/config";
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
+  // Mixed-case addresses (typed from a print ad or a radio spot) go to the one real, lower-case URL.
+  if (/[A-Z]/.test(pathname)) return NextResponse.redirect(new URL(`${pathname.toLowerCase()}${search}`, request.url), 308);
+
   if (pathname === "/pa" || pathname.startsWith("/pa/")) {
     // not released yet: Punjabi URLs behave like any unknown page
     if (!punjabiLive) return NextResponse.rewrite(new URL("/en/__punjabi-not-live", request.url));

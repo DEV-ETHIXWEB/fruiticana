@@ -3,7 +3,7 @@ import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { Icon, socialIcon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
 import type { SiteSettings, Store } from "@/lib/content/types";
-import { citySlug } from "@/lib/site";
+import { cityPath } from "@/lib/cities";
 import { LanguageSwitcher } from "@/i18n/LanguageSwitcher";
 import { getT } from "@/i18n/server";
 import { BackToTop } from "./BackToTop";
@@ -147,10 +147,10 @@ export async function Footer({ settings, stores }: { settings: SiteSettings; sto
             {cities.map(([city, n]) => (
               <li key={city}>
                 <Link
-                  href={`/storefinder#${citySlug(city)}`}
+                  href={cityPath(city)}
                   className="inline-flex items-center gap-1.5 rounded-full bg-cream/[0.06] px-3 py-1 text-[0.78rem] text-cream/85 ring-1 ring-cream/10 transition hover:bg-turmeric hover:text-forest"
                 >
-                  {city} <span className="opacity-70">{n}</span>
+                  {t.places[city as keyof typeof t.places] ?? city} <span className="opacity-70">{n}</span>
                 </Link>
               </li>
             ))}

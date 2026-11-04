@@ -3,6 +3,7 @@ import { PageHero } from "@/components/page/PageHero";
 import { getPosts, getRetailStores } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 import { localizedNav } from "@/lib/site";
+import { cityPath, groupByCity } from "@/lib/cities";
 import { getLocale, getT } from "@/i18n/server";
 
 export async function generateMetadata() {
@@ -15,6 +16,11 @@ export default async function SiteMapPage() {
   const groups = [
     ...localizedNav(t).map((n) => ({ title: n.label, links: n.children ? n.children.map((c) => ({ href: c.href, label: c.label })) : [{ href: n.href, label: n.label }] })),
     { title: t.siteMap.communityStories, links: posts.map((p) => ({ href: `/blog/${p.slug}`, label: p.title })) },
+    {
+      title: t.footer.storesByCity,
+      links: groupByCity(stores).map((c) => ({ href: cityPath(c.name), label: t.city.metaTitle(t.places[c.name as keyof typeof t.places] ?? c.name, t.provinces[c.province]) })),
+    },
+    { title: t.privacy.metaTitle, links: [{ href: "/privacy", label: t.privacy.metaTitle }] },
   ];
   return (
     <>

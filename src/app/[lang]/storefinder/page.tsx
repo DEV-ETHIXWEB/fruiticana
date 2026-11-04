@@ -8,6 +8,7 @@ import { getRetailStores, getStores } from "@/lib/content";
 import { getLocale, getT } from "@/i18n/server";
 import { pageMetadata, storeListLd } from "@/lib/seo";
 import { citySlug } from "@/lib/site";
+import { cityPath } from "@/lib/cities";
 
 const PATH = "/storefinder";
 export async function generateMetadata(): Promise<Metadata> {
@@ -44,8 +45,10 @@ export default async function StoreFinderPage() {
         <div className="mt-10 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           {byCity.map(([city, list], i) => (
             <Reveal key={city} delay={(i % 4) * 0.05} id={citySlug(city)} className="scroll-mt-28">
-              <h3 className="flex items-baseline justify-between border-b border-ink/10 pb-3 text-[0.75rem] font-semibold tracking-[0.2em] text-muted uppercase">
-                {city} <span>{list.length}</span>
+              <h3 className="border-b border-ink/10 pb-3 text-[0.75rem] font-semibold tracking-[0.2em] text-muted uppercase">
+                <Link href={cityPath(city)} className="flex items-baseline justify-between hover:text-leaf">
+                  {t.places[city as keyof typeof t.places] ?? city} <span>{list.length}</span>
+                </Link>
               </h3>
               <ul className="mt-4 space-y-3">
                 {list.map((s) => (

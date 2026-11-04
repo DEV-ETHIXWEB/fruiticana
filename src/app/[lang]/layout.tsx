@@ -24,7 +24,12 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
     keywords: [...t.site.keywords],
     authors: [{ name: "Fruiticana" }],
     formatDetection: { telephone: true, address: true },
-    robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
+    // Search Console / Bing Webmaster ownership tokens, set in the hosting environment
+    verification: {
+      ...(process.env.GOOGLE_SITE_VERIFICATION && { google: process.env.GOOGLE_SITE_VERIFICATION }),
+      ...(process.env.BING_SITE_VERIFICATION && { other: { "msvalidate.01": process.env.BING_SITE_VERIFICATION } }),
+    },
   };
 }
 

@@ -15,6 +15,7 @@ import { distanceKm, formatKm } from "@/lib/geo";
 import { formatHours } from "@/lib/hours";
 import { pageMetadata, storeLd } from "@/lib/seo";
 import { getLocale, getT } from "@/i18n/server";
+import { cityPath } from "@/lib/cities";
 
 export async function generateStaticParams() {
   return (await getStores()).map((s) => ({ slug: s.slug }));
@@ -57,6 +58,7 @@ export default async function StorePage({ params }: PageProps<"/[lang]/storefind
     .slice(0, 3);
   // Only this store’s own regional flyer: another region’s prices would be wrong here.
   const flyer = flyers.find((f) => f.region === store.flyerRegion);
+  const place = t.places[store.locality as keyof typeof t.places] ?? store.locality;
   const address = `${store.street}, ${store.locality}, ${store.province}${store.postalCode ? ` ${store.postalCode}` : ""}`;
   const dirs = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`Fruiticana ${address}`)}`;
   const tel = `tel:+1${store.phone.replace(/\D/g, "")}`;
@@ -67,7 +69,13 @@ export default async function StorePage({ params }: PageProps<"/[lang]/storefind
       <section className="relative overflow-hidden pt-28 pb-8 lg:pt-36">
         <div aria-hidden className="pointer-events-none absolute -top-48 right-[-12%] size-[40rem] rounded-full bg-[radial-gradient(circle,rgb(246_210_28/0.28),transparent_65%)] blur-2xl" />
         <div className="container-x relative">
-          <Breadcrumbs items={[{ name: t.common.storeLocator, path: "/storefinder" }, { name: store.isHeadOffice ? t.common.headOffice : store.name, path: `/storefinder/${store.slug}` }]} />
+          <Breadcrumbs
+            items={[
+              { name: t.common.storeLocator, path: "/storefinder" },
+              ...(store.isHeadOffice ? [] : [{ name: place, path: cityPath(store.locality) }]),
+              { name: store.isHeadOffice ? t.common.headOffice : store.name, path: `/storefinder/${store.slug}` },
+            ]}
+          />
           <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
             <div>
               <p className="eyebrow text-leaf">{store.isHeadOffice ? t.common.headOffice : `${store.locality}, ${store.province}`}</p>
@@ -179,7 +187,14 @@ export default async function StorePage({ params }: PageProps<"/[lang]/storefind
       )}
 
       <section className="container-x pb-16 sm:pb-24 lg:pb-32">
-        <h2 className="font-display text-title text-forest">{t.stores.nearbyTitle}</h2>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+          <h2 className="font-display text-title text-forest">{t.stores.nearbyTitle}</h2>
+          {!store.isHeadOffice && (
+            <Link href={cityPath(store.locality)} className="text-sm font-semibold text-leaf hover:underline">
+              {t.city.cityLink(place)} →
+            </Link>
+          )}
+        </div>
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {nearby.map(({ s, km }, i) => (
             <Reveal key={s.slug} delay={i * 0.07}>

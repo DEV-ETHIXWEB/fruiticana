@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getPosts, getStores } from "@/lib/content";
 import { htmlLang, localizePath, punjabiLive } from "@/i18n/config";
 import { absoluteUrl } from "@/lib/site";
+import { cityPath, groupByCity } from "@/lib/cities";
 
 const staticRoutes: { path: string; priority: number; freq: MetadataRoute.Sitemap[number]["changeFrequency"] }[] = [
   { path: "/", priority: 1, freq: "weekly" },
@@ -24,6 +25,14 @@ const staticRoutes: { path: string; priority: number; freq: MetadataRoute.Sitema
 type Entry = MetadataRoute.Sitemap[number];
 
 /**
+ * When page copy last changed. Bump it when editing static page text, so search engines see a
+ * true date instead of "changed at every deploy". The weekly flyer and the homepage (which
+ * shows it) use the build date, since they change every week.
+ */
+const CONTENT_UPDATED = new Date("2026-11-04");
+const weekly = new Set(["/", "/flyers"]);
+
+/**
  * One entry per language. Once Punjabi is live, each page is listed in English and Punjabi,
  * and every entry names both versions (hreflang alternates), as Google recommends.
  */
@@ -41,8 +50,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [stores, posts] = await Promise.all([getStores(), getPosts()]);
   const now = new Date();
   return [
-    ...staticRoutes.flatMap((r) => entries(r.path, { lastModified: now, changeFrequency: r.freq, priority: r.priority })),
-    ...stores.flatMap((s) => entries(`/storefinder/${s.slug}`, { lastModified: now, changeFrequency: "monthly", priority: s.isHeadOffice ? 0.4 : 0.8 })),
+    ...staticRoutes.flatMap((r) => entries(r.path, { lastModified: weekly.has(r.path) ? now : CONTENT_UPDATED, changeFrequency: r.freq, priority: r.priority })),
+    ...groupByCity(stores).flatMap((c) => entries(cityPath(c.name), { lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.85 })),
+    ...stores.flatMap((s) => entries(`/storefinder/${s.slug}`, { lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: s.isHeadOffice ? 0.4 : 0.8 })),
     ...posts.flatMap((p) => entries(`/blog/${p.slug}`, { lastModified: new Date(p.date), changeFrequency: "yearly", priority: 0.4 })),
   ];
 }

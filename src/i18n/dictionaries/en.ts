@@ -86,6 +86,12 @@ export const en = {
     label: "Breadcrumb",
   },
 
+  error: {
+    title: "Something went wrong on our side.",
+    body: "Sorry about that. Please try again, and if it keeps happening, call our head office at 604-502-0005.",
+    retry: "Try again",
+  },
+
   notFound: {
     metaTitle: "Page not found",
     title: "This aisle doesn’t exist.",
@@ -351,7 +357,7 @@ export const en = {
     benefitsTitle: "5 health benefits of eating *mangoes*",
     benefitsIntro: "Nothing beats a fresh, sweet and juicy mango as the weather starts to get warmer. But the great taste is only part of the reason why you should eat them. Here’s why you should pick some up at your nearest Fruiticana.",
     findNearest: "Find your nearest store",
-    eventsMetaTitle: "Events",
+    eventsMetaTitle: "Community Events at Fruiticana Stores",
     eventsMetaDescription: "Calendar of Fruiticana community events, in-store celebrations and contests across BC and Alberta.",
     eventsTitle: "Calendar of *Events*",
     eventsIntro: "Festivals, in-store celebrations and community gatherings: here’s what’s coming up at Fruiticana.",
@@ -491,5 +497,51 @@ export const en = {
     contactBody: (email: string, phone: string, address: string) =>
       `For any question or request about your privacy, email ${email}, call ${phone}, or write to Fruiticana Produce Ltd., ${address}.`,
     changes: "We may update this policy from time to time. The date at the top always shows the latest version.",
+  },
+  /** City names as written in running text (Punjabi pages spell them in Gurmukhi). */
+  places: {
+    Abbotsford: "Abbotsford",
+    Calgary: "Calgary",
+    Chestermere: "Chestermere",
+    Edmonton: "Edmonton",
+    Kelowna: "Kelowna",
+    "New Westminster": "New Westminster",
+    "Port Coquitlam": "Port Coquitlam",
+    Richmond: "Richmond",
+    Surrey: "Surrey",
+    Vancouver: "Vancouver",
+  },
+  provinces: { BC: "BC", AB: "AB" },
+  provinceNames: { BC: "British Columbia", AB: "Alberta" },
+
+  /** City landing pages (/indian-grocery-store/<city>) */
+  city: {
+    metaTitle: (city: string, province: string) => `Indian Grocery Store in ${city}, ${province}`,
+    metaDescription: (city: string, n: number, hours: string) =>
+      n > 1
+        ? `${n} Fruiticana Indian grocery stores in ${city}, open 7 days, ${hours}. Fresh fruits and vegetables, Indican spices, Rajan mangoes and weekly specials.`
+        : `Fruiticana’s Indian grocery store in ${city} is open 7 days, ${hours}. Fresh fruits and vegetables, Indican spices, Rajan mangoes and weekly specials.`,
+    title: (city: string) => `Indian groceries in ${city}`,
+    intro: (city: string, n: number) =>
+      n > 1
+        ? `${n} Fruiticana stores across ${city}, open seven days a week with fresh produce, everyday Indian staples and the spices you grew up with, at the best price.`
+        : `Fruiticana in ${city} is open seven days a week with fresh produce, everyday Indian staples and the spices you grew up with, at the best price.`,
+    storesTitle: (city: string, n: number) => (n > 1 ? `Our ${n} stores in ${city}` : `Our store in ${city}`),
+    faqTitle: "Good to know",
+    qHours: (city: string) => `What are Fruiticana’s hours in ${city}?`,
+    aHoursOne: (city: string, hours: string) => `Fruiticana in ${city} is open seven days a week, ${hours}.`,
+    aHoursAll: (city: string, hours: string) => `Every Fruiticana store in ${city} is open seven days a week, ${hours}.`,
+    aHoursMost: (city: string, hours: string) => `Most of our ${city} stores are open seven days a week, ${hours}. Each store’s hours are listed above.`,
+    qCount: (city: string) => `How many Fruiticana stores are in ${city}?`,
+    aCount: (city: string, n: number, names: string) => (n === 1 ? `There is one store in ${city}: ${names}.` : `There are ${n} stores in ${city}: ${names}.`),
+    qSpecials: (city: string) => `Where can I see this week’s specials for ${city}?`,
+    aSpecials: (city: string, region: string) => `Our ${region} flyer covers the ${city} stores. It’s on the Weekly Specials page and changes every week.`,
+    aSpecialsNone: (city: string) => `The weekly specials for ${city} aren’t online yet. Ask in store, or call your nearest Fruiticana for this week’s deals.`,
+    qProducts: "What can I buy at Fruiticana?",
+    aProducts:
+      "Fresh fruits and vegetables every day, including okra, guava and sugarcane, plus our own Indican spices, lentils and juices, and Rajan mangoes in season from March through summer.",
+    otherCities: "Fruiticana in other cities",
+    cityLink: (city: string) => `All Fruiticana stores in ${city}`,
+    seeSpecials: "See the weekly specials",
   },
 } as const;

@@ -89,6 +89,12 @@ export const pa: Widen<typeof en> = {
     label: "ਪੰਨੇ ਦਾ ਰਸਤਾ",
   },
 
+  error: {
+    title: "ਸਾਡੇ ਪਾਸੇ ਕੋਈ ਗੜਬੜ ਹੋ ਗਈ।",
+    body: "ਮਾਫ਼ ਕਰਨਾ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ, ਅਤੇ ਜੇ ਇਹ ਵਾਰ-ਵਾਰ ਹੋਵੇ ਤਾਂ ਸਾਡੇ ਮੁੱਖ ਦਫ਼ਤਰ ਨੂੰ 604-502-0005 'ਤੇ ਫ਼ੋਨ ਕਰੋ।",
+    retry: "ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
+  },
+
   notFound: {
     metaTitle: "ਪੰਨਾ ਨਹੀਂ ਮਿਲਿਆ",
     title: "ਇਹ ਗਲੀਆਰਾ ਮੌਜੂਦ ਨਹੀਂ ਹੈ।",
@@ -354,7 +360,7 @@ export const pa: Widen<typeof en> = {
     benefitsTitle: "*ਅੰਬ* ਖਾਣ ਦੇ 5 ਸਿਹਤ ਲਾਭ",
     benefitsIntro: "ਜਿਵੇਂ ਹੀ ਮੌਸਮ ਗਰਮ ਹੋਣ ਲੱਗਦਾ ਹੈ, ਤਾਜ਼ੇ, ਮਿੱਠੇ ਅਤੇ ਰਸੀਲੇ ਅੰਬ ਦਾ ਕੋਈ ਮੁਕਾਬਲਾ ਨਹੀਂ। ਪਰ ਵਧੀਆ ਸੁਆਦ ਤਾਂ ਸਿਰਫ਼ ਇੱਕ ਕਾਰਨ ਹੈ। ਇਹ ਹਨ ਉਹ ਕਾਰਨ ਜਿਨ੍ਹਾਂ ਕਰਕੇ ਤੁਹਾਨੂੰ ਆਪਣੇ ਨੇੜਲੇ Fruiticana ਤੋਂ ਅੰਬ ਜ਼ਰੂਰ ਲੈਣੇ ਚਾਹੀਦੇ ਹਨ।",
     findNearest: "ਆਪਣਾ ਨੇੜਲਾ ਸਟੋਰ ਲੱਭੋ",
-    eventsMetaTitle: "ਸਮਾਗਮ",
+    eventsMetaTitle: "Fruiticana ਸਟੋਰਾਂ ਵਿੱਚ ਭਾਈਚਾਰਕ ਸਮਾਗਮ",
     eventsMetaDescription: "ਬੀ.ਸੀ. ਅਤੇ ਅਲਬਰਟਾ ਵਿੱਚ Fruiticana ਦੇ ਭਾਈਚਾਰਕ ਸਮਾਗਮਾਂ, ਸਟੋਰਾਂ ਵਿੱਚ ਜਸ਼ਨਾਂ ਅਤੇ ਮੁਕਾਬਲਿਆਂ ਦਾ ਕੈਲੰਡਰ।",
     eventsTitle: "*ਸਮਾਗਮਾਂ* ਦਾ ਕੈਲੰਡਰ",
     eventsIntro: "ਤਿਉਹਾਰ, ਸਟੋਰਾਂ ਵਿੱਚ ਜਸ਼ਨ ਅਤੇ ਭਾਈਚਾਰਕ ਇਕੱਠ: ਦੇਖੋ Fruiticana ਵਿੱਚ ਅੱਗੇ ਕੀ ਹੋਣ ਵਾਲਾ ਹੈ।",
@@ -495,5 +501,50 @@ export const pa: Widen<typeof en> = {
     contactBody: (email: string, phone: string, address: string) =>
       `ਆਪਣੀ ਪਰਦੇਦਾਰੀ ਬਾਰੇ ਕਿਸੇ ਵੀ ਸਵਾਲ ਜਾਂ ਬੇਨਤੀ ਲਈ ${email} 'ਤੇ ਈਮੇਲ ਕਰੋ, ${phone} 'ਤੇ ਫ਼ੋਨ ਕਰੋ, ਜਾਂ Fruiticana Produce Ltd., ${address} ਨੂੰ ਲਿਖੋ।`,
     changes: "ਅਸੀਂ ਸਮੇਂ-ਸਮੇਂ 'ਤੇ ਇਹ ਨੀਤੀ ਅੱਪਡੇਟ ਕਰ ਸਕਦੇ ਹਾਂ। ਉੱਪਰ ਦਿੱਤੀ ਤਾਰੀਖ਼ ਹਮੇਸ਼ਾ ਨਵਾਂ ਰੂਪ ਦਿਖਾਉਂਦੀ ਹੈ।",
+  },
+
+  places: {
+    Abbotsford: "ਐਬਟਸਫੋਰਡ",
+    Calgary: "ਕੈਲਗਰੀ",
+    Chestermere: "ਚੈਸਟਰਮੀਅਰ",
+    Edmonton: "ਐਡਮਿੰਟਨ",
+    Kelowna: "ਕੇਲੋਨਾ",
+    "New Westminster": "ਨਿਊ ਵੈਸਟਮਿੰਸਟਰ",
+    "Port Coquitlam": "ਪੋਰਟ ਕੋਕਿਟਲਮ",
+    Richmond: "ਰਿਚਮੰਡ",
+    Surrey: "ਸਰੀ",
+    Vancouver: "ਵੈਨਕੂਵਰ",
+  },
+  provinces: { BC: "ਬੀ.ਸੀ.", AB: "ਅਲਬਰਟਾ" },
+  provinceNames: { BC: "ਬ੍ਰਿਟਿਸ਼ ਕੋਲੰਬੀਆ", AB: "ਅਲਬਰਟਾ" },
+
+  city: {
+    metaTitle: (city: string, province: string) => `${city}, ${province} ਵਿੱਚ ਭਾਰਤੀ ਗਰੋਸਰੀ ਸਟੋਰ`,
+    metaDescription: (city: string, n: number, hours: string) =>
+      n > 1
+        ? `${city} ਵਿੱਚ Fruiticana ਦੇ ${n} ਭਾਰਤੀ ਗਰੋਸਰੀ ਸਟੋਰ, ਸੱਤੇ ਦਿਨ ${hours} ਖੁੱਲ੍ਹੇ। ਤਾਜ਼ੇ ਫਲ-ਸਬਜ਼ੀਆਂ, Indican ਮਸਾਲੇ, Rajan ਅੰਬ ਅਤੇ ਹਫ਼ਤਾਵਾਰੀ ਸਪੈਸ਼ਲ।`
+        : `${city} ਵਿੱਚ Fruiticana ਦਾ ਭਾਰਤੀ ਗਰੋਸਰੀ ਸਟੋਰ ਸੱਤੇ ਦਿਨ ${hours} ਖੁੱਲ੍ਹਾ ਹੈ। ਤਾਜ਼ੇ ਫਲ-ਸਬਜ਼ੀਆਂ, Indican ਮਸਾਲੇ, Rajan ਅੰਬ ਅਤੇ ਹਫ਼ਤਾਵਾਰੀ ਸਪੈਸ਼ਲ।`,
+    title: (city: string) => `${city} ਵਿੱਚ ਭਾਰਤੀ ਗਰੋਸਰੀ`,
+    intro: (city: string, n: number) =>
+      n > 1
+        ? `${city} ਵਿੱਚ Fruiticana ਦੇ ${n} ਸਟੋਰ, ਹਫ਼ਤੇ ਦੇ ਸੱਤੇ ਦਿਨ ਖੁੱਲ੍ਹੇ: ਤਾਜ਼ੇ ਫਲ-ਸਬਜ਼ੀਆਂ, ਰੋਜ਼ਾਨਾ ਦਾ ਭਾਰਤੀ ਸਮਾਨ ਅਤੇ ਉਹ ਮਸਾਲੇ ਜਿਨ੍ਹਾਂ ਨਾਲ ਤੁਸੀਂ ਵੱਡੇ ਹੋਏ, ਸਭ ਤੋਂ ਵਧੀਆ ਕੀਮਤ 'ਤੇ।`
+        : `${city} ਵਿੱਚ Fruiticana ਹਫ਼ਤੇ ਦੇ ਸੱਤੇ ਦਿਨ ਖੁੱਲ੍ਹਾ ਹੈ: ਤਾਜ਼ੇ ਫਲ-ਸਬਜ਼ੀਆਂ, ਰੋਜ਼ਾਨਾ ਦਾ ਭਾਰਤੀ ਸਮਾਨ ਅਤੇ ਉਹ ਮਸਾਲੇ ਜਿਨ੍ਹਾਂ ਨਾਲ ਤੁਸੀਂ ਵੱਡੇ ਹੋਏ, ਸਭ ਤੋਂ ਵਧੀਆ ਕੀਮਤ 'ਤੇ।`,
+    storesTitle: (city: string, n: number) => (n > 1 ? `${city} ਵਿੱਚ ਸਾਡੇ ${n} ਸਟੋਰ` : `${city} ਵਿੱਚ ਸਾਡਾ ਸਟੋਰ`),
+    faqTitle: "ਜਾਣਨ ਯੋਗ ਗੱਲਾਂ",
+    qHours: (city: string) => `${city} ਵਿੱਚ Fruiticana ਦਾ ਸਮਾਂ ਕੀ ਹੈ?`,
+    aHoursOne: (city: string, hours: string) => `${city} ਵਿੱਚ Fruiticana ਹਫ਼ਤੇ ਦੇ ਸੱਤੇ ਦਿਨ ${hours} ਖੁੱਲ੍ਹਾ ਰਹਿੰਦਾ ਹੈ।`,
+    aHoursAll: (city: string, hours: string) => `${city} ਵਿੱਚ Fruiticana ਦੇ ਸਾਰੇ ਸਟੋਰ ਹਫ਼ਤੇ ਦੇ ਸੱਤੇ ਦਿਨ ${hours} ਖੁੱਲ੍ਹੇ ਰਹਿੰਦੇ ਹਨ।`,
+    aHoursMost: (city: string, hours: string) => `${city} ਵਿੱਚ ਸਾਡੇ ਜ਼ਿਆਦਾਤਰ ਸਟੋਰ ਹਫ਼ਤੇ ਦੇ ਸੱਤੇ ਦਿਨ ${hours} ਖੁੱਲ੍ਹੇ ਰਹਿੰਦੇ ਹਨ। ਹਰ ਸਟੋਰ ਦਾ ਸਮਾਂ ਉੱਪਰ ਦਿੱਤਾ ਗਿਆ ਹੈ।`,
+    qCount: (city: string) => `${city} ਵਿੱਚ Fruiticana ਦੇ ਕਿੰਨੇ ਸਟੋਰ ਹਨ?`,
+    aCount: (city: string, n: number, names: string) => (n === 1 ? `${city} ਵਿੱਚ ਇੱਕ ਸਟੋਰ ਹੈ: ${names}।` : `${city} ਵਿੱਚ ${n} ਸਟੋਰ ਹਨ: ${names}।`),
+    qSpecials: (city: string) => `${city} ਲਈ ਇਸ ਹਫ਼ਤੇ ਦੇ ਸਪੈਸ਼ਲ ਕਿੱਥੇ ਦੇਖ ਸਕਦੇ ਹਾਂ?`,
+    aSpecials: (city: string, region: string) => `ਸਾਡਾ ${region} ਫਲਾਇਰ ${city} ਦੇ ਸਟੋਰਾਂ ਲਈ ਹੈ। ਇਹ ਹਫ਼ਤਾਵਾਰੀ ਸਪੈਸ਼ਲ ਵਾਲੇ ਪੰਨੇ 'ਤੇ ਹੈ ਅਤੇ ਹਰ ਹਫ਼ਤੇ ਬਦਲਦਾ ਹੈ।`,
+    aSpecialsNone: (city: string) => `${city} ਦੇ ਹਫ਼ਤਾਵਾਰੀ ਸਪੈਸ਼ਲ ਅਜੇ ਔਨਲਾਈਨ ਨਹੀਂ ਹਨ। ਇਸ ਹਫ਼ਤੇ ਦੇ ਸਪੈਸ਼ਲ ਲਈ ਸਟੋਰ ਵਿੱਚ ਪੁੱਛੋ, ਜਾਂ ਆਪਣੇ ਨੇੜਲੇ Fruiticana ਨੂੰ ਫ਼ੋਨ ਕਰੋ।`,
+    qProducts: "Fruiticana ਵਿੱਚ ਕੀ-ਕੀ ਮਿਲਦਾ ਹੈ?",
+    aProducts:
+      "ਹਰ ਰੋਜ਼ ਤਾਜ਼ੇ ਫਲ ਅਤੇ ਸਬਜ਼ੀਆਂ, ਜਿਨ੍ਹਾਂ ਵਿੱਚ ਭਿੰਡੀ, ਅਮਰੂਦ ਅਤੇ ਗੰਨਾ ਵੀ ਹਨ, ਨਾਲ ਹੀ ਸਾਡੇ ਆਪਣੇ Indican ਮਸਾਲੇ, ਦਾਲਾਂ ਅਤੇ ਜੂਸ, ਅਤੇ ਮਾਰਚ ਤੋਂ ਗਰਮੀਆਂ ਤੱਕ ਸੀਜ਼ਨ ਵਿੱਚ Rajan ਅੰਬ।",
+    otherCities: "ਹੋਰ ਸ਼ਹਿਰਾਂ ਵਿੱਚ Fruiticana",
+    cityLink: (city: string) => `${city} ਵਿੱਚ Fruiticana ਦੇ ਸਾਰੇ ਸਟੋਰ`,
+    seeSpecials: "ਹਫ਼ਤਾਵਾਰੀ ਸਪੈਸ਼ਲ ਦੇਖੋ",
   },
 };

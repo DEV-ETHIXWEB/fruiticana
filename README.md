@@ -83,6 +83,11 @@ Weekly flyer swap: Studio → Weekly flyers → replace the image for the region
 - Rajan mango alert: sign-up on /mangoes, added to the Mailchimp audience (tagged when `MAILCHIMP_MANGO_TAG_ID` is set) and recorded as "Rajan mango alert".
 - WhatsApp channel and delivery services (Instacart, Uber Eats, DoorDash...): fields in Site settings. They appear in the footer and on /flyers only once filled in.
 - Forms keep what the visitor typed when the server sends back an error (`useKeepValues.ts`); React would otherwise reset them.
+- Local SEO pages: `/indian-grocery-store/<city>` (e.g. `/indian-grocery-store/surrey`), one per municipality with a store, in English and Punjabi (`src/lib/cities.ts`, page in `src/app/[lang]/indian-grocery-store/[city]`). Built from the store list, so a store added in the Studio appears on its city page automatically and a new city gets a page. Each lists the city's stores with live open/closed status, hours, phone and directions, the region's flyer, and answers to common questions computed from the real data (FAQPage, ItemList and BreadcrumbList structured data). Linked from the footer city chips, the store finder's city headings, every store page's breadcrumb and the site map.
+- SEO checks: `node scripts/qa-seo.mjs` audits every sitemap URL (status, title and description length, canonical, hreflang, one h1, share image, alt text, JSON-LD, duplicates). Sitemap dates come from `CONTENT_UPDATED` in `src/app/sitemap.ts` (bump it when page copy changes); the homepage and flyers use the build date because they change weekly. Mixed-case URLs 308 to lower case (`src/proxy.ts`).
+- Search Console / Bing: set `GOOGLE_SITE_VERIFICATION` and `BING_SITE_VERIFICATION` in Vercel, then submit `https://www.fruiticana.com/sitemap.xml` in both tools.
+- Error pages: branded 404 (`not-found.tsx`), page errors (`[lang]/error.tsx`, in the visitor's language, with Try again) and a bilingual last-resort `global-error.tsx`.
+- Hero film downloads only after the page has loaded and gone idle (`HeroVideo.tsx`), so on slow phones it never competes with the poster image (the LCP).
 - House style: no em or en dashes in copy, code or comments.
 
 ## Structure
