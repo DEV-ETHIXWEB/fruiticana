@@ -1,4 +1,4 @@
-import type { CampaignBanner, Event, Flyer, Img, Page, Post, SiteSettings, Video } from "../types";
+import type { CampaignBanner, Event, Flyer, Img, Page, Post, SiteSettings, Video, Promo } from "../types";
 import { h2, li, p } from "../pt";
 export { stores } from "./stores";
 
@@ -57,7 +57,6 @@ export const flyers: Flyer[] = [
 
 /* The rotating banners from the legacy homepage, kept as a campaign rail. */
 export const campaigns: CampaignBanner[] = [
-  { id: "diwali-giveaway", label: "Diwali Free Giveaway 2026: a winner every day", href: "/storefinder", endsOn: "2026-11-08", image: img("/images/banners/diwali-giveaway-2026.jpg", "Fruiticana Diwali Free Giveaway 2026, October 25 to November 8: scan the QR code in store for a chance to win small kitchen appliances every day. Sponsored by Teja, Sher and Ashoka. No purchase necessary.", 1040, 300) },
   { id: "happy-diwali", label: "Happy Diwali from Fruiticana", href: "/flyers", endsOn: "2026-11-08", image: img("/images/banners/happy-diwali.jpg", "Happy Diwali from Fruiticana: Diljit Dosanjh with a basket of fresh fruit and vegetables and lit diyas", 1040, 300) },
   { id: "now-open", label: "Now open: South Surrey", href: "/storefinder/south-surrey", image: img("/images/banners/now-open-south-surrey.jpg", "Fruiticana now open at 2990 152 St, South Surrey", 1040, 300) },
   { id: "indican", label: "Indican, available exclusively at Fruiticana", href: "/indican", image: img("/images/banners/indican.jpg", "Indican, available exclusively at Fruiticana: Mango juice, Kheer rice and brown cane sugar", 1800, 517) },
@@ -68,6 +67,24 @@ export const campaigns: CampaignBanner[] = [
   { id: "lentils", label: "India SaY organic lentils", href: "/flyers", image: img("/images/banners/lentils.png", "India SaY organic lentils and dals, in store at Fruiticana", 1800, 517) },
   { id: "locations", label: "Find a location", href: "/storefinder", image: img("/images/banners/locations.jpg", "Fruiticana locations across BC and Alberta", 1800, 517) },
   { id: "company", label: "Our company", href: "/our-company", image: img("/images/banners/our-company.jpg", "Fruiticana offers its customers the highest quality of fresh fruits, vegetables and spices, at the best price", 1800, 517) },
+];
+
+export const promos: Promo[] = [
+  {
+    id: "diwali-giveaway-2026",
+    kicker: "Diwali Free Giveaway 2026",
+    title: "A *winner* every day of Diwali.",
+    dates: "October 25 to November 8",
+    body: "Visit any Fruiticana, scan the QR code in store and you could take home a new blender, microwave, toaster or juicer. A new winner is drawn every day.",
+    steps: ["Visit any Fruiticana store", "Scan the giveaway QR code", "A winner is drawn every day"],
+    sponsors: ["Teja", "Sher", "Ashoka"],
+    ctaLabel: "Find your store",
+    ctaHref: "/storefinder",
+    finePrint: "No purchase necessary. Prizes may differ from those shown.",
+    startsOn: "2026-10-25",
+    endsOn: "2026-11-08",
+    theme: "diwali",
+  },
 ];
 
 export const videos: Video[] = [

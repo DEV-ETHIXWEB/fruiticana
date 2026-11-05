@@ -170,6 +170,42 @@ export const campaign = defineType({
   preview: { select: { title: "label", media: "image", active: "active" }, prepare: ({ title, media, active }) => ({ title, media, subtitle: active ? "Live" : "Hidden" }) },
 });
 
+const paList = (name: string, title: string) => defineField({ name, title, type: "array", of: [{ type: "string" }] });
+
+export const promo = defineType({
+  name: "promo",
+  title: "Festival feature",
+  description: "A designed homepage section for a festival or seasonal promotion (Diwali giveaway, Vaisakhi, mango season). Built from text, so it stays sharp on every screen and translates.",
+  type: "document",
+  groups: [punjabiGroup],
+  fields: [
+    defineField({ name: "kicker", title: "Small line above the title", type: "string", description: "e.g. Diwali Free Giveaway 2026", validation: (r) => r.required() }),
+    defineField({ name: "title", type: "string", description: "Wrap a word in *asterisks* to highlight it in gold.", validation: (r) => r.required().max(60) }),
+    defineField({ name: "dates", title: "Dates, as written", type: "string", description: "e.g. October 25 to November 8", validation: (r) => r.required() }),
+    defineField({ name: "body", type: "text", rows: 3, validation: (r) => r.required().max(260) }),
+    defineField({ name: "steps", title: "How it works (up to 3 steps)", type: "array", of: [{ type: "string" }], validation: (r) => r.max(3) }),
+    defineField({ name: "sponsors", type: "array", of: [{ type: "string" }] }),
+    defineField({ name: "ctaLabel", title: "Button text", type: "string", initialValue: "Find your store", validation: (r) => r.required() }),
+    defineField({ name: "ctaHref", title: "Button link", type: "string", initialValue: "/storefinder", validation: (r) => r.required() }),
+    defineField({ name: "finePrint", title: "Fine print", type: "string" }),
+    defineField({ name: "startsOn", title: "First day shown", type: "date" }),
+    defineField({ name: "endsOn", title: "Last day shown", description: "Hides itself after this day (Pacific time).", type: "date" }),
+    defineField({ name: "theme", type: "string", options: { list: [{ title: "Diwali (night and gold)", value: "diwali" }, { title: "Harvest (green and mango)", value: "harvest" }], layout: "radio" }, initialValue: "diwali" }),
+    defineField({ name: "active", title: "Show on site", type: "boolean", initialValue: true }),
+    punjabi([
+      paString("kicker", "Small line above the title"),
+      paString("title", "Title"),
+      paString("dates", "Dates"),
+      paText("body", "Body"),
+      paList("steps", "How it works"),
+      paString("ctaLabel", "Button text"),
+      paString("finePrint", "Fine print"),
+    ]),
+  ],
+  orderings: [{ title: "Newest first", name: "startsOn", by: [{ field: "startsOn", direction: "desc" }] }],
+  preview: { select: { title: "kicker", subtitle: "dates", active: "active" }, prepare: ({ title, subtitle, active }) => ({ title, subtitle: `${subtitle ?? ""}${active === false ? " · Hidden" : ""}` }) },
+});
+
 export const video = defineType({
   name: "video",
   title: "Commercial",
@@ -298,4 +334,4 @@ export const submission = defineType({
   preview: { select: { title: "subject", subtitle: "email" } },
 });
 
-export const schemaTypes = [siteSettings, store, flyer, campaign, video, post, event, page, job, submission];
+export const schemaTypes = [siteSettings, store, flyer, campaign, promo, video, post, event, page, job, submission];

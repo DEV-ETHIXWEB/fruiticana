@@ -4,9 +4,9 @@ import { groq } from "next-sanity";
 import { sanityFetch } from "@/sanity/client";
 import * as seed from "./seed";
 import { getLocale } from "@/i18n/server";
-import { localizeCampaigns, localizeEvents, localizeFlyers, localizePage, localizePosts, localizeSettings, localizeVideos } from "./localize";
+import { localizeCampaigns, localizePromos, localizeEvents, localizeFlyers, localizePage, localizePosts, localizeSettings, localizeVideos } from "./localize";
 import { pa } from "./seed/pa";
-import type { CampaignBanner, Event, Flyer, FlyerRegion, Img, Job, Page, Post, SiteSettings, Store, Video } from "./types";
+import type { CampaignBanner, Event, Flyer, FlyerRegion, Img, Job, Page, Post, Promo, SiteSettings, Store, Video } from "./types";
 
 /*
  * Single content API for the whole site.
@@ -79,6 +79,27 @@ const loadCampaigns = cache(async (): Promise<CampaignBanner[]> => {
     // seeded documents are "campaign.<id>"; the id is what the Punjabi copy is keyed on
     return image ? [{ id: c._id.replace(/^(drafts\.)?campaign\./, ""), label: c.label, href: c.href, endsOn: c.endsOn ?? undefined, image, pa: c.pa ?? undefined }] : [];
   });
+});
+
+const loadPromos = cache(async (): Promise<Promo[]> => {
+  const data = await sanityFetch<(Omit<Promo, "id" | "steps" | "sponsors"> & { _id: string; active?: boolean; steps?: string[]; sponsors?: string[] })[]>(
+    groq`*[_type == "promo"] | order(startsOn desc){ _id, active, kicker, title, dates, body, steps, sponsors, ctaLabel, ctaHref, finePrint, startsOn, endsOn, theme, pa }`,
+    {},
+    ["promo"],
+  );
+  // No feature documents yet: use the bundled one. Once any exist, "Show on site" switched off really hides it.
+  if (!nonEmpty(data)) return seed.promos;
+  return data.filter((p) => p.active !== false).map((p) => ({
+    ...p,
+    id: p._id.replace(/^(drafts\.)?promo\./, ""),
+    steps: p.steps ?? [],
+    sponsors: p.sponsors ?? [],
+    theme: p.theme ?? "diwali",
+    finePrint: p.finePrint ?? undefined,
+    startsOn: p.startsOn ?? undefined,
+    endsOn: p.endsOn ?? undefined,
+    pa: p.pa ?? undefined,
+  }));
 });
 
 const loadVideos = cache(async (): Promise<Video[]> => {
@@ -155,6 +176,15 @@ const pacificToday = () => new Intl.DateTimeFormat("en-CA", { timeZone: "America
 export const getCampaigns = cache(async () => {
   const today = pacificToday();
   return localizeCampaigns((await loadCampaigns()).filter((c) => !c.endsOn || c.endsOn >= today), await getLocale());
+});
+/** The festival feature running today (Pacific), if any, plus how many days are left including today. */
+export const getActivePromo = cache(async () => {
+  const today = pacificToday();
+  const live = (await loadPromos()).find((p) => (!p.startsOn || p.startsOn <= today) && (!p.endsOn || p.endsOn >= today));
+  if (!live) return null;
+  const [promo] = localizePromos([live], await getLocale());
+  const daysLeft = live.endsOn ? Math.round((Date.parse(live.endsOn) - Date.parse(today)) / 86400000) + 1 : null;
+  return { promo, daysLeft };
 });
 export const getVideos = cache(async () => localizeVideos(await loadVideos(), await getLocale()));
 export const getPosts = cache(async () => localizePosts(await loadPosts(), await getLocale()));

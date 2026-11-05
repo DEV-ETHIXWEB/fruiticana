@@ -360,3 +360,30 @@ html:lang(pa) [class*="text-[0.78rem]"]:not(:lang(en)) { font-size: 0.84rem; }
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
 }
+
+/* Festival feature (FestivalFeature.tsx): CSS-only motion, frozen by the reduced-motion rule above */
+.festival-gold {
+  background: linear-gradient(100deg, #ffe08a 0%, #f6a61c 45%, #ffd36b 70%, #f39a1e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.festival-flame { transform-box: fill-box; transform-origin: 50% 100%; animation: festival-flicker 2.6s ease-in-out infinite; }
+.festival-glow { transform-box: fill-box; transform-origin: center; animation: festival-breathe 3.2s ease-in-out infinite; }
+.festival-rangoli { animation: festival-turn 140s linear infinite; }
+.festival-bulb { box-shadow: 0 0 10px 2px rgb(255 196 92 / 0.55); animation: festival-twinkle 2.4s ease-in-out infinite; }
+.festival-ember { opacity: 0; animation: festival-ember 7s ease-out infinite; box-shadow: 0 0 6px rgb(255 190 80 / 0.8); }
+@keyframes festival-flicker {
+  0%, 100% { transform: scale(1, 1) skewX(0deg); }
+  25% { transform: scale(0.96, 1.05) skewX(-2deg); }
+  50% { transform: scale(1.03, 0.97) skewX(1.5deg); }
+  75% { transform: scale(0.98, 1.03) skewX(-1deg); }
+}
+@keyframes festival-breathe { 0%, 100% { opacity: 0.85; transform: scale(1); } 50% { opacity: 1; transform: scale(1.06); } }
+@keyframes festival-turn { to { transform: rotate(360deg); } }
+@keyframes festival-twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+@keyframes festival-ember {
+  0% { opacity: 0; transform: translateY(0) translateX(0); }
+  15% { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(-360px) translateX(18px); }
+}

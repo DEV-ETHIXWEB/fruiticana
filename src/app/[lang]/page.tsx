@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "@/i18n/Link";
 import { CampaignRail } from "@/components/home/CampaignRail";
+import { FestivalFeature } from "@/components/home/FestivalFeature";
 import { Hero } from "@/components/home/Hero";
 import { QuickActions } from "@/components/home/QuickActions";
 import { NewsVideo } from "@/components/home/NewsVideo";
@@ -11,6 +12,7 @@ import { Arrow, ButtonLink } from "@/components/ui/Button";
 import { Icon3D } from "@/components/ui/Icon3D";
 import { isSmallImage, ProductShot } from "@/components/ui/ProductShot";
 import {
+  getActivePromo,
   getCampaigns,
   getFlyers,
   getPosts,
@@ -54,7 +56,7 @@ function accentPhrases(text: string, phrases: readonly string[]) {
 export default async function HomePage() {
   const [t, lang, photos, milestones, newsClip] = await Promise.all([getT(), getLocale(), getPhotos(), getMilestones(), getNewsClip()]);
   const dateFmt = new Intl.DateTimeFormat(lang === "pa" ? "pa-IN" : "en-CA", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
-  const [settings, campaigns, flyers, stores, retail, videos, posts] = await Promise.all([
+  const [settings, campaigns, flyers, stores, retail, videos, posts, festival] = await Promise.all([
     getSettings(),
     getCampaigns(),
     getFlyers(),
@@ -62,11 +64,14 @@ export default async function HomePage() {
     getRetailStores(),
     getVideos(),
     getPosts(),
+    getActivePromo(),
   ]);
 
   return (
     <>
       <Hero storeCount={retail.length} />
+
+      {festival && <FestivalFeature promo={festival.promo} daysLeft={festival.daysLeft} />}
 
       <CampaignRail items={campaigns} />
 

@@ -9,7 +9,7 @@
 import { createReadStream } from "node:fs";
 import { basename, join } from "node:path";
 import { createClient } from "next-sanity";
-import { campaigns, flyers, pages, photos, posts, settings, stores, videos } from "../src/lib/content/seed";
+import { campaigns, flyers, pages, photos, posts, promos, settings, stores, videos } from "../src/lib/content/seed";
 import { pa } from "../src/lib/content/seed/pa";
 import type { Img } from "../src/lib/content/types";
 
@@ -65,6 +65,10 @@ async function main() {
 
   for (const [i, c] of campaigns.entries()) {
     tx.createOrReplace({ _id: `campaign.${c.id}`, _type: "campaign", label: c.label, href: c.href, endsOn: c.endsOn, order: i * 10, active: true, image: await image(c.image), pa: (({ label, alt }) => ({ label, imageAlt: alt }))(pa.campaigns[c.id as keyof typeof pa.campaigns]) });
+  }
+
+  for (const f of promos) {
+    tx.createOrReplace({ ...f, _id: `promo.${f.id}`, _type: "promo", id: undefined, active: true, pa: pa.promos[f.id] });
   }
 
   for (const [i, v] of videos.entries()) {

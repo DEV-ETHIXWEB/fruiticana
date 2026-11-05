@@ -53,6 +53,31 @@ export type CampaignBanner = {
   pa?: { label?: string; imageAlt?: string };
 };
 
+/**
+ * A festival or seasonal feature (Diwali giveaway, Vaisakhi, mango season...), built in code
+ * from text rather than a flat banner image. Shown on the homepage from startsOn to endsOn.
+ */
+export type Promo = {
+  id: string;
+  /** small line above the title, e.g. "Diwali 2026" */
+  kicker: string;
+  /** wrap a word in *asterisks* for the accent style */
+  title: string;
+  /** how the dates read, e.g. "October 25 to November 8" */
+  dates: string;
+  body: string;
+  /** up to three "how it works" steps */
+  steps: string[];
+  sponsors: string[];
+  ctaLabel: string;
+  ctaHref: string;
+  finePrint?: string;
+  startsOn?: string;
+  endsOn?: string;
+  theme: "diwali" | "harvest";
+  pa?: { kicker?: string; title?: string; dates?: string; body?: string; steps?: string[]; ctaLabel?: string; finePrint?: string };
+};
+
 export type Video = {
   youtubeId: string;
   title: string;

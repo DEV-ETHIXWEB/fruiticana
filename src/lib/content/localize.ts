@@ -2,7 +2,7 @@ import type { PortableTextBlock } from "@portabletext/types";
 import type { Locale } from "@/i18n/config";
 import * as seed from "./seed";
 import { pa } from "./seed/pa";
-import type { CampaignBanner, Event, Flyer, Img, Page, Post, SiteSettings, Video } from "./types";
+import type { CampaignBanner, Event, Flyer, Img, Page, Post, Promo, SiteSettings, Video } from "./types";
 
 /*
  * Content in the page's language. English passes through untouched. For Punjabi, each field
@@ -73,6 +73,26 @@ export function localizeFlyers(list: Flyer[], lang: Locale): Flyer[] {
     const b = pa.flyers[f.region];
     const src = seed.flyers.find((x) => x.region === f.region);
     return { ...f, label: pick(f.pa?.label, b?.label, f.label, src?.label), image: localImg(f.image, f.pa?.imageAlt, b?.alt, src?.image.alt) };
+  });
+}
+
+export function localizePromos(list: Promo[], lang: Locale): Promo[] {
+  if (lang !== "pa") return list;
+  return list.map((x) => {
+    const b = pa.promos[x.id];
+    const src = seed.promos.find((y) => y.id === x.id);
+    const list = (cms: string[] | undefined, bundled: string[] | undefined, en: string[], srcEn?: string[]) =>
+      cms?.length ? cms : bundled && (!srcEn || JSON.stringify(srcEn) === JSON.stringify(en)) ? bundled : en;
+    return {
+      ...x,
+      kicker: pick(x.pa?.kicker, b?.kicker, x.kicker, src?.kicker),
+      title: pick(x.pa?.title, b?.title, x.title, src?.title),
+      dates: pick(x.pa?.dates, b?.dates, x.dates, src?.dates),
+      body: pick(x.pa?.body, b?.body, x.body, src?.body),
+      steps: list(x.pa?.steps, b?.steps, x.steps, src?.steps),
+      ctaLabel: pick(x.pa?.ctaLabel, b?.ctaLabel, x.ctaLabel, src?.ctaLabel),
+      finePrint: x.finePrint ? pick(x.pa?.finePrint, b?.finePrint, x.finePrint, src?.finePrint) : undefined,
+    };
   });
 }
 

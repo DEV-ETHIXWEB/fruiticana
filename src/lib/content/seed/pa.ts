@@ -58,6 +58,17 @@ export const pa = {
   } satisfies Record<FlyerRegion, { label: string; alt: string }>,
 
   /** Keyed by the seed campaign id. */
+  promos: {
+    "diwali-giveaway-2026": {
+      kicker: "ਦੀਵਾਲੀ ਮੁਫ਼ਤ ਇਨਾਮ 2026",
+      title: "ਦੀਵਾਲੀ ਦੇ ਹਰ ਦਿਨ ਇੱਕ *ਜੇਤੂ।*",
+      dates: "25 ਅਕਤੂਬਰ ਤੋਂ 8 ਨਵੰਬਰ",
+      body: "ਕਿਸੇ ਵੀ Fruiticana ਸਟੋਰ 'ਤੇ ਆਓ, ਸਟੋਰ ਵਿੱਚ QR ਕੋਡ ਸਕੈਨ ਕਰੋ ਅਤੇ ਤੁਸੀਂ ਨਵਾਂ ਬਲੈਂਡਰ, ਮਾਈਕ੍ਰੋਵੇਵ, ਟੋਸਟਰ ਜਾਂ ਜੂਸਰ ਘਰ ਲੈ ਜਾ ਸਕਦੇ ਹੋ। ਹਰ ਰੋਜ਼ ਇੱਕ ਨਵਾਂ ਜੇਤੂ ਚੁਣਿਆ ਜਾਂਦਾ ਹੈ।",
+      steps: ["ਕਿਸੇ ਵੀ Fruiticana ਸਟੋਰ 'ਤੇ ਆਓ", "ਇਨਾਮ ਵਾਲਾ QR ਕੋਡ ਸਕੈਨ ਕਰੋ", "ਹਰ ਰੋਜ਼ ਇੱਕ ਜੇਤੂ ਚੁਣਿਆ ਜਾਂਦਾ ਹੈ"],
+      ctaLabel: "ਆਪਣਾ ਸਟੋਰ ਲੱਭੋ",
+      finePrint: "ਕੋਈ ਖ਼ਰੀਦ ਜ਼ਰੂਰੀ ਨਹੀਂ। ਇਨਾਮ ਦਿਖਾਏ ਗਏ ਇਨਾਮਾਂ ਤੋਂ ਵੱਖਰੇ ਹੋ ਸਕਦੇ ਹਨ।",
+    },
+  } as Record<string, { kicker: string; title: string; dates: string; body: string; steps: string[]; ctaLabel: string; finePrint?: string }>,
   campaigns: {
     "diwali-giveaway": { label: "ਦੀਵਾਲੀ ਮੁਫ਼ਤ ਇਨਾਮ 2026: ਹਰ ਰੋਜ਼ ਇੱਕ ਜੇਤੂ", alt: "Fruiticana ਦੀਵਾਲੀ ਮੁਫ਼ਤ ਇਨਾਮ 2026, 25 ਅਕਤੂਬਰ ਤੋਂ 8 ਨਵੰਬਰ: ਸਟੋਰ ਵਿੱਚ QR ਕੋਡ ਸਕੈਨ ਕਰੋ ਅਤੇ ਹਰ ਰੋਜ਼ ਰਸੋਈ ਦੇ ਛੋਟੇ ਉਪਕਰਨ ਜਿੱਤਣ ਦਾ ਮੌਕਾ ਪਾਓ। ਸਪਾਂਸਰ: Teja, Sher ਅਤੇ Ashoka। ਕੋਈ ਖ਼ਰੀਦ ਜ਼ਰੂਰੀ ਨਹੀਂ।" },
     "happy-diwali": { label: "Fruiticana ਵੱਲੋਂ ਦੀਵਾਲੀ ਦੀਆਂ ਮੁਬਾਰਕਾਂ", alt: "Fruiticana ਵੱਲੋਂ ਦੀਵਾਲੀ ਦੀਆਂ ਮੁਬਾਰਕਾਂ: ਤਾਜ਼ੇ ਫਲਾਂ-ਸਬਜ਼ੀਆਂ ਦੀ ਟੋਕਰੀ ਅਤੇ ਬਲਦੇ ਦੀਵਿਆਂ ਨਾਲ ਦਿਲਜੀਤ ਦੋਸਾਂਝ" },

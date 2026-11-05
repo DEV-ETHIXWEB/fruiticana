@@ -44,6 +44,8 @@ To enable the CMS:
 
 Weekly flyer swap: Studio → Weekly flyers → replace the image for the region. Newest flyer per region wins.
 
+Festival feature (Diwali giveaway, Vaisakhi, mango season): Studio → Festival features. A designed homepage section built from text (title, dates, three "how it works" steps, sponsors, button, fine print) in English and Punjabi, shown from "First day shown" to "Last day shown" (Pacific time) with a live "days left" badge. Nothing to design: fill in the words and it appears under the hero. Until any feature exists in the Studio, the bundled Diwali 2026 giveaway is used.
+
 ## Forms
 
 `src/app/actions.ts`: Zod validation, honeypot, minimum fill time, per-IP throttle. Delivery goes to Resend (`RESEND_API_KEY` + `CONTACT_TO_EMAIL`) and/or the Sanity inbox. In production with neither configured the form shows an honest error (with the phone/email) instead of silently dropping messages.

@@ -14,6 +14,7 @@ const structure: StructureResolver = (S) =>
       S.divider(),
       S.documentTypeListItem("flyer").title("Weekly flyers"),
       S.documentTypeListItem("campaign").title("Homepage banners"),
+      S.documentTypeListItem("promo").title("Festival features"),
       S.documentTypeListItem("store").title("Stores"),
       S.divider(),
       S.documentTypeListItem("page").title("Pages"),
