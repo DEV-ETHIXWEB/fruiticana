@@ -20,6 +20,8 @@ const allow = new Set(
     "diljitdosanjh",
     // services named in the privacy policy and the delivery / WhatsApp links (proper names)
     "Vercel", "Web", "Analytics", "Mailchimp", "Resend", "Sanity", "OpenFreeMap", "OpenStreetMap", "WhatsApp", "Word", "MB",
+    // giveaway sponsors and the QR code on the Diwali banner (brand names)
+    "Teja", "Sher", "Ashoka", "QR", "St",
     // units and abbreviations used with numbers
     "km", "m", "h", "k", "com",
   ].map((w) => w.toLowerCase()),

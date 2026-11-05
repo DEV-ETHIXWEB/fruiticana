@@ -163,6 +163,7 @@ export const campaign = defineType({
     defineField({ name: "href", title: "Link", type: "string" }),
     defineField({ name: "order", type: "number", initialValue: 10 }),
     defineField({ name: "active", type: "boolean", initialValue: true }),
+    defineField({ name: "endsOn", title: "Last day shown", description: "Optional. The banner hides itself after this day (Pacific time), e.g. the last day of a festival giveaway.", type: "date" }),
     punjabi([paString("label", "Label"), paString("imageAlt", "Banner image description (alt text)")]),
   ],
   orderings: [{ title: "Order", name: "order", by: [{ field: "order", direction: "asc" }] }],

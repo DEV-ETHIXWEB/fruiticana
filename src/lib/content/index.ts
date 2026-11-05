@@ -68,8 +68,8 @@ const loadFlyers = cache(async (): Promise<Flyer[]> => {
 });
 
 const loadCampaigns = cache(async (): Promise<CampaignBanner[]> => {
-  const data = await sanityFetch<{ _id: string; label: string; href?: string; image: RawImg; pa?: CampaignBanner["pa"] }[]>(
-    groq`*[_type == "campaign" && active != false] | order(order asc){ _id, label, href, "image": image${IMG}, pa }`,
+  const data = await sanityFetch<{ _id: string; label: string; href?: string; endsOn?: string; image: RawImg; pa?: CampaignBanner["pa"] }[]>(
+    groq`*[_type == "campaign" && active != false] | order(order asc){ _id, label, href, endsOn, "image": image${IMG}, pa }`,
     {},
     ["campaign"],
   );
@@ -77,7 +77,7 @@ const loadCampaigns = cache(async (): Promise<CampaignBanner[]> => {
   return data.flatMap((c) => {
     const image = toImg(c.image, c.label);
     // seeded documents are "campaign.<id>"; the id is what the Punjabi copy is keyed on
-    return image ? [{ id: c._id.replace(/^(drafts\.)?campaign\./, ""), label: c.label, href: c.href, image, pa: c.pa ?? undefined }] : [];
+    return image ? [{ id: c._id.replace(/^(drafts\.)?campaign\./, ""), label: c.label, href: c.href, endsOn: c.endsOn ?? undefined, image, pa: c.pa ?? undefined }] : [];
   });
 });
 
@@ -150,7 +150,12 @@ const loadJobs = cache(async (): Promise<Job[]> => {
 
 export const getSettings = cache(async () => localizeSettings(await loadSettings(), await getLocale()));
 export const getFlyers = cache(async () => localizeFlyers(await loadFlyers(), await getLocale()));
-export const getCampaigns = cache(async () => localizeCampaigns(await loadCampaigns(), await getLocale()));
+/** Today in Vancouver as YYYY-MM-DD: a banner shows through the whole of its last day there. */
+const pacificToday = () => new Intl.DateTimeFormat("en-CA", { timeZone: "America/Vancouver", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+export const getCampaigns = cache(async () => {
+  const today = pacificToday();
+  return localizeCampaigns((await loadCampaigns()).filter((c) => !c.endsOn || c.endsOn >= today), await getLocale());
+});
 export const getVideos = cache(async () => localizeVideos(await loadVideos(), await getLocale()));
 export const getPosts = cache(async () => localizePosts(await loadPosts(), await getLocale()));
 export const getPage = cache(async (slug: string) => localizePage(await loadPage(slug), await getLocale()));

@@ -26,6 +26,9 @@ import {
 import { pageMetadata } from "@/lib/seo";
 import { getLocale, getT } from "@/i18n/server";
 
+/* Re-rendered hourly so dated banners (a festival giveaway) disappear after their last day. */
+export const revalidate = 3600;
+
 export async function generateMetadata(): Promise<Metadata> {
   const [t, lang] = await Promise.all([getT(), getLocale()]);
   return pageMetadata({ title: t.home.metaTitle, description: t.home.metaDescription, path: "/", absoluteTitle: true, lang });

@@ -57,6 +57,9 @@ export const flyers: Flyer[] = [
 
 /* The rotating banners from the legacy homepage, kept as a campaign rail. */
 export const campaigns: CampaignBanner[] = [
+  { id: "diwali-giveaway", label: "Diwali Free Giveaway 2026: a winner every day", href: "/storefinder", endsOn: "2026-11-08", image: img("/images/banners/diwali-giveaway-2026.jpg", "Fruiticana Diwali Free Giveaway 2026, October 25 to November 8: scan the QR code in store for a chance to win small kitchen appliances every day. Sponsored by Teja, Sher and Ashoka. No purchase necessary.", 1040, 300) },
+  { id: "happy-diwali", label: "Happy Diwali from Fruiticana", href: "/flyers", endsOn: "2026-11-08", image: img("/images/banners/happy-diwali.jpg", "Happy Diwali from Fruiticana: Diljit Dosanjh with a basket of fresh fruit and vegetables and lit diyas", 1040, 300) },
+  { id: "now-open", label: "Now open: South Surrey", href: "/storefinder/south-surrey", image: img("/images/banners/now-open-south-surrey.jpg", "Fruiticana now open at 2990 152 St, South Surrey", 1040, 300) },
   { id: "indican", label: "Indican, available exclusively at Fruiticana", href: "/indican", image: img("/images/banners/indican.jpg", "Indican, available exclusively at Fruiticana: Mango juice, Kheer rice and brown cane sugar", 1800, 517) },
   { id: "weekly", label: "Weekly Specials", href: "/flyers", image: img("/images/banners/weekly-specials.jpg", "Fruiticana Weekly Specials", 1800, 600) },
   { id: "quality", label: "Highest quality at lowest prices", href: "/commitment-to-quality", image: img("/images/banners/quality-lowest-prices.jpg", "Highest quality at lowest prices: apples, pomegranate, oranges, grapes and berries", 1800, 517) },

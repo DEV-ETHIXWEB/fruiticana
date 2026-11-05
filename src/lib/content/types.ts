@@ -48,6 +48,8 @@ export type CampaignBanner = {
   image: Img;
   href?: string;
   label: string;
+  /** Last day the banner shows (YYYY-MM-DD, Pacific time); after it the banner hides itself */
+  endsOn?: string;
   pa?: { label?: string; imageAlt?: string };
 };
 
