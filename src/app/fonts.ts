@@ -14,6 +14,9 @@ const fraunces = Fraunces({
   style: ["normal", "italic"],
   variable: "--font-fraunces",
   display: "swap",
+  // Not preloaded: its two files (~140 KB) would otherwise download before the hero image on a
+  // slow phone. The headline paints at once in the size-matched fallback and swaps in a moment.
+  preload: false,
 });
 
 const instrument = Instrument_Sans({

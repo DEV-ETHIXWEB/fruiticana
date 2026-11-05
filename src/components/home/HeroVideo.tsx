@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { m, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { useI18n } from "@/i18n/I18nProvider";
@@ -98,7 +98,7 @@ export function HeroVideo({ desktopPoster, mobilePoster, alt }: { desktopPoster:
 
   return (
     <div ref={wrap} data-qa="bleed" className="absolute inset-0 -z-10 overflow-hidden bg-forest-deep">
-      <motion.div style={{ y, scale }} className="absolute inset-0 will-change-transform">
+      <m.div style={{ y, scale }} className="absolute inset-0 will-change-transform">
         <picture>
           <source media="(max-width: 767px)" srcSet={mobilePoster.srcSet} />
           <img
@@ -131,7 +131,7 @@ export function HeroVideo({ desktopPoster, mobilePoster, alt }: { desktopPoster:
           <source src="/video/hero-loop.hevc.mp4" type='video/mp4; codecs="hvc1.2.4.L123.B0"' />
           <source src="/video/hero-loop.mp4" type='video/mp4; codecs="avc1.640020"' />
         </video>
-      </motion.div>
+      </m.div>
 
       {/* Brand-tinted shade (not flat black): strongest behind the text, clear where the produce is */}
       <div aria-hidden className="absolute inset-0 bg-[linear-gradient(to_top,rgb(10_40_25/0.96)_0%,rgb(10_40_25/0.78)_30%,rgb(10_40_25/0.1)_50%,rgb(10_40_25/0.08)_58%,rgb(10_40_25/0.5)_76%,rgb(10_40_25/0.72)_100%)] md:bg-[linear-gradient(to_right,rgb(10_40_25/0.9)_0%,rgb(10_40_25/0.7)_42%,rgb(10_40_25/0.22)_74%,rgb(10_40_25/0.05)_100%)]" />

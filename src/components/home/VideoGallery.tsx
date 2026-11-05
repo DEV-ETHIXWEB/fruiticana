@@ -1,7 +1,7 @@
 "use client";
 
 import { useI18n } from "@/i18n/I18nProvider";
-import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
+import { AnimatePresence, m, useInView, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useRef, useState, type ReactNode } from "react";
 import { Icon } from "@/components/ui/Icon";
@@ -62,9 +62,9 @@ export function VideoGallery({ videos, nonEmbeddable, intro }: { videos: Video[]
       >
         {/* Poster always underneath: instant paint, and the fallback while the iframe boots */}
         <AnimatePresence mode="wait" initial={false}>
-          <motion.div key={`p-${v.youtubeId}`} initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0">
+          <m.div key={`p-${v.youtubeId}`} initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} className="absolute inset-0">
             <Image src={v.poster.src} alt={v.poster.alt} fill sizes="(min-width: 1024px) 62vw, 100vw" className={`object-cover ${letterbox(v.poster)}`} />
-          </motion.div>
+          </m.div>
         </AnimatePresence>
 
         {showFrame && (

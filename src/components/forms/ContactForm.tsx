@@ -1,7 +1,7 @@
 "use client";
 
 import { useI18n } from "@/i18n/I18nProvider";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, m } from "motion/react";
 import { useActionState, useEffect, useState } from "react";
 import Link from "@/i18n/Link";
 import { track } from "@/lib/track";
@@ -23,9 +23,9 @@ function Field({ label, name, error, required, children }: { label: string; name
       <div className="mt-1.5">{children}</div>
       <AnimatePresence>
         {error && (
-          <motion.p id={`${name}-error`} initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-1.5 text-sm text-chili-deep">
+          <m.p id={`${name}-error`} initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-1.5 text-sm text-chili-deep">
             {error}
-          </motion.p>
+          </m.p>
         )}
       </AnimatePresence>
     </div>
@@ -47,11 +47,11 @@ export function ContactForm({ stores }: { stores: string[] }) {
 
   if (state.status === "success") {
     return (
-      <motion.div role="status" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="grid place-items-center rounded-[var(--radius-card)] bg-leaf p-12 text-center text-white">
+      <m.div role="status" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="grid place-items-center rounded-[var(--radius-card)] bg-leaf p-12 text-center text-white">
         <Icon3D name="check" className="size-20" />
         <p className="mt-6 font-display text-3xl">{t.forms.sent}</p>
         <p className="mt-3 max-w-sm text-white/80">{state.message}</p>
-      </motion.div>
+      </m.div>
     );
   }
 
@@ -96,7 +96,7 @@ export function ContactForm({ stores }: { stores: string[] }) {
         </div>
       </fieldset>
       {topic === "Party & bulk orders" && (
-        <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="space-y-3 rounded-2xl bg-paper p-4">
+        <m.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="space-y-3 rounded-2xl bg-paper p-4">
           <p className="text-sm text-ink-soft">{t.forms.partyHint}</p>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label={t.forms.eventDate} name="eventDate" error={e.eventDate}>
@@ -106,7 +106,7 @@ export function ContactForm({ stores }: { stores: string[] }) {
               <input id="guests" name="guests" type="number" inputMode="numeric" min={1} max={99999} aria-invalid={Boolean(e.guests)} aria-describedby={e.guests ? "guests-error" : undefined} className={input} />
             </Field>
           </div>
-        </motion.div>
+        </m.div>
       )}
       <Field label={t.forms.message} name="message" error={e.message} required>
         <textarea id="message" name="message" rows={3} required aria-invalid={Boolean(e.message)} aria-describedby={e.message ? "message-error" : undefined} className={`${input} resize-y`} />

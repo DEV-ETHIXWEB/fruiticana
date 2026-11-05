@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, m } from "motion/react";
 import { useActionState, useEffect, useState } from "react";
 import { applyJob, type FormState } from "@/app/actions";
 import { Button } from "@/components/ui/Button";
@@ -26,9 +26,9 @@ function Field({ label, name, error, required, hint, children }: { label: string
       <div className="mt-1.5">{children}</div>
       <AnimatePresence>
         {error && (
-          <motion.p id={`${name}-error`} initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-1.5 text-sm text-chili-deep">
+          <m.p id={`${name}-error`} initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-1.5 text-sm text-chili-deep">
             {error}
-          </motion.p>
+          </m.p>
         )}
       </AnimatePresence>
     </div>
@@ -55,11 +55,11 @@ export function ApplyForm({ positions, stores }: { positions: string[]; stores: 
 
   if (state.status === "success") {
     return (
-      <motion.div role="status" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="grid place-items-center rounded-[var(--radius-card)] bg-leaf p-10 text-center text-white">
+      <m.div role="status" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="grid place-items-center rounded-[var(--radius-card)] bg-leaf p-10 text-center text-white">
         <Icon3D name="check" className="size-20" />
         <p className="mt-6 font-display text-3xl">{c.sent}</p>
         <p className="mt-3 max-w-sm text-white/80">{state.message}</p>
-      </motion.div>
+      </m.div>
     );
   }
 

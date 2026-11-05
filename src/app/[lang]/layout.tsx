@@ -4,6 +4,7 @@ import { fontVariables } from "../fonts";
 import { htmlLang, isLocale, locales, punjabiLive, SWITCH_KEY } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { I18nProvider } from "@/i18n/I18nProvider";
+import { MotionProvider } from "@/components/motion/MotionProvider";
 import { SITE_URL } from "@/lib/site";
 import { SiteShell } from "./SiteShell";
 import { TrackClicks } from "@/components/analytics/TrackClicks";
@@ -66,7 +67,9 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
     <html lang={htmlLang[lang]} className={fontVariables}>
       <body>
         <I18nProvider lang={lang}>
-          <SiteShell>{children}</SiteShell>
+          <MotionProvider>
+            <SiteShell>{children}</SiteShell>
+          </MotionProvider>
         </I18nProvider>
         {/* last in the body: an inline script waits for the stylesheet, and here that holds
             up nothing (at the top it would delay discovering the hero image) */}

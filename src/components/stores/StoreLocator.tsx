@@ -1,7 +1,7 @@
 "use client";
 
 import { useI18n } from "@/i18n/I18nProvider";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, m } from "motion/react";
 import Link from "@/i18n/Link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Map as MLMap, Marker } from "maplibre-gl";
@@ -262,9 +262,9 @@ export function StoreLocator({ stores }: { stores: Store[] }) {
         </div>
         <AnimatePresence>
           {(notice || origin) && (
-            <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="mt-3 px-1 text-sm text-ink-soft" aria-live="polite">
+            <m.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="mt-3 px-1 text-sm text-ink-soft" aria-live="polite">
               {notice ?? t.stores.sortedFrom(origin!.label)}
-            </motion.p>
+            </m.p>
           )}
         </AnimatePresence>
       </div>

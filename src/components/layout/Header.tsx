@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
+import { AnimatePresence, m, useMotionValueEvent, useScroll } from "motion/react";
 import Link from "@/i18n/Link";
 import { stripLocale } from "@/i18n/config";
 import { LanguageSwitcher } from "@/i18n/LanguageSwitcher";
@@ -117,7 +117,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
 
                       <AnimatePresence>
                         {children && open === item.label && (
-                          <motion.div
+                          <m.div
                             initial={{ opacity: 0, y: 10, scale: 0.98 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: 6, scale: 0.98, transition: { duration: 0.15 } }}
@@ -128,7 +128,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
                           >
                             <div className="overflow-hidden rounded-3xl bg-white p-2 shadow-[0_30px_80px_-20px_rgb(15_59_38/0.35),0_0_0_1px_rgb(28_26_21/0.06)]">
                               {children.map((c, i) => (
-                                <motion.div key={c.href} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 * i, duration: 0.3 }}>
+                                <m.div key={c.href} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 * i, duration: 0.3 }}>
                                   <Link
                                     href={c.href}
                                     onBlur={(e) => !e.currentTarget.closest("li")?.contains(e.relatedTarget as Node) && setOpen(null)}
@@ -140,10 +140,10 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
                                       <span className="mt-0.5 block text-[0.82rem] leading-snug text-muted">{c.blurb}</span>
                                     </span>
                                   </Link>
-                                </motion.div>
+                                </m.div>
                               ))}
                             </div>
-                          </motion.div>
+                          </m.div>
                         )}
                       </AnimatePresence>
                     </li>
@@ -184,7 +184,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
 
       <AnimatePresence>
         {mobile && (
-          <motion.div
+          <m.div
             id="mobile-menu"
             className="grain fixed inset-0 z-40 flex flex-col overflow-y-auto bg-forest pt-24 text-cream xl:hidden"
             initial={{ clipPath: "circle(0% at calc(100% - 3rem) 2.75rem)" }}
@@ -195,7 +195,7 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
             <nav aria-label={t.header.mobileNav} className="container-x relative z-10 flex-1 pb-10">
               <ul className="divide-y divide-cream/10 border-y border-cream/10">
                 {items.map((item, i) => (
-                  <motion.li key={item.label} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.05, duration: 0.6, ease: EASE }}>
+                  <m.li key={item.label} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.05, duration: 0.6, ease: EASE }}>
                     <Link href={item.href} className="flex items-baseline justify-between py-4 font-display text-[2rem] leading-none">
                       {item.label}
                       <span className="font-sans text-xs tracking-widest text-cream/40">0{i + 1}</span>
@@ -211,10 +211,10 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
                         ))}
                       </ul>
                     )}
-                  </motion.li>
+                  </m.li>
                 ))}
               </ul>
-              <motion.div className="mt-8 grid grid-cols-2 gap-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
+              <m.div className="mt-8 grid grid-cols-2 gap-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
                 <Link href="/storefinder" className="flex items-center justify-center btn-3d btn-chili gap-2 rounded-full bg-chili py-3.5 text-sm font-semibold uppercase">
                   <Icon name="pin" className="size-4" /> {t.common.locations}
                 </Link>
@@ -225,9 +225,9 @@ export function Header({ announcement, phone }: { announcement?: { text: string;
                 <a href={`tel:+1${phone.replace(/\D/g, "")}`} className="col-span-2 mt-2 text-center text-sm text-cream/60">
                   {t.header.headOfficePhone(phone)}
                 </a>
-              </motion.div>
+              </m.div>
             </nav>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

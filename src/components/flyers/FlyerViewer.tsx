@@ -1,7 +1,7 @@
 "use client";
 
 import { useI18n } from "@/i18n/I18nProvider";
-import { AnimatePresence, motion, useMotionValue, useSpring } from "motion/react";
+import { AnimatePresence, m, useMotionValue, useSpring } from "motion/react";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -57,7 +57,7 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
                 data-track-region={f.region}
                 className={`relative shrink-0 rounded-full px-5 py-3 text-sm font-semibold transition-colors ${active ? "text-white" : "btn-glass text-ink/70 hover:text-ink"}`}
               >
-                {active && <motion.span layoutId="flyer-tab" className="btn-3d btn-leaf absolute inset-0 rounded-full bg-leaf" transition={{ type: "spring", stiffness: 380, damping: 32 }} />}
+                {active && <m.span layoutId="flyer-tab" className="btn-3d btn-leaf absolute inset-0 rounded-full bg-leaf" transition={{ type: "spring", stiffness: 380, damping: 32 }} />}
                 <span className="relative">{f.label}</span>
               </button>
             );
@@ -82,7 +82,7 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
         </div>
         {/* initial={false}: the first flyer is the page's LCP, so it renders visible immediately; region switches still animate */}
         <AnimatePresence mode="wait" initial={false}>
-          <motion.button
+          <m.button
             key={flyer.region}
             type="button"
             onClick={() => setZoomed(true)}
@@ -106,7 +106,7 @@ export function FlyerViewer({ flyers }: { flyers: Flyer[] }) {
             <span className="pointer-events-none absolute right-6 bottom-6 inline-flex items-center gap-2 rounded-full bg-forest/90 px-4 py-2.5 text-sm font-semibold text-cream opacity-0 backdrop-blur transition-opacity group-hover:opacity-100">
               <Icon name="zoomIn" className="size-4" /> {t.flyers.tapToZoom}
             </span>
-          </motion.button>
+          </m.button>
         </AnimatePresence>
       </div>
 
@@ -153,7 +153,7 @@ function Lightbox({ flyer, onClose }: { flyer: Flyer; onClose: () => void }) {
   }, [onClose, scale, zoomTo]);
 
   return (
-    <motion.div
+    <m.div
       role="dialog"
       aria-modal="true"
       aria-label={t.flyers.flyerOf(flyer.label)}
@@ -165,7 +165,7 @@ function Lightbox({ flyer, onClose }: { flyer: Flyer; onClose: () => void }) {
       onWheel={(e) => zoomTo(scale + (e.deltaY < 0 ? 0.25 : -0.25))}
     >
       <div className="absolute inset-0 overflow-hidden" onDoubleClick={() => zoomTo(scale > 1 ? 1 : 2.2)}>
-        <motion.div
+        <m.div
           className="flex h-full w-full items-center justify-center p-4 sm:p-10"
           style={{ x, y, scale: s }}
           drag={scale > 1}
@@ -173,7 +173,7 @@ function Lightbox({ flyer, onClose }: { flyer: Flyer; onClose: () => void }) {
           dragElastic={0.08}
         >
           <Image src={flyer.image.src} alt={flyer.image.alt} width={flyer.image.width} height={flyer.image.height} quality={90} sizes="100vw" className="pointer-events-none h-full w-auto max-w-full rounded-lg object-contain select-none" draggable={false} />
-        </motion.div>
+        </m.div>
       </div>
       <div className="absolute top-4 right-4 flex gap-2">
         <span className="hidden items-center rounded-full bg-cream/10 px-4 text-sm text-cream/80 sm:inline-flex">{Math.round(scale * 100)}%</span>
@@ -188,6 +188,6 @@ function Lightbox({ flyer, onClose }: { flyer: Flyer; onClose: () => void }) {
         </button>
       </div>
       <p className="absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full bg-cream/10 px-4 py-2 text-xs text-cream/70">{t.flyers.hint}</p>
-    </motion.div>
+    </m.div>
   );
 }

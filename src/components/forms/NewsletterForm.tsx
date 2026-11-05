@@ -1,7 +1,7 @@
 "use client";
 
 import { useI18n } from "@/i18n/I18nProvider";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, m } from "motion/react";
 import { useActionState, useEffect, useState } from "react";
 import { track } from "@/lib/track";
 import { keepValues } from "./useKeepValues";
@@ -23,7 +23,7 @@ export function NewsletterForm({ tone = "dark", compact = false, stacked = false
     <div className="relative">
       <AnimatePresence mode="wait" initial={false}>
         {state.status === "success" ? (
-          <motion.p
+          <m.p
             key="ok"
             role="status"
             initial={{ opacity: 0, y: 10 }}
@@ -34,9 +34,9 @@ export function NewsletterForm({ tone = "dark", compact = false, stacked = false
               <Icon name="check" className="size-4" strokeWidth={2.4} />
             </span>
             {state.message}
-          </motion.p>
+          </m.p>
         ) : (
-          <motion.form key="form" action={action} onSubmit={keepValues(action)} exit={{ opacity: 0, y: -8 }} noValidate>
+          <m.form key="form" action={action} onSubmit={keepValues(action)} exit={{ opacity: 0, y: -8 }} noValidate>
             <input type="hidden" name="_t" value={startedAt} />
             <input type="hidden" name="lang" value={lang} />
             {interest && <input type="hidden" name="interest" value={interest} />}
@@ -74,7 +74,7 @@ export function NewsletterForm({ tone = "dark", compact = false, stacked = false
             <p id={`nl-msg-${id}`} aria-live="polite" className={`mt-2.5 px-5 text-[0.8rem] ${compact && state.status !== "error" ? "sr-only" : "min-h-5"} ${state.status === "error" ? (dark ? "text-[#ff8a80]" : "text-chili-deep") : (noteClass ?? (dark ? "text-cream/65" : "text-muted"))}`}>
               {state.status === "error" ? state.message : (note ?? t.forms.newsletterNote)}
             </p>
-          </motion.form>
+          </m.form>
         )}
       </AnimatePresence>
     </div>

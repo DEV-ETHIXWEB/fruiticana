@@ -1,7 +1,7 @@
 "use client";
 
 import { useI18n } from "@/i18n/I18nProvider";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import Link from "@/i18n/Link";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -85,7 +85,7 @@ export function CampaignRail({ items }: { items: CampaignBanner[] }) {
       >
         <div className="relative aspect-[1800/517]">
           <AnimatePresence initial={false} custom={dir} mode="popLayout">
-            <motion.div
+            <m.div
               key={current.id}
               custom={dir}
               className="absolute inset-0"
@@ -116,7 +116,7 @@ export function CampaignRail({ items }: { items: CampaignBanner[] }) {
               ) : (
                 <Image src={current.image.src} alt={current.image.alt} fill sizes="100vw" className="object-contain" draggable={false} />
               )}
-            </motion.div>
+            </m.div>
           </AnimatePresence>
         </div>
       </div>

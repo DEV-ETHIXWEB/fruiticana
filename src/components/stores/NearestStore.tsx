@@ -1,7 +1,7 @@
 "use client";
 
 import { useI18n } from "@/i18n/I18nProvider";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, m } from "motion/react";
 import Link from "@/i18n/Link";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
@@ -45,7 +45,7 @@ export function NearestStore({ stores, tone = "dark" }: { stores: Store[]; tone?
     <div className="min-h-[4.5rem]" aria-live="polite">
       <AnimatePresence mode="wait" initial={false}>
         {state.kind === "found" ? (
-          <motion.div key="found" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+          <m.div key="found" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             <Link
               href={`/storefinder/${state.store.slug}`}
               className={`group flex items-center gap-4 rounded-2xl p-4 transition-colors ${dark ? "bg-forest text-cream hover:bg-forest-deep" : "bg-white hover:bg-cream"}`}
@@ -58,9 +58,9 @@ export function NearestStore({ stores, tone = "dark" }: { stores: Store[]; tone?
               </span>
               <Icon name="chevron" className="size-5 shrink-0 transition-transform group-hover:translate-x-1" strokeWidth={2} />
             </Link>
-          </motion.div>
+          </m.div>
         ) : (
-          <motion.div key="cta" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-wrap items-center gap-3">
+          <m.div key="cta" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-wrap items-center gap-3">
             <button
               type="button"
               onClick={locate}
@@ -71,7 +71,7 @@ export function NearestStore({ stores, tone = "dark" }: { stores: Store[]; tone?
               {state.kind === "locating" ? t.stores.locating : t.stores.useMyLocation}
             </button>
             {state.kind === "error" && <p className="text-sm opacity-75">{state.message}</p>}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

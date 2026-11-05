@@ -1,18 +1,22 @@
 "use client";
 
-import {
-  animate,
-  motion,
-  useInView,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "motion/react";
+import { m, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
 import { useEffect, useLayoutEffect, useRef, type ElementType, type ReactNode } from "react";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
+const EASE_CSS = `cubic-bezier(${EASE.join(", ")})`;
+/* Close match to EASE for number tweens (an expo ease-out) */
+const easeOut = (t: number) => (t >= 1 ? 1 : 1 - Math.pow(2, -10 * t));
+
+/* Fades use the browser's own Web Animations API, so no animation library loads for them. */
+const rise = (el: HTMLElement, y: number, duration: number, delay: number) =>
+  el
+    .animate([{ opacity: 0, transform: `translateY(${y}px)` }, { opacity: 1, transform: "translateY(0px)" }], { duration: duration * 1000, delay: delay * 1000, easing: EASE_CSS, fill: "both" })
+    .finished.then(() => {
+      el.style.opacity = "";
+      el.style.transform = "";
+    })
+    .catch(() => {});
 
 /*
  * Scroll reveals are progressive enhancement. The server HTML is always fully visible, so
@@ -52,7 +56,7 @@ export function Reveal({
     el.style.opacity = "0";
     el.style.transform = `translateY(${y}px)`;
     return onEnter(el, () => {
-      animate(el, { opacity: [0, 1], transform: [`translateY(${y}px)`, "translateY(0px)"] }, { duration: 0.9, ease: EASE, delay });
+      rise(el, y, 0.9, delay);
     });
   }, [reduce, y, delay]);
   const Tag = as as ElementType;
@@ -76,7 +80,7 @@ export function Stagger({ children, className, gap = 0.08 }: { children: ReactNo
       it.style.transform = "translateY(24px)";
     });
     return onEnter(el, () => {
-      items.forEach((it, i) => animate(it, { opacity: [0, 1], transform: ["translateY(24px)", "translateY(0px)"] }, { duration: 0.8, ease: EASE, delay: i * gap }));
+      items.forEach((it, i) => rise(it, 24, 0.8, i * gap));
     });
   }, [reduce, gap]);
   return (
@@ -145,7 +149,7 @@ export function SplitHeading({
 
   return (
     <Tag className={className}>
-      <motion.span
+      <m.span
         className="block"
         initial={reduce ? false : "hidden"}
         whileInView="show"
@@ -153,14 +157,14 @@ export function SplitHeading({
         variants={{ hidden: {}, show: { transition: { staggerChildren: step, delayChildren: delay } } }}
       >
         {words((word, accent) => (
-          <motion.span
+          <m.span
             className={`inline-block will-change-transform ${accent ? accentClassName : ""}`}
             variants={{ hidden: { y: "150%", rotate: 4 }, show: { y: "0%", rotate: 0, transition: { duration: 1, ease: EASE } } }}
           >
             {word}
-          </motion.span>
+          </m.span>
         ))}
-      </motion.span>
+      </m.span>
     </Tag>
   );
 }
@@ -173,9 +177,9 @@ export function Parallax({ children, className, amount = 60 }: { children: React
   const y = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [-amount, amount]);
   return (
     <div ref={ref} className={className}>
-      <motion.div style={{ y }} className="relative h-full w-full will-change-transform">
+      <m.div style={{ y }} className="relative h-full w-full will-change-transform">
         {children}
-      </motion.div>
+      </m.div>
     </div>
   );
 }
@@ -188,9 +192,9 @@ export function ZoomSettle({ children, className }: { children: ReactNode; class
   const scale = useTransform(scrollYProgress, [0, 1], reduce ? [1, 1] : [1.18, 1]);
   return (
     <div ref={ref} className={`overflow-hidden ${className ?? ""}`}>
-      <motion.div style={{ scale }} className="relative h-full w-full origin-center will-change-transform">
+      <m.div style={{ scale }} className="relative h-full w-full origin-center will-change-transform">
         {children}
-      </motion.div>
+      </m.div>
     </div>
   );
 }
@@ -204,7 +208,7 @@ export function Magnetic({ children, strength = 0.28, className }: { children: R
   const sy = useSpring(y, { stiffness: 220, damping: 18, mass: 0.4 });
   const reduce = useReducedMotion();
   return (
-    <motion.span
+    <m.span
       ref={ref}
       className={`inline-flex ${className ?? ""}`}
       style={{ x: sx, y: sy }}
@@ -220,7 +224,7 @@ export function Magnetic({ children, strength = 0.28, className }: { children: R
       }}
     >
       {children}
-    </motion.span>
+    </m.span>
   );
 }
 
@@ -233,14 +237,15 @@ export function Counter({ to, suffix = "", prefix = "", className, format = true
   useEffect(() => {
     if (!inView || reduce || !ref.current) return;
     const el = ref.current;
-    const controls = animate(0, to, {
-      duration: 1.8,
-      ease: EASE,
-      onUpdate: (v) => {
-        el.textContent = `${prefix}${fmt(v)}${suffix}`;
-      },
-    });
-    return () => controls.stop();
+    const start = performance.now();
+    let frame = 0;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / 1800);
+      el.textContent = `${prefix}${fmt(to * easeOut(t))}${suffix}`;
+      if (t < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
   return (
