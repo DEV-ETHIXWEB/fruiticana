@@ -48,10 +48,11 @@ const restoreSpot = `(function(){try{var k=${JSON.stringify(SWITCH_KEY)},s=sessi
 
 /*
  * Vercel Web Analytics: cookieless, aggregate visit counts (described in the privacy policy).
- * Only on Vercel builds; enable it once under the project's Analytics tab. The queue lets
- * track() calls made before the script loads still count.
+ * Switch it on in the Vercel project's Analytics tab, then set ENABLE_VERCEL_ANALYTICS=1 and
+ * redeploy: until Analytics is enabled the script 404s, which shows as a console error. The
+ * queue lets track() calls made before the script loads still count.
  */
-const analyticsOn = process.env.VERCEL === "1";
+const analyticsOn = process.env.VERCEL === "1" && process.env.ENABLE_VERCEL_ANALYTICS === "1";
 const analyticsQueue = "window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};";
 
 /* Prerender the other language as soon as the reader shows intent (hover / press on a
